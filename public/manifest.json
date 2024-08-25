@@ -1,0 +1,16 @@
+{
+    "name": "Mana Kirana",
+    "short_name": "MK",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+      {
+        "src": "FeviconManaKirana.ico",
+        "sizes": "32x26",
+        "type": "image/x-icon"
+      }
+    ]
+  }
+  
