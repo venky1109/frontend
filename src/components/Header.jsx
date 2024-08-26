@@ -172,21 +172,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from '../slices/usersApiSlice';
-import { logout } from '../slices/authSlice';
+import { useSelector } from 'react-redux';
+// import { useNavigate } from 'react-router-dom';
+// import { useLogoutMutation } from '../slices/usersApiSlice';
+// import { logout } from '../slices/authSlice';
 import SearchBox from './SearchBox';
-import logo from '../assets/ManaKiranaLogoWithName.png';
-import { resetCart } from '../slices/cartSlice';
+import logo from '../assets/ManaKiranaLogoWithName.gif';
+// import { resetCart } from '../slices/cartSlice';
 import LoginScreen from './LoginScreen'; // Import the LoginScreen component
 import Account from './Account'; // Import the Account component
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [logoutApiCall] = useLogoutMutation();
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const [logoutApiCall] = useLogoutMutation();
   const navbarRef = useRef(null);
   const userIconRef = useRef(null); // Ref for the FaUserCircle icon
   const loginFormRef = useRef(null); // Ref for the login form
@@ -204,16 +204,16 @@ const Header = () => {
     });
   }, []);
 
-  const logoutHandler = async () => {
-    try {
-      await logoutApiCall().unwrap();
-      dispatch(logout());
-      dispatch(resetCart());
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const logoutHandler = async () => {
+  //   try {
+  //     await logoutApiCall().unwrap();
+  //     dispatch(logout());
+  //     dispatch(resetCart());
+  //     navigate('/');
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const toggleLoginForm = () => {
     setShowLoginForm((prev) => !prev);
@@ -246,10 +246,10 @@ const Header = () => {
 
   return (
     <header className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <nav className="container mx-auto flex items-center justify-between p-2 lg:p-4" ref={navbarRef}>
+      <nav className="container mx-auto flex items-center justify-between p-2 lg:p-1" ref={navbarRef}>
         <div className="flex items-center space-x-2 w-full">
           <Link to="/" className="flex-shrink-0 relative">
-            <img src={logo} alt="ManaKirana logo" className="w-24 h-auto sm:w-20 lg:w-24" />
+            <img src={logo} alt="ManaKirana logo" className="w-24 h-20 sm:w-20 lg:w-24" />
           </Link>
 
           <div className="flex-grow">
@@ -272,15 +272,15 @@ const Header = () => {
                 {showAccountForm && (
                   <div
                     ref={accountFormRef} // Attach ref to the account form
-                    className="absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+                    className="absolute right-0  w-96 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
                   >
                     <Account onClose={() => setShowAccountForm(false)} />
-                    <button
+                    {/* <button
                       onClick={logoutHandler}
                       className="w-full mt-2 text-sm text-red-600 hover:bg-gray-100 rounded-lg py-1"
                     >
                       Logout
-                    </button>
+                    </button> */}
                   </div>
                 )}
               </div>
@@ -296,7 +296,7 @@ const Header = () => {
                 {showLoginForm && (
                   <div
                     ref={loginFormRef} // Attach ref to the login form
-                    className="absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+                    className="absolute right-0 w-96 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
                   >
                     <LoginScreen onClose={() => setShowLoginForm(false)} />
                   </div>

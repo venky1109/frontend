@@ -1,24 +1,43 @@
-import { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useGetDeliveryAddressQuery } from '../slices/usersApiSlice'; // Assuming this is the correct import
 import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { saveShippingAddress } from '../slices/cartSlice';
 
 const ShippingScreen = () => {
-  const cart = useSelector((state) => state.cart);
-  const { shippingAddress } = cart;
-
-  const [address, setAddress] = useState(shippingAddress.address || '');
-  const [city, setCity] = useState(shippingAddress.city || '');
-  const [postalCode, setPostalCode] = useState(
-    shippingAddress.postalCode || ''
-  );
-  const [country, setCountry] = useState(shippingAddress.country || '');
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+
+  const user = useSelector((state) => state.auth.userInfo);
+// console.log('User Info:', user); // This should print your user info object
+  const userId = user?._id; // Safely accessing the user ID
+  // console.log(user?._id)
+ 
+
+  const { data: deliveryAddress, isLoading, isError } = useGetDeliveryAddressQuery(userId, {
+    skip: !userId, // Skip the query if userId is not available
+  });
+
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [country, setCountry] = useState(''); // Assuming country needs to be set manually
+
+  useEffect(() => {
+    if (deliveryAddress) {
+      console.log('Updating address fields with:', deliveryAddress);
+      setAddress(deliveryAddress.deliveryAddress.street || '');
+      setCity(deliveryAddress.deliveryAddress.city || '');
+      setPostalCode(deliveryAddress.deliveryAddress.postalCode || '');
+      setCountry('India'); // Assuming the country is India
+    }
+  }, [deliveryAddress]);
+
+
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -26,60 +45,88 @@ const ShippingScreen = () => {
     navigate('/payment');
   };
 
+  if (!userId) {
+    return <div>Error: User ID is not available.</div>;
+  }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading address</div>;
+
   return (
-    <FormContainer>
-      <CheckoutSteps step1 step2 />
-      <h1>Shipping</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className='my-2' controlId='address'>
-          <Form.Label>Address</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Enter address'
-            value={address}
-            required
-            onChange={(e) => setAddress(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+    <div className="mt-20">
+      <FormContainer>
+        <CheckoutSteps step1 step2 />
+        <h1 className="text-2xl font-semibold mb-6">Shipping</h1>
+        <form onSubmit={submitHandler}>
+          <div className="mb-4">
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+              Address
+            </label>
+            <input
+              type="text"
+              id="address"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter address"
+              value={address}
+              required
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
 
-        <Form.Group className='my-2' controlId='city'>
-          <Form.Label>City</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Enter city'
-            value={city}
-            required
-            onChange={(e) => setCity(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <div className="mb-4">
+            <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+              City
+            </label>
+            <input
+              type="text"
+              id="city"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter city"
+              value={city}
+              required
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </div>
 
-        <Form.Group className='my-2' controlId='postalCode'>
-          <Form.Label>Postal Code</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Enter postal code'
-            value={postalCode}
-            required
-            onChange={(e) => setPostalCode(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <div className="mb-4">
+            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">
+              Postal Code
+            </label>
+            <input
+              type="text"
+              id="postalCode"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter postal code"
+              value={postalCode}
+              required
+              onChange={(e) => setPostalCode(e.target.value)}
+            />
+          </div>
 
-        <Form.Group className='my-2' controlId='country'>
-          <Form.Label>Country</Form.Label>
-          <Form.Control
-            type='text'
-            placeholder='Enter country'
-            value={country}
-            required
-            onChange={(e) => setCountry(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <div className="mb-4">
+            <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+              Country
+            </label>
+            <input
+              type="text"
+              id="country"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter country"
+              value={country}
+              required
+              onChange={(e) => setCountry(e.target.value)}
+            />
+          </div>
 
-        <Button type='submit' variant='primary'>
-          Continue
-        </Button>
-      </Form>
-    </FormContainer>
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-geen-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Continue
+          </button>
+        </form>
+      </FormContainer>
+    </div>
   );
 };
 

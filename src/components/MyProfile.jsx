@@ -164,7 +164,7 @@ const MyProfile = () => {
   };
 
   return (
-    <div className="p-4 bg-white shadow-md rounded-lg max-w-lg mx-auto mt-8 overflow-y-auto max-h-screen">
+    <div className="p-4 mt-1 bg-white shadow-md rounded-lg max-w-lg mx-auto mt-8 ">
     <h2 className="text-xl font-semibold mb-4">User Profile</h2>
       <form onSubmit={submitHandler} className="space-y-4">
         <div className="space-y-1">
@@ -174,7 +174,7 @@ const MyProfile = () => {
           <input
             type="text"
             id="name"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
             placeholder="Enter name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -188,7 +188,7 @@ const MyProfile = () => {
           <input
             type="tel"
             id="tel"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full p-2 border border-gray-300 rounded"
             value={phoneNo}
             disabled // Make the phone number non-editable
           />
@@ -202,7 +202,7 @@ const MyProfile = () => {
             <input
               type="text"
               id="address"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
               placeholder="Enter your street address"
               value={deliveryAddress}
               onChange={(e) => setDeliveryAddress(e.target.value)}
@@ -216,7 +216,7 @@ const MyProfile = () => {
             <input
               type="text"
               id="city"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
               placeholder="Enter your city"
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -230,7 +230,7 @@ const MyProfile = () => {
             <input
               type="text"
               id="postalCode"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                 className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
               placeholder="Enter your postal code"
               value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}

@@ -1,12 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link ,useNavigate} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLogoutMutation } from '../slices/usersApiSlice';
-import { logout } from '../slices/authSlice';
-import { resetCart } from '../slices/cartSlice';
+import { useSelector } from 'react-redux';
+
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import LoginScreen from './LoginScreen'; // Import the LoginScreen component
@@ -25,9 +23,7 @@ export default function Footer() {
   const loginFormRef = useRef(null);
   const accountFormRef = useRef(null); // Ref for the account form
   const userIconRef = useRef(null);  // Ref for the FaUserCircle icon
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [logoutApiCall] = useLogoutMutation();
+
 
   const toggleLoginForm = () => {
     setShowLoginForm((prev) => !prev);
@@ -38,16 +34,7 @@ export default function Footer() {
     setShowAccountForm((prev) => !prev);
     setShowLoginForm(false); // Ensure login form is closed when profile form is opened
   };
-  const logoutHandler = async () => {
-    try {
-      await logoutApiCall().unwrap();
-      dispatch(logout());
-      dispatch(resetCart());
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -103,16 +90,11 @@ export default function Footer() {
               {showAccountForm && (
                 <div
                   ref={accountFormRef}
-                  className="fixed bottom-12 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4"
+                  className="fixed top-24 bottom-12 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 "
                   
                 >
                   <Account onClose={() => setShowAccountForm(false)} />
-                  <button
-                      onClick={logoutHandler}
-                      className="w-full mt-2 text-sm text-red-600 hover:bg-gray-100 rounded-lg py-1"
-                    >
-                      Logout
-                    </button>
+        
                 </div>
               )}
             </div>

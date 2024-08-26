@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import CheckoutSteps from '../components/CheckoutSteps';
@@ -27,17 +26,14 @@ const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const placeOrderHandler = async () => {
     try {
-      //  console.log(cart);
       const res = await createOrder({
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: 'Cash Or UPI',
         itemsPrice: cart.itemsPrice,
         shippingPrice: cart.shippingPrice,
-         //taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
       }).unwrap();
-      // console.log(res);
       dispatch(clearCartItems());
       navigate(`/order/${res._id}`);
     } catch (err) {
@@ -48,141 +44,81 @@ const PlaceOrderScreen = () => {
   return (
     <>
       <CheckoutSteps step1 step2 step3 step4 />
-      <Row>
-        <Col md={8}>
-          <ListGroup variant='flush'>
-            <ListGroup.Item>
-              <h2>Shipping</h2>
-              <p>
-                <strong>Address:</strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
-                {cart.shippingAddress.postalCode},{' '}
-                {cart.shippingAddress.country}
-              </p>
-            </ListGroup.Item>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2">
+          <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+            <h2 className="text-2xl font-semibold mb-4">Shipping</h2>
+            <p>
+              <strong>Address:</strong> {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
+              {cart.shippingAddress.postalCode}, {cart.shippingAddress.country}
+            </p>
+          </div>
 
-            <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <strong>Method: </strong>
-              Cash/UPI On Delivery
-            </ListGroup.Item>
+          <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+            <h2 className="text-2xl font-semibold mb-4">Payment Method</h2>
+            <strong>Method:</strong> Cash/UPI On Delivery
+          </div>
 
-            <ListGroup.Item>
-              <h2>Order Items</h2>
-              {cart.cartItems.length === 0 ? (
-                <Message>Your cart is empty</Message>
-              ) : (
-                <ListGroup variant='flush'>
-                  {cart.cartItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
-                      <Row>
-  <Col md={1}><strong>Image</strong></Col>
-  <Col md={3}><strong>Name</strong></Col>
-  <Col md={3}><strong>Brand</strong></Col>
-  <Col md={2}><strong>Weight</strong></Col>
-  <Col md={1}><strong>Qty</strong></Col>
-  <Col md={2}><strong>Price</strong></Col>
-</Row>
-                      <Row>
-                        <Col md={1}>
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fluid
-                            rounded
-                          />
-                        </Col>
-                        <Col md={3}>
-                          {/* <Link to={`/product/${item.product}`}> */}
-                            {item.name}
-                          {/* </Link> */}
-                        </Col>
-                        <Col md={3}>
-                          {/* <Link to={`/product/${item.product}`}> */}
-                            {item.brand}
-                          {/* </Link> */}
-                        </Col>
-                        <Col md={2}>
-                          {item.quantity}
-                        </Col>
-                        <Col md={1}>
-                          {item.qty}
-                        </Col>
-                       
-                        <Col md={2}>
-                          
-                          {(item.qty * (item.dprice * 100)) / 100}
-                        </Col>
-                       
-                      </Row>
-                    </ListGroup.Item>
-                    
-                  ))}
-                              {/* <ListGroup.Item>
-      <Button
-        type='button'
-        className='btn-block'
-        onClick={() => window.print()}
-      >
-        Print Invoice
-      </Button>
-    </ListGroup.Item> */}
-                </ListGroup>
-              )}
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={4}>
-          <Card>
-            <ListGroup variant='flush'>
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Items</Col>
-                  <Col> &#x20b9;{cart.itemsPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Shipping</Col>
-                  <Col> &#x20b9;{cart.shippingPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              {/* <ListGroup.Item>
-                <Row>
-                  <Col>Tax</Col>
-                  <Col> &#x20b9;{cart.taxPrice}</Col>
-                </Row>
-              </ListGroup.Item> */}
-              <ListGroup.Item>
-                <Row>
-                  <Col>Total</Col>
-                  <Col> &#x20b9;{cart.totalPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                {error && (
-                  <Message variant='danger'>{error.data.message}</Message>
-                )}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Button
-                  type='button'
-                  className='btn-block'
-                  disabled={cart.cartItems === 0}
-                  onClick={placeOrderHandler}
-                >
-                  Place Order
-                </Button>
-                {isLoading && <Loader />}
-              </ListGroup.Item>
-  
-            </ListGroup>
-          </Card>
-        </Col>
-      </Row>
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Order Items</h2>
+            {cart.cartItems.length === 0 ? (
+              <Message>Your cart is empty</Message>
+            ) : (
+              <div>
+                <div className="grid grid-cols-12 gap-4 font-semibold">
+                  <div className="col-span-1">Image</div>
+                  <div className="col-span-3">Name</div>
+                  <div className="col-span-3">Brand</div>
+                  <div className="col-span-2">Weight</div>
+                  <div className="col-span-1">Qty</div>
+                  <div className="col-span-2">Price</div>
+                </div>
+                {cart.cartItems.map((item, index) => (
+                  <div key={index} className="grid grid-cols-12 gap-4 items-center border-b pb-4 mt-4">
+                    <div className="col-span-1">
+                      <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                    </div>
+                    <div className="col-span-3">{item.name}</div>
+                    <div className="col-span-3">{item.brand}</div>
+                    <div className="col-span-2">{item.quantity}</div>
+                    <div className="col-span-1">{item.qty}</div>
+                    <div className="col-span-2">&#x20b9;{(item.qty * item.dprice).toFixed(2)}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span>Items</span>
+              <span>&#x20b9;{cart.itemsPrice}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Shipping</span>
+              <span>&#x20b9;{cart.shippingPrice}</span>
+            </div>
+            <div className="flex justify-between font-semibold text-lg">
+              <span>Total</span>
+              <span>&#x20b9;{cart.totalPrice}</span>
+            </div>
+            {error && (
+              <Message variant="danger">{error.data.message}</Message>
+            )}
+          </div>
+          <button
+            type="button"
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-green-700 mt-4"
+            disabled={cart.cartItems.length === 0}
+            onClick={placeOrderHandler}
+          >
+            Place Order
+          </button>
+          {isLoading && <Loader />}
+        </div>
+      </div>
     </>
   );
 };

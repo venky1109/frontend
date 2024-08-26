@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './assets/styles/bootstrap.custom.css';
+// import './assets/styles/bootstrap.custom.css';
 import './assets/styles/index.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
@@ -17,8 +17,9 @@ import AdminRoute from './components/AdminRoute';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
+// import CartScreen from './screens/FloatingCartIcon';
+ import LoginScreen from './components/LoginScreen';
+import RegisterScreen from './components/RegisterScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';

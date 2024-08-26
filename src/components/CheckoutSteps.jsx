@@ -1,50 +1,61 @@
 import React from 'react';
-import { Nav } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 
 const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
   return (
-    <Nav className='justify-content-center mb-4'>
-      <Nav.Item>
+    <div className="flex justify-center mb-8 mt-20">
+      <div className="mx-2">
         {step1 ? (
-          <LinkContainer to='/login'>
-            <Nav.Link>Sign In</Nav.Link>
-          </LinkContainer>
+          <Link
+            to="/login"
+            className="text-green-800 bg-green-100 hover:bg-green-500 hover:text-white px-3 py-2 rounded"
+          >
+            Sign In
+          </Link>
         ) : (
-          <Nav.Link disabled>Sign In</Nav.Link>
+          <span className="text-gray-500 bg-red-100 px-3 py-2 rounded">Sign In</span>
         )}
-      </Nav.Item>
+      </div>
 
-      <Nav.Item>
+      <div className="mx-2">
         {step2 ? (
-          <LinkContainer to='/shipping'>
-            <Nav.Link>Shipping</Nav.Link>
-          </LinkContainer>
+          <Link
+            to="/shipping"
+            className="text-green-800 bg-green-100  hover:bg-green-500 hover:text-white px-3 py-2 rounded"
+          >
+            Shipping
+          </Link>
         ) : (
-          <Nav.Link disabled>Shipping</Nav.Link>
+          <span className="text-gray-500 bg-red-100 px-3 py-2 rounded">Shipping</span>
         )}
-      </Nav.Item>
+      </div>
 
-      <Nav.Item>
+      <div className="mx-2">
         {step3 ? (
-          <LinkContainer to='/payment'>
-            <Nav.Link>Payment</Nav.Link>
-          </LinkContainer>
+          <Link
+            to="/payment"
+            className="text-green-800 bg-green-100  hover:bg-green-500 hover:text-white px-3 py-2 rounded"
+          >
+            Payment
+          </Link>
         ) : (
-          <Nav.Link disabled>Payment</Nav.Link>
+          <span className="text-gray-500 bg-red-100 px-3 py-2 rounded">Payment</span>
         )}
-      </Nav.Item>
+      </div>
 
-      <Nav.Item>
+      <div className="mx-2">
         {step4 ? (
-          <LinkContainer to='/placeorder'>
-            <Nav.Link>Place Order</Nav.Link>
-          </LinkContainer>
+          <Link
+            to="/placeorder"
+            className="text-green-800 bg-green-100  hover:bg-green-500 hover:text-white px-3 py-2 rounded"
+          >
+            Place Order
+          </Link>
         ) : (
-          <Nav.Link disabled>Place Order</Nav.Link>
+          <span className="text-gray-500 bg-red-100 px-3 py-2 rounded">Place Order</span>
         )}
-      </Nav.Item>
-    </Nav>
+      </div>
+    </div>
   );
 };
 

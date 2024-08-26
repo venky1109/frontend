@@ -63,7 +63,7 @@ const LoginScreen = ({ onClose }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-md mt-20 mx-auto p-4 bg-white shadow-md rounded-lg">
       {screen === 'login' && (
         <>
           <h1 className="mb-4 text-center text-green-700 text-lg md:text-xl bg-gray-100 p-2 rounded-lg shadow-sm">

@@ -1,50 +1,45 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../slices/cartSlice';
 import { Link } from 'react-router-dom';
 import { FaShoppingBag } from 'react-icons/fa';
-import Cart from './Cart';
 
 const Product = ({ product, keyword }) => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const [selectedQty, setSelectedQty] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const isDown = useRef(false); // Fix: Initialize isDown with useRef
+  const startX = useRef(0); // Fix: Initialize startX with useRef
+  const scrollLeft = useRef(0); // Fix: Initialize scrollLeft with useRef
 
+  const scrollContainersRef = useRef({});
+  const selectedButtonsRef = useRef({});
   const dispatch = useDispatch();
-  const scrollContainersRef = useRef([]);
 
-  const calculateMaxDiscount = useCallback(
-    (brand) => {
-      const brandDetails = product.details.filter((detail) => detail.brand === brand);
-      const maxDiscount = brandDetails.reduce((max, detail) => {
-        const detailMaxDiscount = detail.financials.reduce(
-          (max, financial) => Math.max(max, parseFloat(financial.Discount)),
-          0
-        );
-        return Math.max(max, detailMaxDiscount);
-      }, 0);
-      return maxDiscount;
-    },
-    [product.details]
-  );
+  const calculateMaxDiscount = useCallback((brand) => {
+    const brandDetails = product.details.filter((detail) => detail.brand === brand);
+    return brandDetails.reduce((max, detail) => {
+      return detail.financials.reduce(
+        (max, financial) => Math.max(max, parseFloat(financial.Discount)),
+        max
+      );
+    }, 0);
+  }, [product.details]);
 
-  const maxDiscountQuanty = useCallback(
-    (brand) => {
+  const maxDiscountQuanty = useMemo(() => {
+    return (brand) => {
       const brandDetails = product.details.filter((detail) => detail.brand === brand);
-      const maxDiscountqty = brandDetails.reduce((max, detail) => {
-        const detailMaxDiscount = detail.financials.reduce(
+      return brandDetails.reduce((max, detail) => {
+        return detail.financials.reduce(
           (max, financial) => Math.max(max, parseFloat(financial.quantity)),
-          0
+          max
         );
-        return Math.max(max, detailMaxDiscount);
       }, 0);
-      return maxDiscountqty;
-    },
-    [product.details]
-  );
+    };
+  }, [product.details]);
 
-  const getBrandWithHighestDiscount = useCallback(() => {
+  const getBrandWithHighestDiscount = useMemo(() => {
     let maxDiscount = 0;
     let brandWithMaxDiscount = '';
 
@@ -64,7 +59,7 @@ const Product = ({ product, keyword }) => {
     let newSelectedQuantity = '';
 
     if (keyword) {
-      const searchSelectedBrand = product.details.filter((detail) =>
+      const searchSelectedBrand = product.details.filter(detail =>
         detail.brand.toLowerCase().includes(keyword.toLowerCase())
       );
 
@@ -74,12 +69,12 @@ const Product = ({ product, keyword }) => {
         newSelectedBrand = brand;
         newSelectedQuantity = qty.toString();
       } else {
-        newSelectedBrand = getBrandWithHighestDiscount();
+        newSelectedBrand = getBrandWithHighestDiscount;
         const qty = maxDiscountQuanty(newSelectedBrand);
         newSelectedQuantity = qty.toString();
       }
     } else {
-      newSelectedBrand = getBrandWithHighestDiscount();
+      newSelectedBrand = getBrandWithHighestDiscount;
       const qty = maxDiscountQuanty(newSelectedBrand);
       newSelectedQuantity = qty.toString();
     }
@@ -88,14 +83,46 @@ const Product = ({ product, keyword }) => {
     setSelectedQuantity(newSelectedQuantity);
   }, [keyword, product.details, getBrandWithHighestDiscount, maxDiscountQuanty]);
 
-  const handleBrandChange = (event) => {
-    const newBrand = event.target.value;
-    setSelectedBrand(newBrand);
+  const scrollToSelectedButton = (detailIndex) => {
+    const button = selectedButtonsRef.current[detailIndex];
+    const scrollContainer = scrollContainersRef.current[detailIndex];
 
-    const qty = maxDiscountQuanty(newBrand);
+    if (button && scrollContainer) {
+      const buttonOffsetLeft = button.getBoundingClientRect().left;
+      const containerOffsetLeft = scrollContainer.getBoundingClientRect().left;
+      const containerScrollLeft = scrollContainer.scrollLeft;
+      const containerWidth = scrollContainer.clientWidth;
+      const buttonWidth = button.clientWidth;
+
+      const buttonRelativePosition = buttonOffsetLeft - containerOffsetLeft;
+
+      const isButtonFullyVisible =
+        buttonRelativePosition >= 0 &&
+        buttonRelativePosition + buttonWidth <= containerWidth;
+
+      if (!isButtonFullyVisible) {
+        const scrollPosition = containerScrollLeft + buttonRelativePosition;
+
+        scrollContainer.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth',
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    Object.keys(selectedButtonsRef.current).forEach(detailIndex => {
+      scrollToSelectedButton(detailIndex);
+    });
+  }, [selectedBrand]);
+
+  const handleBrandChange = (detailIndex, brand) => {
+    setSelectedBrand(brand);
+    const qty = maxDiscountQuanty(brand);
     setSelectedQuantity(qty.toString());
-
     setIsAddedToCart(false);
+    scrollToSelectedButton(detailIndex);
   };
 
   const handleQuantityChange = (event) => {
@@ -110,82 +137,16 @@ const Product = ({ product, keyword }) => {
     }
   };
 
-  const handleScroll = (scrollDirection, index) => {
-    const scrollContainer = scrollContainersRef.current[index];
-    if (scrollContainer) {
-      const containerWidth = scrollContainer.clientWidth;
-      const scrollPosition = scrollContainer.scrollLeft;
-
-      if (scrollDirection === 'left') {
-        scrollContainer.scrollTo({
-          left: Math.max(0, scrollPosition - containerWidth),
-          behavior: 'smooth',
-        });
-      } else if (scrollDirection === 'right') {
-        scrollContainer.scrollTo({
-          left: scrollPosition + containerWidth,
-          behavior: 'smooth',
-        });
-      }
-    }
-  };
-
-  const getFormattedQuantity = (quantity) => {
-    if (!isNaN(quantity)) {
-      if (quantity > 30) {
-        return `${quantity} grams`;
-      } else {
-        return `${quantity} Kg`;
-      }
-    }
-    return 'N/A';
-  };
-
-  const getPrice = (selectedQuantity, financials) => {
-    if (!financials || !Array.isArray(financials) || selectedQuantity == null) {
-      return 'N/A';
-    }
-
-    const selectedFinancial = financials.find((financial) =>
-      financial?.quantity?.toString() === selectedQuantity.toString()
-    );
-    const price = selectedFinancial ? selectedFinancial.price : null;
-    return typeof price === 'number' ? price : 'N/A';
-  };
-
-  const getDprice = (selectedQuantity, financials) => {
-    if (!financials || !Array.isArray(financials) || selectedQuantity == null) {
-      return 0;
-    }
-
-    const selectedFinancial = financials.find((financial) =>
-      financial?.quantity?.toString() === selectedQuantity.toString()
-    );
-
-    return selectedFinancial ? selectedFinancial.dprice : 0;
-  };
-
-  const getDiscount = (selectedQuantity, financials) => {
-    if (!financials || !Array.isArray(financials) || selectedQuantity == null) {
-      return 0;
-    }
-
-    const selectedFinancial = financials.find((financial) =>
-      financial?.quantity?.toString() === selectedQuantity.toString()
-    );
-
-    return selectedFinancial ? selectedFinancial.Discount : 0;
-  };
-
   const addToCartHandler = () => {
     setIsAddedToCart(true);
     setTimeout(() => {
       setIsAddedToCart(false);
     }, 5000);
-    const selectedDetail = product.details.find((detail) => detail.brand === selectedBrand);
-    const selectedFinancial = selectedDetail.financials.find(
-      (financial) => financial.quantity.toString() === selectedQuantity
-    );
+
+    const selectedDetail = product.details.find((detail) => detail.brand === selectedBrand) || {};
+    const selectedFinancial = selectedDetail.financials?.find(
+      (financial) => financial.quantity.toString() === selectedQuantity.toString()
+    ) || {};
 
     dispatch(addToCart({
       name: product.name,
@@ -196,106 +157,175 @@ const Product = ({ product, keyword }) => {
       price: selectedFinancial.price,
       dprice: selectedFinancial.dprice,
       Discount: selectedFinancial.Discount,
-      image: selectedDetail.images[0].image,
+      image: selectedDetail.images ? selectedDetail.images[0].image : '',
       qty: selectedQty,
       financialId: selectedFinancial._id,
       brandId: selectedDetail._id,
       countInStock: 10
     }));
-
-    showCartScreen();
   };
 
-  const showCartScreen = () => {
-    const cartScreen = document.querySelector('.cart-screen');
-    if (cartScreen) {
-      cartScreen.classList.add('show');
-    }
+  const handleMouseDown = (e, index) => {
+    isDown.current = true;
+    scrollContainersRef.current[index].classList.add('active');
+    startX.current = e.pageX - scrollContainersRef.current[index].offsetLeft;
+    scrollLeft.current = scrollContainersRef.current[index].scrollLeft;
   };
 
-  const hideCartScreen = () => {
-    const cartScreen = document.querySelector('.cart-screen');
-    if (cartScreen) {
-      cartScreen.classList.remove('show');
-    }
+  const handleMouseLeave = (index) => {
+    isDown.current = false;
+    scrollContainersRef.current[index].classList.remove('active');
+  };
+
+  const handleMouseUp = (index) => {
+    isDown.current = false;
+    scrollContainersRef.current[index].classList.remove('active');
+  };
+
+  const handleMouseMove = (e, index) => {
+    if (!isDown.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainersRef.current[index].offsetLeft;
+    const walk = (x - startX.current) * 2;
+    scrollContainersRef.current[index].scrollLeft = scrollLeft.current - walk;
   };
 
   return (
-    <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="flex flex-wrap gap-4 justify-center">
       {product.details.map((detail, detailIndex) => (
         (!selectedBrand || detail.brand === selectedBrand) && (
-          <div key={detailIndex} className="bg-white shadow-md rounded-lg overflow-hidden mb-6 transform transition-transform hover:scale-105">
+          <div
+            key={detailIndex}
+            className="border border-gray-300 rounded-lg p-4 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full"
+          >
             <Link to={`/product/${product._id}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
-              <div className="relative h-48 w-full overflow-hidden" ref={(el) => (scrollContainersRef.current[detailIndex] = el)}>
-                <div className="flex transition-all duration-500 ease-in-out">
-                  {detail.images && detail.images.map((image, imageIndex) => (
-                    <img key={imageIndex} src={image.image} className="object-cover w-full h-full" alt={`${product.name}`} />
-                  ))}
-                </div>
+              <div className="relative overflow-hidden rounded-t-lg h-48">
+                {detail.images && detail.images.map((image, imageIndex) => (
+                  <img key={imageIndex} src={image.image} className="w-20px h-30px object-cover transition-transform duration-250 ease-in-out transform hover:scale-110" alt={`${product.name}`} />
+                ))}
+                {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
+                  <div className="absolute top-2 left-2 bg-green-700 text-white px-2 py-1 rounded-lg">
+                    <p>{getDiscount(selectedQuantity, detail.financials)}% off</p>
+                  </div>
+                )}
               </div>
             </Link>
 
-            <div className="p-4">
-              <div className="mb-2">
-                <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-              </div>
+            <div className="mt-4 text-center flex-1 flex flex-col justify-between">
+              <p className="text-lg font-semibold text-maroon-600">{product.name}</p>
 
-              <div className="flex items-center mb-2">
-                <label className="mr-4 font-semibold text-gray-600" htmlFor={`brandDropdown-${detailIndex}`}>Brand</label>
-                <select id={`brandDropdown-${detailIndex}`} onChange={handleBrandChange} value={selectedBrand} className="block w-full p-2 border border-gray-300 rounded">
-                  {product.details.map((detail) => (
-                    <option key={detail.brand} value={detail.brand}>
-                      {detail.brand}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center mb-4">
-                <label className="mr-4 font-semibold text-gray-600" htmlFor={`weightDropdown-${detailIndex}`}>Weight</label>
-                <select id={`weightDropdown-${detailIndex}`} onChange={handleQuantityChange} value={selectedQuantity} className="block w-full p-2 border border-gray-300 rounded">
-                  {detail.financials.map((financial, index) => (
-                    <option key={index} value={financial.quantity}>
-                      {getFormattedQuantity(financial.quantity)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-                <div className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded px-2 py-1">
-                  {getDiscount(selectedQuantity, detail.financials)}% off
-                </div>
-              )}
-
-              <div className="flex items-center space-x-4 mt-4">
-                <div className="flex items-center border border-gray-300 rounded">
-                  <button className="px-2 py-1" onClick={() => handleQtyChange(selectedQty - 1)}>-</button>
-                  <span className="px-2">{selectedQty}</span>
-                  <button className="px-2 py-1" onClick={() => handleQtyChange(selectedQty + 1)}>+</button>
+              <div className="flex flex-col mt-1 space-y-1">
+                {/* Brand Scroll */}
+                <div className="flex items-center">
+                  <div
+                    id={`brandScroll-${detailIndex}`}
+                    ref={el => scrollContainersRef.current[detailIndex] = el}
+                    className="flex overflow-x-auto space-x-2 py-2 scrollbar-hide"
+                    onMouseDown={(e) => handleMouseDown(e, detailIndex)}
+                    onMouseLeave={() => handleMouseLeave(detailIndex)}
+                    onMouseUp={() => handleMouseUp(detailIndex)}
+                    onMouseMove={(e) => handleMouseMove(e, detailIndex)}
+                  >
+                    {product.details.map((brandDetail) => (
+                      <button
+                        key={brandDetail.brand}
+                        ref={el => {
+                          if (brandDetail.brand === selectedBrand) {
+                            selectedButtonsRef.current[detailIndex] = el;
+                          }
+                        }}
+                        onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
+                        className={`px-3 py-1 rounded-lg border ${
+                          selectedBrand === brandDetail.brand
+                            ? 'bg-green-500 text-white border-green-500'
+                            : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'
+                        } whitespace-nowrap`}
+                        aria-label={`Select brand ${brandDetail.brand}`}
+                      >
+                        {brandDetail.brand}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                <button
-                  className="flex items-center justify-center bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
-                  onClick={addToCartHandler}
-                >
-                  {isAddedToCart ? 'ITEM ADDED' : 'ADD TO CART'}
-                  {isAddedToCart && <FaShoppingBag className="ml-2" />}
-                </button>
-              </div>
-
-              {isAddedToCart && (
-                <div className="cart-screen absolute top-0 left-0 right-0 bottom-0 bg-white flex flex-col items-center justify-center">
-                  <button onClick={hideCartScreen} className="bg-green-700 text-white py-2 px-4 rounded mb-4">Close</button>
-                  <Cart />
+                <div className="flex items-center">
+                  <div className="flex overflow-x-auto space-x-1 py-2 scrollbar-hide hover:scrollbar-visible w-full">
+                    {detail.financials.map((financial, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleQuantityChange({ target: { value: financial.quantity } })}
+                        className={`px-1 py-1 rounded-lg border ${
+                          selectedQuantity.toString() === financial.quantity.toString()
+                            ? 'bg-green-500 text-white border-green-500'
+                            : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'
+                        }`}
+                      >
+                        {getFormattedQuantity(financial.quantity)}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              )}
 
-              <div className="flex items-center justify-between mt-4">
-                <button className="text-gray-500 hover:text-gray-700" onClick={() => handleScroll('left', detailIndex)}>&lt;</button>
-                <button className="text-gray-500 hover:text-gray-700" onClick={() => handleScroll('right', detailIndex)}>&gt;</button>
+                {/* Price Display */}
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center text-xl font-semibold text-gray-900">
+                    {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
+                      <>
+                        <span className="line-through text-red-500">
+                          &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
+                        </span>
+                        <span className="ml-2 text-green-900">
+                          &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
+                        </span>
+                      </>
+                    ) : (
+                      <span>&#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Price for Multiple Packs */}
+                {selectedQuantity && selectedQty > 1 && (
+                  <div className="mt-2 text-lg font-medium text-gray-800">
+                    Total for {selectedQty} packs: 
+                    <span className="ml-2 text-green-600">
+                      &#x20b9;{(getPrice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+
               </div>
             </div>
+
+            {/* Quantity and Add to Cart */}
+            <div className="flex items-center justify-between mt-4 space-x-2">
+              <div className="flex items-center space-x-2">
+                <button 
+                  className="text-white px-3 py-1 bg-green-600 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
+                  onClick={() => handleQtyChange(selectedQty - 1)}
+                  aria-label="Decrease Quantity"
+                >
+                  -
+                </button>
+                <span className="text-lg font-semibold text-gray-800">{selectedQty}</span>
+                <button 
+                  className="text-white px-3 py-1 bg-green-600 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
+                  onClick={() => handleQtyChange(selectedQty + 1)}
+                  aria-label="Increase Quantity"
+                >
+                  +
+                </button>
+              </div>
+              
+              <button 
+                className={`flex-1 flex items-center justify-center bg-green-700 text-white py-2 rounded-lg ml-2 transition-transform transform hover:scale-105 active:scale-95 ${isAddedToCart ? 'bg-green-800' : 'bg-green-700'}`}
+                onClick={addToCartHandler}
+              >
+                {isAddedToCart ? 'ITEM ADDED' : 'ADD TO CART'}
+                {isAddedToCart && <FaShoppingBag className="ml-2" />}
+              </button>
+            </div>
+
           </div>
         )
       ))}
@@ -304,3 +334,32 @@ const Product = ({ product, keyword }) => {
 };
 
 export default Product;
+
+// Helper functions for price and discount calculations
+const getPrice = (selectedQuantity, financials) => {
+  const selectedFinancial = financials.find(
+    (financial) => financial.quantity.toString() === selectedQuantity.toString()
+  );
+  return selectedFinancial ? selectedFinancial.price : 0;
+};
+
+const getDprice = (selectedQuantity, financials) => {
+  const selectedFinancial = financials.find(
+    (financial) => financial.quantity.toString() === selectedQuantity.toString()
+  );
+  return selectedFinancial ? selectedFinancial.dprice : 0;
+};
+
+const getDiscount = (selectedQuantity, financials) => {
+  const selectedFinancial = financials.find(
+    (financial) => financial.quantity.toString() === selectedQuantity.toString()
+  );
+  return selectedFinancial ? selectedFinancial.Discount : 0;
+};
+
+const getFormattedQuantity = (quantity) => {
+  if (!isNaN(quantity)) {
+    return quantity > 30 ? `${quantity} grams` : `${quantity} Kg`;
+  }
+  return 'N/A';
+};

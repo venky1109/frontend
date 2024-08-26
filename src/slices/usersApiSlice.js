@@ -79,8 +79,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['User'],
     }),
     getDeliveryAddress: builder.query({
-      query: (userId) => ({
-        url: `${USERS_URL}/${userId}/address`,
+      query: () => ({
+        url: `${USERS_URL}/address`, // No need to include userId in the URL
       }),
       providesTags: ['User'],
     }),

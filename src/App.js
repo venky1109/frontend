@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Container } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingCartIcon from './components/FloatingCartIcon';
+
 import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,19 +23,22 @@ const App = () => {
     }
   }, [dispatch]);
 
-
   return (
-    <div style={{ paddingTop: '100px',marginRight: '1rem',marginLeft: '0.5rem'}}>
-      <ToastContainer />
-      <Header />
-      <main className='py-4'>
-        <Container>
-          <Outlet />
-        </Container>
-      </main>
-      <FloatingCartIcon /> 
-      <Footer />
+<div className="min-h-screen flex flex-col">
+  <ToastContainer />
+  <Header />
+
+  <main className="flex-grow py-4">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <Outlet />
     </div>
+  </main>
+
+  <FloatingCartIcon />
+  
+  <Footer className="mt-auto" />
+</div>
+
   );
 };
 
