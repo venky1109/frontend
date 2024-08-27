@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import PrintableOrderDetails from '../components/PrintableOrderDetails';
 import Loader from '../components/Loader';
 import Message from '../components/Message';

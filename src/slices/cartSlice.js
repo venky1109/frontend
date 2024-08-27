@@ -10,22 +10,30 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      // NOTE: we don't need user, rating, numReviews or reviews
-      // in the cart
       const { user, rating, numReviews, reviews, ...item } = action.payload;
-
-      const existItem = state.cartItems.find((x) => x.productId === item.productId  &&  x.brand === item.brand &&
-      x.quantity === item.quantity );
-
+    
+      const existItem = state.cartItems.find(
+        (x) =>
+          x.productId === item.productId &&
+          x.brand === item.brand &&
+          x.quantity === item.quantity
+      );
+    
       if (existItem) {
+        // If the item exists, update the quantity by adding only 1 to the existing qty
         state.cartItems = state.cartItems.map((x) =>
-          x.productId === existItem.productId ? item : x
+          x.productId === existItem.productId &&
+          x.brand === existItem.brand &&
+          x.quantity === existItem.quantity
+            ? { ...existItem, qty: existItem.qty + 1 }
+            : x
         );
       } else {
-        state.cartItems = [...state.cartItems, item];
+        // If the item does not exist, add it to the cart with the initial qty of 1
+        state.cartItems = [...state.cartItems, { ...item, qty: 1 }];
       }
-
-      return updateCart(state, item);
+    
+      return updateCart(state, item); // Assuming updateCart recalculates totals or other necessary state
     },
     // removeFromCart: (state, action) => {
     //   console.log(action.payload);

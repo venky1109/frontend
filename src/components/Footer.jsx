@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link} from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
@@ -13,7 +13,7 @@ import Account from './Account'; // Import the Account component
 
 export default function Footer() {
   const { userInfo } = useSelector((state) => state.auth);
-  const { cartItems } = useSelector((state) => state.cart);
+  // const { cartItems } = useSelector((state) => state.cart);
   const currentYear = new Date().getFullYear();
 
   // State to manage the visibility of the login and account forms
@@ -68,14 +68,14 @@ export default function Footer() {
             <FontAwesomeIcon icon={faHome} className="h-7 w-7 text-green-900" />
           </Link>
 
-          <Link to="/cart" className="flex flex-col items-center relative">
+          {/* <Link to="/cart" className="flex flex-col items-center relative">
             <FontAwesomeIcon icon={faShoppingCart} className="h-7 w-7 text-green-900" />
             {cartItems.length > 0 && (
               <span className="absolute top-0 right-0 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
                 {cartItems.length}
               </span>
             )}
-          </Link>
+          </Link> */}
 
           {/* User Account Icon */}
           {userInfo ? (
