@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../slices/cartSlice';
 import { Link } from 'react-router-dom';
-import { FaShoppingBag } from 'react-icons/fa';
+// import { FaShoppingBag } from 'react-icons/fa';
+import { FaCartPlus } from "react-icons/fa6";
 import FloatingCartIcon from './FloatingCartIcon'; 
 
 const Product = ({ product, keyword }) => {
@@ -288,8 +289,8 @@ const Product = ({ product, keyword }) => {
                   {/* Price for Multiple Packs */}
                   {selectedQuantity && selectedQty > 1 && (
                     <div className="text-sm font-medium text-gray-800">
-                      Total for {selectedQty} packs:{' '}
-                      <span className="ml-1 text-green-600">
+                      {selectedQty}xpacks{' '}
+                      <span className="ml-1 text-green-900">
                         &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
                       </span>
                     </div>
@@ -299,7 +300,7 @@ const Product = ({ product, keyword }) => {
                 {/* Cart and Quantity Controls */}
                 <div className="flex items-center space-x-2">
                   {showQuantityControls ? (
-                    <div className="flex flex-col  bg-green-600 items-center space-y-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
+                    <div className="flex flex-col  bg-green-900 items-center space-y-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
                       <button
                         className="text-white px-2 py-0.5 "
                         onClick={() => handleQtyChange(selectedQty + 1)}
@@ -322,7 +323,8 @@ const Product = ({ product, keyword }) => {
                       onClick={() => addToCartHandler(detailIndex)} 
                       aria-label="Add Product to Cart"
                     >
-                      <FaShoppingBag className="w-8 h-8 text-gray-700" />
+                      {/* <FaShoppingBag className="w-8 h-8 text-gray-700" /> */}
+                      <FaCartPlus  className="w-8 h-8 text-green-900" /> 
                     </button>
                   )}
                 </div>
