@@ -44,7 +44,7 @@ const PlaceOrderScreen = () => {
   return (
     <>
       <CheckoutSteps step1 step2 step3 step4 />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
         <div className="md:col-span-2">
           <div className="bg-white p-4 rounded-lg shadow-md mb-4">
             <h2 className="text-2xl font-semibold mb-4">Shipping</h2>

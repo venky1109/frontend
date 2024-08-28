@@ -1,3 +1,4 @@
+import { useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash } from 'react-icons/fa';
@@ -7,9 +8,15 @@ import { addToCart, removeFromCart } from '../slices/cartSlice';
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useEffect(() => {
+    // Scroll to the top of the page when the component is mounted
+    window.scrollTo(0, 0);
+  }, []);
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+
+
 
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
@@ -30,7 +37,7 @@ const CartScreen = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row mt-20">
+    <div className="flex flex-col md:flex-row mt-20 mb-20">
       <div className="md:w-2/3 p-4">
         <Link to="/" className="text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block">
           Go Back

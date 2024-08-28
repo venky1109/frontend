@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FaShoppingBag } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useSelector } from 'react-redux';
 
 const FloatingCartIcon = React.forwardRef((props, ref) => {
   const { cartItems } = useSelector((state) => state.cart);
   const [isFooterVisible, setFooterVisible] = useState(false);
+  const footerRef = useRef(null); // Use a ref for the footer
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Calculate total price
   const totalPrice = cartItems.reduce(
@@ -14,34 +16,39 @@ const FloatingCartIcon = React.forwardRef((props, ref) => {
   );
 
   useEffect(() => {
-    const footer = document.querySelector('footer'); // Assuming your footer element is a <footer> tag
+    const footerElement = footerRef.current; // Copy footerRef.current to a variable
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         setFooterVisible(entry.isIntersecting);
       },
-      { threshold: 0.1 } // Adjust the threshold if needed
+      { threshold: 0.1 } // Adjust the threshold as needed
     );
 
-    if (footer) {
-      observer.observe(footer);
+    if (footerElement) {
+      observer.observe(footerElement);
     }
 
     return () => {
-      if (footer) {
-        observer.unobserve(footer);
+      if (footerElement) {
+        observer.unobserve(footerElement); // Use the variable for cleanup
       }
     };
-  }, []);
+  }, [footerRef]);
+
+  // Handle click to navigate to the cart screen
+  const handleCartClick = () => {
+    navigate('/cart'); // Navigate to the cart screen in the same window
+  };
 
   return (
     <div
       className={`fixed z-50 ${
-        isFooterVisible ? 'bottom-24' : 'bottom-8'
-      } right-4 lg:inset-y-1/2 lg:right-4 lg:bottom-auto transition-all duration-300 ease-in-out`}
+        isFooterVisible ? 'bottom-24' : 'bottom-20'
+      } right-4 lg:inset-y-1/2 lg:right-4 lg:bottom-auto transition-all duration-300 ease-in-out `}
     >
-      <Link to="/cart" className="relative" ref={ref}>
-        <div className="flex items-center justify-center w-10 h-9 bg-yellow-600 text-white rounded-md shadow-sm hover:bg-yellow-800 transition duration-300 ease-in-out lg:w-14 lg:h-16">
+      <div className="relative" ref={ref} onClick={handleCartClick}>
+        <div className="flex items-center justify-center w-10 h-9  bg-yellow-600 text-white rounded-md shadow-sm hover:bg-yellow-800 transition duration-300 ease-in-out lg:w-14 lg:h-16 cursor-pointer">
           <FaShoppingBag className="text-xl lg:text-2xl" />
           {cartItems.length > 0 && (
             <>
@@ -49,12 +56,12 @@ const FloatingCartIcon = React.forwardRef((props, ref) => {
                 {cartItems.length}
               </span>
               <span className="absolute -bottom-5 bg-white text-green-600 text-xs font-semibold px-2 py-1 rounded-lg shadow-sm lg:text-sm">
-                ₹{totalPrice}
+                ₹{totalPrice.toFixed(2)}
               </span>
             </>
           )}
         </div>
-      </Link>
+      </div>
     </div>
   );
 });

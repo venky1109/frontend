@@ -1,53 +1,48 @@
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useGetDeliveryAddressQuery } from '../slices/usersApiSlice'; // Assuming this is the correct import
+import { useGetDeliveryAddressQuery } from '../slices/usersApiSlice';
 import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
-import { saveShippingAddress } from '../slices/cartSlice';
+import Account from '../components/Account'; // Import Account component
 
 const ShippingScreen = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
-
   const user = useSelector((state) => state.auth.userInfo);
-// console.log('User Info:', user); // This should print your user info object
-  const userId = user?._id; // Safely accessing the user ID
-  // console.log(user?._id)
- 
+  const userId = user?._id;
 
-  const { data: deliveryAddress, isLoading, isError } = useGetDeliveryAddressQuery(userId, {
-    skip: !userId, // Skip the query if userId is not available
+  // State to manage Account form visibility
+  const [showAccountForm, setShowAccountForm] = useState(false);
+
+  // Fetch the delivery address using React Query
+  const { data: deliveryAddress, isLoading, isError, refetch } = useGetDeliveryAddressQuery(userId, {
+    skip: !userId,
   });
-
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [country, setCountry] = useState(''); // Assuming country needs to be set manually
-
+  
   useEffect(() => {
-    if (deliveryAddress) {
-      console.log('Updating address fields with:', deliveryAddress);
-      setAddress(deliveryAddress.deliveryAddress.street || '');
-      setCity(deliveryAddress.deliveryAddress.city || '');
-      setPostalCode(deliveryAddress.deliveryAddress.postalCode || '');
-      setCountry('India'); // Assuming the country is India
+    if (!userId) {
+      navigate('/login');
     }
-  }, [deliveryAddress]);
+  }, [userId, navigate]);
 
+  // Toggle Account form visibility
+  const handleGoToAccount = () => {
+    setShowAccountForm((prev) => !prev);
+  };
 
+  // Close the Account form and refetch the delivery address
+  const handleAccountUpdate = () => {
+    setShowAccountForm(false); // Close the Account form
+    refetch(); // Refetch the address from the database after update
+  };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(saveShippingAddress({ address, city, postalCode, country }));
+  // Navigate to payment if there is a valid saved address
+  const handleContinueWithSavedAddress = () => {
     navigate('/payment');
   };
 
-  if (!userId) {
-    return <div>Error: User ID is not available.</div>;
-  }
+  // Check if the delivery address is valid
+  const hasValidAddress = deliveryAddress && deliveryAddress.deliveryAddress && deliveryAddress.deliveryAddress.street && deliveryAddress.deliveryAddress.city && deliveryAddress.deliveryAddress.postalCode;
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading address</div>;
@@ -57,74 +52,35 @@ const ShippingScreen = () => {
       <FormContainer>
         <CheckoutSteps step1 step2 />
         <h1 className="text-2xl font-semibold mb-6">Shipping</h1>
-        <form onSubmit={submitHandler}>
-          <div className="mb-4">
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
-            <input
-              type="text"
-              id="address"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter address"
-              value={address}
-              required
-              onChange={(e) => setAddress(e.target.value)}
-            />
+        {hasValidAddress ? (
+          <div className="border p-4 mb-4 rounded-md shadow-sm">
+            <h2 className="text-lg font-semibold mb-2">Saved Address</h2>
+            <p>{deliveryAddress.deliveryAddress.street}</p>
+            <p>{deliveryAddress.deliveryAddress.city}</p>
+            <p>{deliveryAddress.deliveryAddress.postalCode}</p>
+            <button
+              className="w-full mt-4 bg-green-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-green-700"
+              onClick={handleContinueWithSavedAddress}
+            >
+              Continue with Saved Address
+            </button>
           </div>
-
-          <div className="mb-4">
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-              City
-            </label>
-            <input
-              type="text"
-              id="city"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter city"
-              value={city}
-              required
-              onChange={(e) => setCity(e.target.value)}
-            />
+        ) : (
+          <div className="border p-4 mb-4 rounded-md shadow-sm">
+            <p className="text-red-600">Enter address in account to complete order</p>
+            <button
+              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              onClick={handleGoToAccount}
+            >
+              Go to Account
+            </button>
           </div>
-
-          <div className="mb-4">
-            <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">
-              Postal Code
-            </label>
-            <input
-              type="text"
-              id="postalCode"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter postal code"
-              value={postalCode}
-              required
-              onChange={(e) => setPostalCode(e.target.value)}
-            />
+        )}
+        {showAccountForm && (
+          <div className="mt-4">
+            <Account onClose={handleAccountUpdate} /> {/* Pass handleAccountUpdate as the onClose callback */}
           </div>
-
-          <div className="mb-4">
-            <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-              Country
-            </label>
-            <input
-              type="text"
-              id="country"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter country"
-              value={country}
-              required
-              onChange={(e) => setCountry(e.target.value)}
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-geen-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Continue
-          </button>
-        </form>
+        )}
       </FormContainer>
     </div>
   );

@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import axios from 'axios';
 import MapComponent from './MapComponent'; // Make sure to adjust the import path
 
-const MyProfile = () => {
+const MyProfile = ({ onProfileUpdate }) => {  // Accept onProfileUpdate prop
   const [name, setName] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
@@ -138,21 +138,24 @@ const MyProfile = () => {
         name,
         phoneNo,
         deliveryAddress: {
-            street: deliveryAddress,
-            city: city,
-            postalCode: postalCode,
-          },
-          location: {
-            latitude: latitude,
-            longitude: longitude,
-          },
-          password,
+          street: deliveryAddress,
+          city: city,
+          postalCode: postalCode,
+        },
+        location: {
+          latitude: latitude,
+          longitude: longitude,
+        },
+        password,
       };
 
       try {
         const res = await updateProfile(payload).unwrap();
         dispatch(setCredentials({ ...res }));
         toast.success('Profile updated successfully');
+
+        // After successful update, trigger the onProfileUpdate callback
+        onProfileUpdate();  // Close the Account component and refresh the ShippingScreen
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -165,7 +168,7 @@ const MyProfile = () => {
 
   return (
     <div className="p-4 mt-1 bg-white shadow-md rounded-lg max-w-lg mx-auto mt-8 ">
-    <h2 className="text-xl font-semibold mb-4">User Profile</h2>
+      <h2 className="text-xl font-semibold mb-4">User Profile</h2>
       <form onSubmit={submitHandler} className="space-y-4">
         <div className="space-y-1">
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -202,7 +205,7 @@ const MyProfile = () => {
             <input
               type="text"
               id="address"
-                className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
               placeholder="Enter your street address"
               value={deliveryAddress}
               onChange={(e) => setDeliveryAddress(e.target.value)}
@@ -216,7 +219,7 @@ const MyProfile = () => {
             <input
               type="text"
               id="city"
-                className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
               placeholder="Enter your city"
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -230,7 +233,7 @@ const MyProfile = () => {
             <input
               type="text"
               id="postalCode"
-                 className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
+              className="w-full p-2 border border-gray-400 rounded focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700"
               placeholder="Enter your postal code"
               value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}

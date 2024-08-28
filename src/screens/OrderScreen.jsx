@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useSelector } from 'react-redux';
 // import { toast } from 'react-toastify';
 import PrintableOrderDetails from '../components/PrintableOrderDetails';
@@ -12,6 +12,7 @@ import {
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
+  const navigate = useNavigate(); // Initialize navigate
   const { userInfo } = useSelector((state) => state.auth);
   const {
     data: order,
@@ -44,14 +45,18 @@ const OrderScreen = () => {
     refetch();
   };
 
+  const handleContinueShopping = () => {
+    navigate('/'); // Navigate to home page
+  };
+
   return isLoading ? (
     <Loader />
   ) : error ? (
     <Message variant='danger'>{error.data.message}</Message>
   ) : (
     <>
-      <h1 className="text-2xl font-semibold mb-4 mt-20">Order {order._id}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <h1 className="text-2xl font-semibold  mt-20">Order {order._id}</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
         <div className="md:col-span-2">
           <div className="bg-white p-4 rounded shadow mb-4">
             <h2 className="text-xl font-semibold">Shipping</h2>
@@ -125,20 +130,17 @@ const OrderScreen = () => {
               <span>Total</span>
               <span>&#x20b9;{order.totalPrice}</span>
             </div>
-            {userInfo && userInfo.isAdmin && (
-              <button
-                onClick={printOrderDetails}
-                className="bg-blue-500 text-white py-2 px-4 rounded mt-4 w-full hover:bg-blue-600"
-              >
-                Print Order Details
-              </button>
-            )}
-            <div ref={printableContentRef} style={{ display: 'none' }}>
-              <PrintableOrderDetails order={order} />
-            </div>
           </div>
 
-          {loadingDeliver && <Loader />}
+          {/* Continue Shopping Button */}
+          <button
+            onClick={handleContinueShopping}
+            className="bg-green-800 text-white py-2 px-4 rounded mt-4 w-full hover:bg-green-600"
+          >
+            Continue Shopping
+          </button>
+
+          {/* {loadingDeliver && <Loader />}
 
           {userInfo && userInfo.isAdmin && !order.isDelivered && (
             <button
@@ -148,7 +150,7 @@ const OrderScreen = () => {
             >
               Mark As Delivered
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </>
