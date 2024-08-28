@@ -93,8 +93,8 @@ const HomeScreen = () => {
         <div>
           <Meta />
           {categories.map((category, index) => (
-            <div key={category} className="mt-4">
-              <h3 className="text-xl font-semibold">{category}</h3>
+            <div key={category} className="mt-4  bg-gray-100 p-8 rounded-md ">
+              <p className="text-xl font-serif  pb-5 ">{category}</p>
               <div className="relative flex items-center">
                 {/* <button 
                   className="absolute left-0 bg-green-500 text-white px-2 py-1 rounded-full focus:outline-none"

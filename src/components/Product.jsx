@@ -193,7 +193,7 @@ const Product = ({ product, keyword }) => {
       {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
         <div
           key={detailIndex}
-          className="border border-green-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
+          className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
         >
           <Link
             to={`/product/${product._id}`}
