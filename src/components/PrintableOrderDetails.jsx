@@ -57,7 +57,7 @@ const PrintableOrderDetails = ({ order }) => {
             <tr key={index} className="border-b">
               <td className="p-2 border">{item.name}</td>
               <td className="p-2 border">{item.brand}</td>
-              <td className="p-2 border">{item.quantity > 30 ? `${item.quantity} grams` : `${item.quantity} kg`}</td>
+              <td className="p-2 border">{item.quantity}{item.units}</td>
               <td className="p-2 border">{item.qty}</td>
               <td className="p-2 border">
                 {item.qty} x &#x20b9;{item.price}

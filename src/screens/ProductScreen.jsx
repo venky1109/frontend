@@ -49,19 +49,7 @@ const ProductScreen = () => {
     }, 0);
     return maxDiscountqty;
   };
-  const getFormattedQuantity = (quantity) => {
-    
-  
-    if (!isNaN(quantity)) {
-      if (quantity > 30) {
-        return `${quantity} grams`;
-        } else {
-        return `${quantity} Kg`;
-      }
-    }
-  
-    return 'N/A';
-  };
+
   const handleBrandChange = (event) => {
     const newBrand = event.target.value;
     setSelectedBrand(newBrand);
@@ -203,7 +191,7 @@ const ProductScreen = () => {
     >
       {detail.financials.map((financial, index) => (
         <option key={index} value={financial.quantity}>
-           {getFormattedQuantity(financial.quantity)}
+           {financial.quantity}{financial.units}
         </option>
       ))}
     </select>

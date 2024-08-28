@@ -30,11 +30,6 @@ const CartScreen = () => {
     navigate('/login?redirect=/shipping');
   };
 
-  const getFormattedQuantity = (quantity) => {
-    if (!isNaN(quantity)) {
-      return quantity > 30 ? `${quantity} grams` : `${quantity} Kg`;
-    }
-  };
 
   return (
     <div className="flex flex-col md:flex-row mt-20 mb-20">
@@ -58,7 +53,7 @@ const CartScreen = () => {
                   <p className="text-sm">
                     (<s>&#x20b9;{item.price}</s> <b>&#x20b9;{item.dprice}</b> per pack)
                   </p>
-                  <p className="text-sm">{getFormattedQuantity(item.quantity)}</p>
+                  <p className="text-sm">{item.quantity}{item.units}</p>
                 </div>
                 <div className="flex-1 text-right">
                   <p className="text-sm">

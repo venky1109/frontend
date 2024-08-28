@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useGetDeliveryAddressQuery } from '../slices/usersApiSlice';
 import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Account from '../components/Account'; // Import Account component
+import { saveShippingAddress } from '../slices/cartSlice';
 
 const ShippingScreen = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.userInfo);
   const userId = user?._id;
+  
+  const dispatch = useDispatch();
 
   // State to manage Account form visibility
   const [showAccountForm, setShowAccountForm] = useState(false);
@@ -38,6 +41,8 @@ const ShippingScreen = () => {
 
   // Navigate to payment if there is a valid saved address
   const handleContinueWithSavedAddress = () => {
+    // console.log("navigating to payment")
+    dispatch(saveShippingAddress(deliveryAddress.deliveryAddress));
     navigate('/payment');
   };
 
@@ -69,7 +74,7 @@ const ShippingScreen = () => {
           <div className="border p-4 mb-4 rounded-md shadow-sm">
             <p className="text-red-600">Enter address in account to complete order</p>
             <button
-              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              className="mt-4 bg-green-800 text-white py-2 px-4 rounded-md hover:bg-green-500"
               onClick={handleGoToAccount}
             >
               Go to Account

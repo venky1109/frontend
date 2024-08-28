@@ -156,6 +156,7 @@ const Product = ({ product, keyword }) => {
       category: product.category,
       brand: selectedBrand,
       quantity: selectedQuantity,
+      units:selectedFinancial.units,
       price: selectedFinancial ? selectedFinancial.price : 0,
       dprice: selectedFinancial ? selectedFinancial.dprice : 0,
       Discount: selectedFinancial ? selectedFinancial.Discount : 0,
@@ -261,7 +262,7 @@ const Product = ({ product, keyword }) => {
                           ? 'bg-gray-100 text-black border-gray-500'
                           : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} text-xs`}
                     >
-                      {getFormattedQuantity(financial.quantity)}
+                      {financial.quantity}{financial.units}
                     </button>
                   ))}
                 </div>
@@ -363,6 +364,4 @@ const getDiscount = (selectedQuantity, financials) => {
   return selectedFinancial ? selectedFinancial.Discount : 0;
 };
 
-const getFormattedQuantity = (quantity) => {
-  return !isNaN(quantity) ? (quantity > 30 ? `${quantity} grams` : `${quantity} Kg`) : 'N/A';
-};
+

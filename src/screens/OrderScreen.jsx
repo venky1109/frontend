@@ -1,49 +1,47 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 // import { toast } from 'react-toastify';
-import PrintableOrderDetails from '../components/PrintableOrderDetails';
+// import PrintableOrderDetails from '../components/PrintableOrderDetails';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import {
-  useDeliverOrderMutation,
   useGetOrderDetailsQuery,
 } from '../slices/ordersApiSlice';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
   const navigate = useNavigate(); // Initialize navigate
-  const { userInfo } = useSelector((state) => state.auth);
+  // const { userInfo } = useSelector((state) => state.auth);
   const {
     data: order,
-    refetch,
     isLoading,
     error,
   } = useGetOrderDetailsQuery(orderId);
 
-  const [deliverOrder, { isLoading: loadingDeliver }] = useDeliverOrderMutation();
+  // const [deliverOrder, { isLoading: loadingDeliver }] = useDeliverOrderMutation();
 
-  const printableContentRef = useRef(null);
+  // const printableContentRef = useRef(null);
 
-  const printOrderDetails = () => {
-    const content = printableContentRef.current.innerHTML;
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>ManaKirana</title>
-        </head>
-        <body>${content}</body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-  };
+  // const printOrderDetails = () => {
+  //   const content = printableContentRef.current.innerHTML;
+  //   const printWindow = window.open('', '_blank');
+  //   printWindow.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>ManaKirana</title>
+  //       </head>
+  //       <body>${content}</body>
+  //     </html>
+  //   `);
+  //   printWindow.document.close();
+  //   printWindow.print();
+  // };
 
-  const deliverHandler = async () => {
-    await deliverOrder(orderId);
-    refetch();
-  };
+  // const deliverHandler = async () => {
+  //   await deliverOrder(orderId);
+  //   refetch();
+  // };
 
   const handleContinueShopping = () => {
     navigate('/'); // Navigate to home page
@@ -62,7 +60,7 @@ const OrderScreen = () => {
             <h2 className="text-xl font-semibold">Shipping</h2>
             <p><strong>Name: </strong>{order.user.name}</p>
             <p><strong>Phone Number: </strong><a href={`call to:${order.user.phoneNo}`}>{order.user.phoneNo}</a></p>
-            <p><strong>Address: </strong>{order.shippingAddress.address}, {order.shippingAddress.city} {order.shippingAddress.postalCode}, {order.shippingAddress.country}</p>
+            <p><strong>Address: </strong>{order.shippingAddress.street}, {order.shippingAddress.city} {order.shippingAddress.postalCode}</p>
             {order.isDelivered ? (
               <Message variant='success'>Delivered on {order.deliveredAt}</Message>
             ) : (
@@ -86,29 +84,51 @@ const OrderScreen = () => {
               <Message>Order is empty</Message>
             ) : (
               <div>
-                <div className="grid grid-cols-12 gap-4 font-semibold mb-4">
-                  <div className="col-span-1">Image</div>
-                  <div className="col-span-3">Name</div>
+                <div className="grid grid-cols-12 gap-4 mb-4">
+                  <div className="col-span-2">Image</div>
+                  <div className="col-span-2">Name</div>
                   <div className="col-span-3">Brand</div>
-                  <div className="col-span-2">Quantity</div>
+                  <div className="col-span-2">Wt</div>
                   <div className="col-span-1">Qty</div>
-                  <div className="col-span-2">Total Price</div>
+                  <div className="col-span-2"> Total</div>
                 </div>
                 {order.orderItems.map((item, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-4 items-center mb-4">
-                    <div className="col-span-1">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                    </div>
-                    <div className="col-span-3">{item.name}</div>
-                    <div className="col-span-3">{item.brand}</div>
-                    <div className="col-span-2">{item.quantity}</div>
-                    <div className="col-span-1">{item.qty}</div>
-                    <div className="col-span-2">&#x20b9;{item.price * item.qty}</div>
+                  <div key={index} className="text-sm grid grid-cols-12 gap-4 items-center mb-4">
+                  {/* Image */}
+                  <div className="col-span-2">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
                   </div>
+                
+                  {/* Name */}
+                  <div className="col-span-2 overflow-hidden whitespace-nowrap ">
+                    {item.name}
+                  </div>
+                
+                  {/* Brand */}
+                  <div className="col-span-3 overflow-hidden whitespace-nowrap ">
+                    {item.brand}
+                  </div>
+                
+                  {/* Quantity */}
+                  <div className="col-span-2 overflow-hidden whitespace-nowrap">
+                    {item.quantity}
+                    {item.units}
+                  </div>
+                
+                  {/* Quantity in Cart */}
+                  <div className="col-span-1">{item.qty}</div>
+                
+                  {/* Total Price */}
+                  <div className="col-span-2">
+                    &#x20b9;{(item.price * item.qty)}
+                  </div>
+                </div>
+                
+                  
                 ))}
               </div>
             )}

@@ -16,12 +16,19 @@ const PlaceOrderScreen = () => {
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
   useEffect(() => {
-    if (!cart.shippingAddress.address) {
+    // Ensure that shippingAddress is defined and contains necessary fields
+    if (
+      !cart.shippingAddress ||
+      !cart.shippingAddress.street ||  // Adjust these fields as per your state structure
+      !cart.shippingAddress.city ||
+      !cart.shippingAddress.postalCode
+    ) {
       navigate('/shipping');
     } else if (!cart.paymentMethod) {
       navigate('/payment');
     }
-  }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
+  }, [cart.paymentMethod, cart.shippingAddress, navigate]);  // Use `cart.shippingAddress` instead of `.address`
+  
 
   const dispatch = useDispatch();
   const placeOrderHandler = async () => {
@@ -65,27 +72,53 @@ const PlaceOrderScreen = () => {
               <Message>Your cart is empty</Message>
             ) : (
               <div>
-                <div className="grid grid-cols-12 gap-4 font-semibold">
-                  <div className="col-span-1">Image</div>
-                  <div className="col-span-3">Name</div>
-                  <div className="col-span-3">Brand</div>
-                  <div className="col-span-2">Weight</div>
-                  <div className="col-span-1">Qty</div>
-                  <div className="col-span-2">Price</div>
-                </div>
-                {cart.cartItems.map((item, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-4 items-center border-b pb-4 mt-4">
-                    <div className="col-span-1">
-                      <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
-                    </div>
-                    <div className="col-span-3">{item.name}</div>
-                    <div className="col-span-3">{item.brand}</div>
-                    <div className="col-span-2">{item.quantity}</div>
-                    <div className="col-span-1">{item.qty}</div>
-                    <div className="col-span-2">&#x20b9;{(item.qty * item.dprice).toFixed(2)}</div>
-                  </div>
-                ))}
+              {/* Header Row */}
+              <div className="grid grid-cols-12 gap-4 font-semibold text-sm md:text-base">
+                <div className="col-span-2 sm:col-span-1">Image</div>
+                <div className="col-span-4 sm:col-span-3">Name</div>
+                <div className="col-span-3 sm:col-span-3 hidden sm:block">Brand</div>
+                <div className="col-span-2 hidden sm:block">Weight</div>
+                <div className="col-span-1">Qty</div>
+                <div className="col-span-2 sm:col-span-2">Price</div>
               </div>
+            
+              {/* Items */}
+              {cart.cartItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-12 gap-2 sm:gap-4 items-center border-b pb-4 mt-4 text-xs md:text-sm"
+                >
+                  {/* Image */}
+                  <div className="col-span-2 sm:col-span-1">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                    />
+                  </div>
+            
+                  {/* Name */}
+                  <div className="col-span-4 sm:col-span-3">{item.name}</div>
+            
+                  {/* Brand */}
+                  <div className="col-span-3 hidden sm:block">{item.brand}</div>
+            
+                  {/* Weight */}
+                  <div className="col-span-2 hidden sm:block">
+                    {item.quantity} {item.units}
+                  </div>
+            
+                  {/* Quantity */}
+                  <div className="col-span-2 sm:col-span-1">{item.qty}</div>
+            
+                  {/* Price */}
+                  <div className="col-span-2 sm:col-span-2">
+                    &#x20b9;{(item.qty * item.dprice).toFixed(2)}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
             )}
           </div>
         </div>

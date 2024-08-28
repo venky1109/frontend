@@ -11,10 +11,17 @@ const PaymentScreen = () => {
   const { shippingAddress } = cart;
 
   useEffect(() => {
-    if (!shippingAddress.address) {
+    // Check if shippingAddress is defined and contains necessary fields
+    if (
+      !shippingAddress ||
+      !shippingAddress.street ||  // Adjust field names according to your state structure
+      !shippingAddress.city ||
+      !shippingAddress.postalCode
+    ) {
       navigate('/shipping');
     }
   }, [navigate, shippingAddress]);
+  
 
   const [paymentMethod, setPaymentMethod] = useState('PayPal');
 
@@ -28,6 +35,7 @@ const PaymentScreen = () => {
 
   return (
     <FormContainer>
+     
       <CheckoutSteps step1 step2 step3 />
       <h1 className="text-2xl font-semibold mb-6">Payment Method</h1>
       <form onSubmit={submitHandler}>
