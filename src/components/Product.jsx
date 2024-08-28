@@ -199,7 +199,7 @@ const Product = ({ product, keyword }) => {
             to={`/product/${product._id}`}
             state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
           >
-            <div className="relative overflow-hidden rounded-t-lg h-32">
+            <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
               {detail.images?.map((image, imageIndex) => (
                 <img
                   key={imageIndex}
@@ -241,7 +241,7 @@ const Product = ({ product, keyword }) => {
                       } }
                       onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
                       className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
-                          ? 'bg-green-100 text-black border-green-500'
+                          ? 'bg-gray-100 text-black border-gray-500'
                           : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
                       aria-label={`Select brand ${brandDetail.brand}`}
                     >
@@ -258,7 +258,7 @@ const Product = ({ product, keyword }) => {
                       key={index}
                       onClick={() => handleQuantityChange(financial.quantity.toString())}
                       className={`px-2 py-0.5 rounded-lg border ${selectedQuantity === financial.quantity.toString()
-                          ? 'bg-green-100 text-black border-green-500'
+                          ? 'bg-gray-100 text-black border-gray-500'
                           : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} text-xs`}
                     >
                       {getFormattedQuantity(financial.quantity)}
@@ -270,14 +270,14 @@ const Product = ({ product, keyword }) => {
               {/* Grouped Price, Cart, Quantity Controls, and Multiple Qty Price */}
               <div className="flex items-center justify-between mt-2 space-x-2">
                 {/* Price and Multiple Qty Price Group */}
-                <div className="flex flex-col">
+                <div className="flex flex-col ml-3">
                   <div className="text-sm text-gray-900">
                     {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
                       <>
-                        <span className="line-through text-red-400">
+                        <span className="line-through text-gray-400">
                           &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
                         </span>
-                        <span className="ml-1 bg-gray-100 font-semibold text-black-700">
+                        <span className=" bg-gray-100 font-semibold text-black-700">
                           &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
                         </span>
                       </>
@@ -288,9 +288,9 @@ const Product = ({ product, keyword }) => {
 
                   {/* Price for Multiple Packs */}
                   {selectedQuantity && selectedQty > 1 && (
-                    <div className="text-sm font-medium text-gray-800">
+                    <div className=" text-sm font-medium text-gray-800">
                       {selectedQty}xpacks{' '}
-                      <span className="ml-1 text-green-900">
+                      <span className=" text-green-900">
                         &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
                       </span>
                     </div>
@@ -300,31 +300,31 @@ const Product = ({ product, keyword }) => {
                 {/* Cart and Quantity Controls */}
                 <div className="flex items-center space-x-2">
                   {showQuantityControls ? (
-                    <div className="flex flex-col  bg-green-900 items-center space-y-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
+                    <div className="flex m-3 bg-green-700 items-center space-x-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
                       <button
                         className="text-white px-2 py-0.5 "
-                        onClick={() => handleQtyChange(selectedQty + 1)}
-                        aria-label="Increase Quantity"
-                      >
-                        +
-                      </button>
-                      <span className="text-sm text-white  font-semibold">{selectedQty}</span>
-                      <button
-                        className="text-white px-2 py-0.5  "
                         onClick={() => handleQtyChange(selectedQty - 1)}
                         aria-label="Decrease Quantity"
                       >
                         -
                       </button>
+                      <span className="text-sm text-white  font-semibold">{selectedQty}</span>
+                      <button
+                        className="text-white px-2 py-0.5  "
+                        onClick={() => handleQtyChange(selectedQty + 1)}
+                        aria-label="Increase Quantity"
+                      >
+                        +
+                      </button>
                     </div>
                   ) : (
                     <button
-                      className="ml-auto flex items-center justify-center bg-gray-200 p-2 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
+                      className="ml-auto flex items-center justify-center bg-gray-100 p-2 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
                       onClick={() => addToCartHandler(detailIndex)} 
                       aria-label="Add Product to Cart"
                     >
                       {/* <FaShoppingBag className="w-8 h-8 text-gray-700" /> */}
-                      <FaCartPlus  className="w-8 h-8 text-green-900" /> 
+                      <FaCartPlus  className="w-8 h-8 text-green-800" /> 
                     </button>
                   )}
                 </div>
