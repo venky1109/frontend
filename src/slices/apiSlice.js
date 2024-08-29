@@ -10,6 +10,7 @@ import { logout } from './authSlice'; // Import the logout action
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
+  // credentials: 'include',  // Include credentials in all requests
 });
 
 async function baseQueryWithAuth(args, api, extra) {
