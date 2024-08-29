@@ -34,6 +34,7 @@ import store from './store';
 import { Provider } from 'react-redux';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import firebase from 'firebase/compat/app'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 
 const firebaseConfig = {
@@ -96,5 +97,6 @@ root.render(
     </HelmetProvider>
   </React.StrictMode>
 );
-
+// Change unregister() to register() below.
+serviceWorkerRegistration.register();
 reportWebVitals();
