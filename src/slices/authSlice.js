@@ -14,11 +14,12 @@ const authSlice = createSlice({
       state.userInfo = action.payload;
       localStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
-    logout: (state, action) => {
+    logout: (state) => {
       state.userInfo = null;
-      // NOTE: here we need to also remove the cart from storage so the next
-      // logged in user doesn't inherit the previous users cart and shipping
-      localStorage.clear();
+      // Clear local storage to ensure no leftover data from the previous session
+      localStorage.removeItem('userInfo'); // Only remove user-specific info
+      localStorage.removeItem('cart'); // Remove cart information if stored
+      localStorage.removeItem('shippingAddress'); // Remove shipping address if stored
     },
   },
 });

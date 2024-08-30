@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { updateCart } from '../utils/cartUtils';
 
+// Initial cart state from local storage or default values
 const initialState = localStorage.getItem('cart')
   ? JSON.parse(localStorage.getItem('cart'))
   : { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
@@ -11,16 +12,17 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const { user, rating, numReviews, reviews, ...item } = action.payload;
-    
+
+      // Check if the item already exists in the cart
       const existItem = state.cartItems.find(
         (x) =>
           x.productId === item.productId &&
           x.brand === item.brand &&
           x.quantity === item.quantity
       );
-    
+
       if (existItem) {
-        // If the item exists, update the quantity by adding only 1 to the existing qty
+        // If the item exists, increment its quantity
         state.cartItems = state.cartItems.map((x) =>
           x.productId === existItem.productId &&
           x.brand === existItem.brand &&
@@ -29,33 +31,25 @@ const cartSlice = createSlice({
             : x
         );
       } else {
-        // If the item does not exist, add it to the cart with the initial qty of 1
+        // If the item does not exist, add it to the cart with an initial quantity of 1
         state.cartItems = [...state.cartItems, { ...item, qty: 1 }];
       }
-    
-      return updateCart(state, item); // Assuming updateCart recalculates totals or other necessary state
+
+      // Update the cart state
+      return updateCart(state, item);
     },
-    // removeFromCart: (state, action) => {
-    //   console.log(action.payload);
-    //   state.cartItems = state.cartItems.filter((x) => x.productId !== action.payload);
-    //   return updateCart(state);
-    // },
     removeFromCart: (state, action) => {
       const { productId, brand, quantity } = action.payload;
-      console.log(action.payload);
-      console.log('before removal from cart '+state.cartItems);
+      console.log(`Before removal: ${JSON.stringify(state.cartItems)}`);
       
-      // Filter out the items that match the provided productId, brand, and 
-      console.log(quantity);
-      state.cartItems.forEach(item => {
-        console.log(`Item: ${item.productId} - Brand: ${item.brand} - Quantity: ${item.quantity}`);
-      });
-      state.cartItems = state.cartItems.filter((item) => {
-return !(item.productId === productId && item.brand === brand && item.quantity===quantity);
-      });
-      console.log('after removal from cart '+state.cartItems);
+      // Remove the specific item from the cart based on productId, brand, and quantity
+      state.cartItems = state.cartItems.filter(
+        (item) => !(item.productId === productId && item.brand === brand && item.quantity === quantity)
+      );
       
-      // After filtering, update the cart state
+      console.log(`After removal: ${JSON.stringify(state.cartItems)}`);
+
+      // Update the cart state after removal
       return updateCart(state);
     },
     saveShippingAddress: (state, action) => {
@@ -66,13 +60,14 @@ return !(item.productId === productId && item.brand === brand && item.quantity==
       state.paymentMethod = action.payload;
       localStorage.setItem('cart', JSON.stringify(state));
     },
-    clearCartItems: (state, action) => {
+    clearCartItems: (state) => {
       state.cartItems = [];
       localStorage.setItem('cart', JSON.stringify(state));
     },
-    // NOTE: here we need to reset state for when a user logs out so the next
-    // user doesn't inherit the previous users cart and shipping
-    resetCart: (state) => (state = initialState),
+    resetCart: (state) => {
+      state = initialState; // Reset the cart state to initial values
+      localStorage.setItem('cart', JSON.stringify(state));
+    },
   },
 });
 

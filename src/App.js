@@ -18,6 +18,7 @@ const App = () => {
       const currentTime = new Date().getTime();
 
       if (currentTime > expirationTime) {
+        // console.log('logging out')
         dispatch(logout());
       }
     }
