@@ -26,11 +26,11 @@ const MyProfile = ({ onProfileUpdate }) => {  // Accept onProfileUpdate prop
   useEffect(() => {
     setName(userInfo.name);
     setPhoneNo(userInfo.phoneNo);
-    setDeliveryAddress(userInfo.deliveryAddress.street || '');
-    setCity(userInfo.deliveryAddress.city || '');
-    setPostalCode(userInfo.deliveryAddress.postalCode || '');
-    setLatitude(userInfo.location.latitude || null);
-    setLongitude(userInfo.location.longitude || null);
+    setDeliveryAddress(userInfo.deliveryAddress?.street || '');
+    setCity(userInfo.deliveryAddress?.city || '');
+    setPostalCode(userInfo.deliveryAddress?.postalCode || '');
+    setLatitude(userInfo.location?.latitude || null);
+    setLongitude(userInfo.location?.longitude || null);
   }, [userInfo]);
 
   const fetchGeolocation = async (latitude, longitude) => {
