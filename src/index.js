@@ -15,6 +15,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import HomeScreen from './screens/HomeScreen';
+import CategoryScreen from './screens/CategoryScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 // import CartScreen from './screens/FloatingCartIcon';
@@ -61,6 +62,7 @@ const router = createBrowserRouter(
       <Route path='/cart' element={<CartScreen />} />
       <Route path='/login' element={<LoginScreen />} />
       <Route path='/register' element={<RegisterScreen />} />
+      <Route path="/category/:categoryName" element={<CategoryScreen />} />
       {/* Registered users */}
       <Route path='' element={<PrivateRoute />}>
         <Route path='/shipping' element={<ShippingScreen />} />

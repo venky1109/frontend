@@ -7,6 +7,11 @@ import { logout } from './authSlice'; // Import the logout action
 const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
   async ({ url, method, data, params }) => {
+    // console.log('Request sent to:', baseUrl + url); // Log the URL being requested
+    // console.log('Request method:', method); // Log the request method
+    // console.log('Request data:', data); // Log the request payload
+    // console.log('Request params:', params); // Log any query parameters
+
     try {
       const result = await axios({
         url: baseUrl + url,
@@ -48,6 +53,6 @@ async function baseQueryWithAuth(args, api, extra) {
 export const apiSlice = createApi({
   reducerPath: 'api', // Optional: Define a custom reducer path for this API slice
   baseQuery: baseQueryWithAuth, // Use the customized baseQuery with authorization handling
-  tagTypes: ['Product', 'Order', 'User'], // Define tags for cache invalidation and refetching
+  tagTypes: ['Product', 'Order', 'User','Category'], // Define tags for cache invalidation and refetching
   endpoints: () => ({}), // No endpoints are defined here; they are defined in respective slices
 });

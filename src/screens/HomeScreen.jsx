@@ -1,126 +1,68 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useGetProductsQuery } from '../slices/productsApiSlice';
-import Product from '../components/Product';
+// src/screens/HomeScreen.js
+import React, { useEffect, useState } from 'react';
+import { useGetAllCategoriesQuery } from '../slices/categoryApiSlice';
+import CategoryCard from '../components/CategoryCard';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import Meta from '../components/Meta';
 import AdvertisingBanner from '../components/Advertise';
 import advertise from '../advertise';
+import homeConfig from '../HomeConfig.json'; // Import JSON configuration
 
 const HomeScreen = () => {
-  const { pageNumber, keyword } = useParams();
-  const adv = advertise.find(item => item.type === "BodyBanner");
-  // const containerRefs = useRef([]);
+  const adv = advertise.find((item) => item.type === 'BodyBanner');
   const [categories, setCategories] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const categoriesPerPage = 2;
 
-  const { data, isLoading, error } = useGetProductsQuery({
-    keyword,
-    pageNumber,
-  });
+  // Fetch all categories
+  const { data, isLoading, error } = useGetAllCategoriesQuery();
 
-  const getCategories = useCallback(() => {
-    if (!data || !data.products) return [];
-    return [...new Set(data.products.map(product => product.category))];
+  useEffect(() => {
+    if (data && data.categories) {
+      setCategories(data.categories);
+    }
   }, [data]);
 
-  const loadMoreCategories = useCallback(() => {
-    const allCategories = getCategories();
-    const newCategories = allCategories.slice(
-      (currentPage - 1) * categoriesPerPage,
-      currentPage * categoriesPerPage
-    );
-    setCategories(prevCategories => {
-      const combinedCategories = [...prevCategories, ...newCategories];
-      return [...new Set(combinedCategories)]; // Ensure no duplicate categories
-    });
-  }, [getCategories, currentPage, categoriesPerPage]);
+  // Function to find the matching image for each category
+  const getCategoryImage = (categoryName) => {
+    // Find the matching category customization
+    const categoryCustomization = homeConfig.sections
+      .find((section) => section.type === 'category')
+      ?.customization.categories.find(
+        (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+      );
 
-  useEffect(() => {
-    // Load initial categories
-    if (data && data.products) {
-      loadMoreCategories();
-    }
-
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScroll);
-
-    // Cleanup on component unmount
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [data, loadMoreCategories]);
-
-  useEffect(() => {
-    // Load more categories when the page number changes
-    if (currentPage > 1) {
-      loadMoreCategories();
-    }
-  }, [currentPage, loadMoreCategories]);
-
-  const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 50) {
-      // User has scrolled to the bottom, load more categories
-      setCurrentPage(prevPage => prevPage + 1);
-    }
+    // Return the image URL if found; otherwise, use a default image
+    return categoryCustomization ? categoryCustomization.image : 'https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2';
   };
-
-  // const handleScrollButton = (scrollOffset, index) => {
-  //   const container = containerRefs.current[index];
-  //   if (container) {
-  //     container.scrollLeft += scrollOffset;
-  //   }
-  // };
+  const categorySection = homeConfig.sections.find((section) => section.type === 'category');
+  const categoryTitle = categorySection ? categorySection.title : 'Categories';
 
   return (
     <>
-      {!keyword ? (
-       <div className="mt-20">
-       <AdvertisingBanner images={adv.images} height={adv.dimensions.height} width={adv.dimensions.width} />
-     </div>
-      ) : (
-        <Link to='/' className='btn btn-light mb-4'>
-          Go Back
-        </Link>
-      )}
+      <div className="mt-20">
+        <AdvertisingBanner
+          images={adv.images}
+          height={adv.dimensions.height}
+          width={adv.dimensions.width}
+        />
+      </div>
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>
-          {error?.data?.message || error.error}
-        </Message>
+        <Message variant="danger">{error?.data?.message || error.error}</Message>
       ) : (
-        <div>
-          <Meta />
-          {categories.map((category, index) => (
-            <div key={category} className="mt-4  bg-gray-100 p-8 rounded-md ">
-              <p className="text-xl font-serif  pb-5 ">{category}</p>
-              <div className="relative flex items-center">
-                {/* <button 
-                  className="absolute left-0 bg-green-500 text-white px-2 py-1 rounded-full focus:outline-none"
-                  onClick={() => handleScrollButton(-100, index)}
-                >
-                  &lt;
-                </button> */}
-                <div className="ml-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    {data.products
-      .filter((product) => product.category === category)
-      .map((product) => (
-        <Product key={product._id} product={product} keyword={keyword} />
-      ))}
-  </div>
-</div>
-
-                {/* <button 
-                  className="absolute right-0 bg-green-500 text-white px-2 py-1 rounded-full focus:outline-none"
-                  onClick={() => handleScrollButton(100, index)}
-                >
-                  &gt;
-                </button> */}
-              </div>
-            </div>
-          ))}
+        <div className="mt-4 mb-24">
+          <h2 className="text-3xl font-serif text-green-800 mb-4 semi-bold">
+            {categoryTitle}
+          </h2>
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-4">
+            {categories.map((category) => (
+              <CategoryCard
+                key={category}
+                name={category}
+                image={getCategoryImage(category)} // Dynamically set the image
+              />
+            ))}
+          </div>
         </div>
       )}
     </>

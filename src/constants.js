@@ -13,7 +13,7 @@ export const BASE_URL = 'https://mkbackend.onrender.com'; // If using proxy
 
 // export const BASE_URL =
 //   process.env.NODE_ENV === 'development'
-//     ? ''  // Local backend server in development
+//     ? 'http://localhost:5000'  // Local backend server in development
 //     : 'https://mkbackend.onrender.com';  // Replace with the correct backend URL for production
 
 export const PRODUCTS_URL = '/api/products';

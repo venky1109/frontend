@@ -13,6 +13,15 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ['Products'],
     }),
+    getProductsByCategory: builder.query({
+        query: (category) => ({
+          url: `/api/products/categories/${category}/products`,
+          method: 'GET', // Explicitly specify method for axios
+        }),
+      keepUnusedDataFor: 5, // Cache duration in seconds
+      providesTags: (result, error, category) => [{ type: 'Products', id: category }], // Provides specific tag for refetching
+    }),
+  
 
     // Query to get product details by ID
     getProductDetails: builder.query({
@@ -127,6 +136,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
 // Export hooks for the defined queries and mutations
 export const {
   useGetProductsQuery,
+  useGetProductsByCategoryQuery,
   useGetProductDetailsQuery,
   useCreateProductDetailMutation,
   useCreateFinancialDetailMutation,

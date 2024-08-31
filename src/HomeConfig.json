@@ -1,0 +1,60 @@
+{
+  "sections": [
+    {
+      "type": "banner",
+      "title": "Main Banner",
+      "sequence": 1,
+      "props": {
+        "type": "BodyBanner",
+        "images": ["path/to/banner1.jpg", "path/to/banner2.jpg"],
+        "dimensions": { "height": "300px", "width": "100%" }
+      },
+      "styles": "mt-20"
+    },
+    {
+      "type": "category",
+      "title": "Featured Categories",
+      "sequence": 2,
+      "styles": "mt-4 bg-gray-100 p-8 rounded-md",
+      "productsPerCategory": 5,
+      "customization": {
+        "categories": [
+          { "key": "baking_needs", "name": "Baking Needs", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "biscuits", "name": "Biscuits", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "chips_papads", "name": "Chips and Papads", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "chocolates", "name": "Chocolates", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "dental_care", "name": "Dental Care", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "dryfruits", "name": "Dry Fruits", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "flour", "name": "Flour", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "food_additives", "name": "Food Additives", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "food_grains", "name": "Food Grains", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "grooming", "name": "Grooming", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "hair_care", "name": "Hair Care", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "health_drink", "name": "Health Drink", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "oils_ghee", "name": "Household Oils and Ghee", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "hygiene", "name": "Hygiene", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "laundry", "name": "Laundry", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "masala", "name": "Masala", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "personal_hygiene", "name": "Personal Hygiene", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "pooja_needs", "name": "Pooja Needs", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "household", "name": "Regular Household", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2" },
+          { "key": "sauces", "name": "Sauces", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "semi_grains", "name": "Semi Grains", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "skin_care", "name": "Skin Care", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "spices", "name": "Spices", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" },
+          { "key": "utensils_cleaners", "name": "Utensils Cleaners", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f" }
+        ]
+      }
+    },
+    {
+      "type": "promotion",
+      "title": "Promotions",
+      "sequence": 3,
+      "styles": "mt-4 bg-blue-100 p-6 rounded-md",
+      "products": [
+        { "id": 1, "name": "Promo Product 1", "price": "$99", "image": "path/to/product1.jpg" },
+        { "id": 2, "name": "Promo Product 2", "price": "$199", "image": "path/to/product2.jpg" }
+      ]
+    }
+  ]
+}
