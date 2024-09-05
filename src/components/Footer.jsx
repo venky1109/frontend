@@ -4,7 +4,6 @@ import { FaUserCircle } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
-
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import LoginScreen from './LoginScreen'; // Import the LoginScreen component
@@ -117,21 +116,21 @@ export default function Footer() {
       </footer>
 
       {/* Desktop Footer */}
-      <footer className="hidden md:block bg-gray-800 text-white py-8">
+      <footer className="hidden md:block bg-green-800 text-white py-8">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between">
-            <div className="md:w-1/4 mb-6 md:mb-0">
+            <div className="md:w-6/12 mb-6 md:mb-0">
               <h6 className="text-lg font-semibold mb-2">About Us</h6>
               <p className="text-sm">
                 We are a team of aspirants with a mission to deliver fresh and finest products to your doorstep, ensuring timely and reliable service. With a diverse range of items over phone call, WhatsApp message, user-friendly online platform, and a commitment to customer satisfaction, we make grocery shopping a breeze.
               </p>
             </div>
-            <div className="md:w-1/4 mb-6 md:mb-0">
+            <div className="md:w-2/12 mb-6 md:mb-0">
               <h6 className="text-lg font-semibold mb-2">Contact Us</h6>
               <p className="text-sm">Email: customercare@manakirana.online</p>
               <p className="text-sm">Phone: 8121774325</p>
             </div>
-            <div className="md:w-1/4 mb-6 md:mb-0">
+            <div className="md:w-1/12 mb-6 md:mb-0">
               <h6 className="text-lg font-semibold mb-2">Quick Links</h6>
               <ul className="list-none space-y-1">
                 <li><Link to="/" className="text-sm hover:underline">Home</Link></li>
@@ -139,7 +138,7 @@ export default function Footer() {
                 <li><Link to="/cart" className="text-sm hover:underline">Cart</Link></li>
               </ul>
             </div>
-            <div className="md:w-1/4 mb-6 md:mb-0">
+            <div className="md:w-1/12 mb-6 md:mb-0 mr-8">
               <h6 className="text-lg font-semibold mb-2">Follow Us</h6>
               <div className="flex space-x-4">
                 <a href="https://www.facebook.com/profile.php?id=61557084347066" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-500">
@@ -157,7 +156,7 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <hr className="my-4 border-gray-700" />
+          <hr className="my-4 border-gray-400" />
           <p className="text-center text-sm">&copy; {currentYear} ManaKirana</p>
         </div>
       </footer>

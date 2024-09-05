@@ -46,15 +46,41 @@
         ]
       }
     },
-    {
+    { 
       "type": "promotion",
-      "title": "Promotions",
-      "sequence": 3,
-      "styles": "mt-4 bg-blue-100 p-6 rounded-md",
-      "products": [
-        { "id": 1, "name": "Promo Product 1", "price": "$99", "image": "path/to/product1.jpg" },
-        { "id": 2, "name": "Promo Product 2", "price": "$199", "image": "path/to/product2.jpg" }
-      ]
+      "title": "Special offers",
+      "description": "Get 50% off on all products.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
+      "sequence": 3
+     
+    },
+    { 
+      "type": "promotion",
+      "title": "Summer Sale",
+      "description": "Enjoy our summer sale with 30% off.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
+      "sequence": 4
+    },
+    { 
+      "type": "promotion",
+      "title": "Clearance Event",
+      "description": "Huge discounts on clearance items.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
+      "sequence": 5
+    },
+    { 
+      "type": "promotion",
+      "title": "Summer Sale",
+      "description": "Huge discounts on clearance items.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
+      "sequence": 6
+    },
+    { 
+      "type": "promotion",
+      "title": "Clearance Event",
+      "description": "Huge discounts on clearance items.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
+      "sequence": 7
     }
   ]
 }

@@ -277,7 +277,7 @@ const Product = ({ product, keyword }) => {
                       <>
                         <span className="line-through text-gray-400">
                           &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
-                        </span>
+                        </span><br />
                         <span className=" bg-gray-100 font-semibold text-black-700">
                           &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
                         </span>
