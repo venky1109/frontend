@@ -33,11 +33,11 @@ const CategoryScreen = () => {
       ) : error ? (
         <Message variant="danger">{error?.data?.message || error.error}</Message>
       ) : (
-        <div className='mb-24'>
+        <div className='mb-24 '>
           <h2 className="text-3xl font-serif text-green-800 mt-24 m-4 semi-bold">
             {categoryName === 'all' ? 'All Products' : categoryName}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 bg-gray-300 rounded-md p-5 ">
             {products && products.map((product) => (
               <Product key={product._id} product={product} />
             ))}

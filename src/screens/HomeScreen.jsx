@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGetAllCategoriesQuery } from '../slices/categoryApiSlice';
 import { useGetProductsQuery } from '../slices/productsApiSlice'; // Import the hook to fetch all products
+import { useFetchPromotionsQuery } from '../slices/promotionsAPISlice'
 import CategoryCard from '../components/CategoryCard';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -26,6 +27,9 @@ const HomeScreen = () => {
   
   // Fetch all products
   const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
+
+    // Fetch promotions using the generated hook
+    const { data: promotions, error, isLoading } = useFetchPromotionsQuery();
 
   useEffect(() => {
     if (categoriesData && categoriesData.categories) {
@@ -87,8 +91,9 @@ const HomeScreen = () => {
   
   const categorySection = homeConfig.sections.find((section) => section.type === 'category');
   const categoryTitle = categorySection ? categorySection.title : 'Categories';
-  const promotionSections = homeConfig.sections.filter((section) => section.type === 'promotion'); // Define here
-
+  // const promotionSections = homeConfig.sections.filter((section) => section.type === 'promotion'); // Define here
+   // Use fetched promotions or an empty array if there are no promotions
+   const promotionSections = promotions || [];
   return (
     <>
       <div className="mt-20">
@@ -126,7 +131,7 @@ const HomeScreen = () => {
                     />
                   </div>
                 ))}
-                {/* Duplicate Promotion Sections to Ensure Continuous Scrolling */}
+                {/* Duplicate Promotion Sections to Ensure Continuous Scrolling
                 {promotionSections.map((promotion, index) => (
                   <div
                     key={`duplicate-${index}`}
@@ -138,7 +143,7 @@ const HomeScreen = () => {
                       image={promotion.image || ''} // Provide fallback for image if needed
                     />
                   </div>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>
@@ -146,7 +151,7 @@ const HomeScreen = () => {
             {categoryTitle}
           </h5>
           {/* Categories Section */}
-          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4 bg-gray-300 rounded-md p-5">
           {categories.map((category) => (
                 <CategoryCard
                   key={category}
@@ -160,7 +165,7 @@ const HomeScreen = () => {
             All Products
           </h5>
           {/* Products Section */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4  bg-gray-300 rounded-md p-5">
             {products.map((product) => (
               <Product key={product._id} product={product} />
             ))}

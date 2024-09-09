@@ -27,12 +27,12 @@ const cartSlice = createSlice({
           x.productId === existItem.productId &&
           x.brand === existItem.brand &&
           x.quantity === existItem.quantity
-            ? { ...existItem, qty: existItem.qty + 1 }
+            ? { ...existItem, qty: item.qty }
             : x
         );
       } else {
         // If the item does not exist, add it to the cart with an initial quantity of 1
-        state.cartItems = [...state.cartItems, { ...item, qty: 1 }];
+        state.cartItems = [...state.cartItems, { ...item, qty:item.qty|| 1 }];
       }
 
       // Update the cart state

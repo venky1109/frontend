@@ -69,9 +69,9 @@ const CartScreen = () => {
                     value={item.qty}
                     onChange={(e) => addToCartHandler(item, Number(e.target.value))}
                   >
-                    {[...Array(item.countInStock).keys()].map((x) => (
-                      <option key={x + 1} value={x + 1}>
-                        {x + 1}
+                    {[...Array(item.countInStock + 1).keys()].map((x) => (
+                      <option key={x} value={x}>
+                        {x}
                       </option>
                     ))}
                   </select>

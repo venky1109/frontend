@@ -53,6 +53,6 @@ async function baseQueryWithAuth(args, api, extra) {
 export const apiSlice = createApi({
   reducerPath: 'api', // Optional: Define a custom reducer path for this API slice
   baseQuery: baseQueryWithAuth, // Use the customized baseQuery with authorization handling
-  tagTypes: ['Product', 'Order', 'User','Category'], // Define tags for cache invalidation and refetching
+  tagTypes: ['Product', 'Order', 'User', 'Category', 'Promotion'], // Define tags for cache invalidation and refetching
   endpoints: () => ({}), // No endpoints are defined here; they are defined in respective slices
 });

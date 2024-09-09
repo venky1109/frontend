@@ -1,336 +1,309 @@
-import React, { useState, useEffect ,useRef } from 'react';
+
+
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import { addToCart } from '../slices/cartSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import {   Row,
-  Col, 
-  Button} from 'react-bootstrap';
-
-import './ProductScreen.css'
-
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    // Scroll to the top of the page when the component is mounted
+    window.scrollTo(0, 0);
+  }, []);
   const location = useLocation();
   const scrollContainersRef = useRef([]);
-  const { brand, quantity , qty } = location.state || {};
+  const { brand, quantity, qty } = location.state || {};
 
-  const {
-    data: product,
-    isLoading,
-    error,
-  } = useGetProductDetailsQuery(productId);
+  const { data: product, isLoading, error } = useGetProductDetailsQuery(productId);
 
   const [selectedBrand, setSelectedBrand] = useState(brand || '');
   const [selectedQuantity, setSelectedQuantity] = useState(quantity || '1');
   const [selectedQty, setSelectedQty] = useState(qty || '1');
+  const [selectedDetail, setSelectedDetail] = useState(null);
 
+  // Update selected detail whenever the selected brand or product data changes
   useEffect(() => {
-    if (brand) {
-      setSelectedBrand(brand);
+    if (product && selectedBrand) {
+      const detail = product.details.find((detail) => detail.brand === selectedBrand);
+      setSelectedDetail(detail);
+      if (detail && detail.financials.length > 0) {
+        setSelectedQuantity(detail.financials[0].quantity.toString());
+      }
     }
-    if (quantity) {
-      setSelectedQuantity(quantity);
-    }
-  }, [brand, quantity]);
-  const maxDiscountQuanty = (brand) => {
-    const brandDetails = product.details.filter((detail) => detail.brand === brand);
-    const maxDiscountqty = brandDetails.reduce((max, detail) => {
-      const detailMaxDiscount = detail.financials.reduce(
-        (max, financial) => Math.max(max, parseFloat(financial.quantity)),
-        0
-      );
-      return Math.max(max, detailMaxDiscount);
-    }, 0);
-    return maxDiscountqty;
-  };
+  }, [selectedBrand, product]);
 
   const handleBrandChange = (event) => {
     const newBrand = event.target.value;
     setSelectedBrand(newBrand);
-
-
-    const qty = maxDiscountQuanty(newBrand);
-    setSelectedQuantity(qty.toString());
   };
 
   const handleQtyChange = (event) => {
     setSelectedQty(event.target.value);
   };
 
-
   const handleQuantityChange = (event) => {
     setSelectedQuantity(event.target.value);
   };
-  const handleScroll = (scrollDirection, index) => {
-    const scrollContainer = scrollContainersRef.current[index];
 
-    if (scrollContainer) {
-      const containerWidth = scrollContainer.clientWidth;
-      const scrollPosition = scrollContainer.scrollLeft;
-
-      if (scrollDirection === 'left') {
-        scrollContainer.scrollTo({
-          left: Math.max(0, scrollPosition - containerWidth),
-          behavior: 'smooth',
-        });
-      } else if (scrollDirection === 'right') {
-        scrollContainer.scrollTo({
-          left: scrollPosition + containerWidth,
-          behavior: 'smooth',
-        });
-      }
-    }
+  const handleSimilarItemClick = (brand, quantity) => {
+    setSelectedBrand(brand);
+    setSelectedQuantity(quantity);
   };
+
   const addToCartHandler = () => {
-    const selectedDetail = product.details.find((detail) => detail.brand === selectedBrand);
+    if (!selectedDetail) {
+      alert('Selected brand details are not available.');
+      return;
+    }
+
     const selectedFinancial = selectedDetail.financials.find(
       (financial) => financial.quantity.toString() === selectedQuantity
     );
 
-    dispatch(addToCart({
-      name:product.name,
-      productId:product._id,
-      category:product.category,
-      brand: selectedBrand,
-      quantity: selectedQuantity,
-      price: selectedFinancial.price,
-      dprice: selectedFinancial.dprice,
-      Discount: selectedFinancial.Discount,
-      image:selectedDetail.images[0].image,
-      qty:selectedQty,
-      financialId:selectedFinancial._id,
-      brandId:selectedDetail._id,
-      countInStock:10
-    }));
+    if (!selectedFinancial) {
+      alert('Selected quantity details are not available.');
+      return;
+    }
+
+    dispatch(
+      addToCart({
+        name: product.name,
+        productId: product._id,
+        category: product.category,
+        brand: selectedBrand,
+        quantity: selectedQuantity,
+        price: selectedFinancial.price,
+        dprice: selectedFinancial.dprice,
+        Discount: selectedFinancial.Discount,
+        image: selectedDetail.images[0]?.image,
+        qty: selectedQty,
+        financialId: selectedFinancial._id,
+        brandId: selectedDetail._id,
+        countInStock: 10,
+      })
+    );
 
     navigate('/cart');
   };
 
   return (
+    <div className="mt-24">
+  <Link to="/" className="bg-green-800 text-white font-semibold rounded p-2 hover:bg-green-500 transition">
+    Go Back
+  </Link>
+  {isLoading ? (
+    <Loader />
+  ) : error ? (
+    <Message variant="danger">{error?.data?.message || error.error}</Message>
+  ) : (
     <>
-      <Link variant='outline-success' className='btn  btn-outline-success  p-1 my-2' to='/'>
-        Go Back
-      </Link>
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant='danger'>{error?.data?.message || error.error}</Message>
-      ) : (
-   
-      product.details.map((detail, detailIndex) => (
-        (!selectedBrand || detail.brand === selectedBrand) && (
-        <Row >
-          <Col md="4" >
-          <div key={detailIndex} className="card-container-screen" >
-            {/* Render images with scroll buttons */}  
-            <Link to={`/product/${product._id}`} state={{brand: selectedBrand, quantity: selectedQuantity }}>
-            <div className="image-container" ref={(el) => (scrollContainersRef.current[detailIndex] = el)}>
-    
-    <div className="images-wrapper">
-      {detail.images && detail.images.map((image, imageIndex) => (
-        <img key={imageIndex} src={image.image} width='100%' height='250px' alt={`${product.name}`} />
-      ))}
-    </div>
-    
-  </div>
-  
+      {/* Main Product Section */}
+      {selectedDetail && (
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 mt-9 border-b border-gray-200">
+          {/* Image Section */}
+          <div className="w-full md:w-1/3 flex-shrink-0">
+            <h4 className="text-2xl font-semibold text-center text-green-700 mb-4 mt-2">
+              {selectedBrand} {product.name}
+            </h4>
+            <Link
+              to={`/product/${product._id}`}
+              state={{ brand: selectedBrand, quantity: selectedQuantity }}
+            >
+              <div className="relative overflow-hidden">
+                <div
+                  className="flex space-x-2"
+                  ref={(el) => (scrollContainersRef.current[0] = el)}
+                >
+                  {selectedDetail.images &&
+                    selectedDetail.images.map((image, imageIndex) => (
+                      <img
+                        key={imageIndex}
+                        src={image.image}
+                        alt={`${product.name}`}
+                        className="w-full h-64 object-cover rounded"
+                      />
+                    ))}
+                </div>
+              </div>
             </Link>
-            <div className="scroll-buttons-container">
-              <button className="scroll-button" onClick={() => handleScroll('left', detailIndex)}>
-                &lt;
-              </button>
-              <button className="scroll-button" onClick={() => handleScroll('right', detailIndex)}>
-                &gt;
-              </button>
-            </div>
-            {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-                <span className='discount-ribbon-screen' >
-                  <p>{getDiscount(selectedQuantity,detail.financials)}% off</p>
-                  </span>
-              )}  
           </div>
-          </Col>
-          <Col md="4">
-          <h4 className="card-heading" style={{ color: '#937c0c', fontweight:500 }}>{product.name}</h4>
-          <div className="product-info">
-          <div className="form-group  justify-content-center mb-0" >
-          <label htmlFor={`brandDropdown-${detailIndex}`} className='mb-0' style={{ color: 'forestgreen' }}>
-      <h6 style={{ margin: '0.25em' }}>Brand:</h6>
-          </label>
-          <select
-      id={`brandDropdown-${detailIndex}`}
-      className="form-control mb-0"
-      style={{ borderColor: 'forestgreen' ,color: '#937c0c' ,fontWeight:500 ,fontSize:'15px' }}
-      onChange={handleBrandChange}
-      value={selectedBrand}
-    >
-      {product.details.map((detail) => (
-        <option key={detail.brand} value={detail.brand}>
-          {detail.brand}
-        </option>
-      ))}
-          </select>
-  </div>
 
-  <div className="form-group mb-0">
-    <label htmlFor={`weightDropdown-${detailIndex}`} style={{ color: 'forestgreen',paddingTop:'0.25em',paddingBottom:'0em' }}>
-    <h6 style={{ margin: '0.25em' }}>Weight:</h6>
-    </label>
-    <select
-      id={`weightDropdown-${detailIndex}`}
-      className="form-control"
-      style={{ borderColor: 'forestgreen',color: '#937c0c' ,fontWeight:500 ,fontSize:'15px'  }}
-      onChange={handleQuantityChange}
-      value={selectedQuantity}
-    >
-      {detail.financials.map((financial, index) => (
-        <option key={index} value={financial.quantity}>
-           {financial.quantity}{financial.units}
-        </option>
-      ))}
-    </select>
-  </div>
-  <div className="form-group">
-    <label htmlFor={`quantityDropdown-${detailIndex}`} style={{ color: 'forestgreen',paddingTop:'0.25em'  }}>
-    <h6 style={{ margin: '0.25em' }}>Number Of Packs:</h6>
-    </label>
-    <select
-      id={`quantityDropdown-${detailIndex}`}
-      className="form-control"
-      style={{ borderColor: 'forestgreen',color: '#937c0c' ,fontWeight:500 ,fontSize:'15px' }}
-      onChange={handleQtyChange}
-      value={selectedQty}
-    >
-        {[...Array(10).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-    </select>
-  </div>
+          {/* Details Section */}
+          <div className="w-full md:w-2/3 flex flex-col space-y-4">
+            {/* Brand Selector */}
+            <div>
+              <label htmlFor="brandDropdown" className="text-sm font-medium text-green-700">
+                Brand:
+              </label>
+              <select
+                id="brandDropdown"
+                className="w-full border border-green-500 rounded mt-1 p-2"
+                onChange={handleBrandChange}
+                value={selectedBrand}
+              >
+                {product.details.map((detail) => (
+                  <option key={detail.brand} value={detail.brand}>
+                    {detail.brand}
+                  </option>
+                ))}
+              </select>
+            </div>
 
+            {/* Weight Selector */}
+            <div>
+              <label htmlFor="weightDropdown" className="text-sm font-medium text-green-700">
+                Weight:
+              </label>
+              <select
+                id="weightDropdown"
+                className="w-full border border-green-500 rounded mt-1 p-2"
+                onChange={handleQuantityChange}
+                value={selectedQuantity}
+              >
+                {selectedDetail?.financials.map((financial, index) => (
+                  <option key={index} value={financial.quantity}>
+                    {financial.quantity}
+                    {financial.units}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-</div>
- </Col>
- <Col md="4">
-  
- <div className="price-info" style={{paddingTop:'3em',paddingLeft:'1em'}}>
-  {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-    <div className="price-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-      <div className="mrp-container" style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5em' }}>
-        <span style={{ color: 'forestgreen' }}>
-          <h6>MRP </h6>
-        </span>
-        <span style={{ color: 'forestgreen', fontSize: '10px', marginLeft: '0.5em', lineHeight: '1.5' }}>(Max Retail Price):</span>
-        <h6 style={{ color: 'forestgreen' }}>:</h6>
-        <h6 style={{ margin: '0.25em' }}><s className="original-price" style={{ color: '#937c0c', fontWeight: 600, fontSize: '20px', marginLeft: '0.5em', lineHeight: '1.5' }}>
-          &#x20b9;{(getPrice(selectedQuantity, detail.financials)).toFixed(2)} 
-        </s>  </h6> <p style={{ color: '#937c0c' ,fontSize:'15px'}}>Per Pack</p>
-      </div>
-      <div className="mkp-container" style={{ display: 'flex', alignItems: 'center' }}>
-        <h6 style={{ color: 'forestgreen' , margin: '0.25em' }}>MKP</h6>
-        <p style={{color: 'forestgreen', fontSize: '10px', marginLeft: '0.5em', lineHeight: '1.5' }}>(ManaKiranaPrice)</p>
-        <h6 style={{ color: 'forestgreen' ,  margin: '0.25em'}}>:</h6>
-        <h6 className="discounted-price" style={{ color: 'forestgreen',  margin: '0.25em',fontWeight: 600, fontSize: '20px', marginLeft: '0.5em' }}>
-          &#x20b9;{(getDprice(selectedQuantity, detail.financials)).toFixed(2)}
-        </h6><p style={{ color: 'forestgreen' ,fontSize:'15px'}}>Per Pack</p>
-      </div>
-      { selectedQty >1 &&(
-      <div className="mkp-container" style={{ display: 'flex', alignItems: 'center', border:' 2px solid #937c0c',borderRadius:'4px',padding:'3px' }}>
-        <h6 style={{ color: 'forestgreen' }}>MKP of {selectedQty} Packs</h6>
-        <p style={{color: 'forestgreen', fontSize: '10px', marginLeft: '0.5em', lineHeight: '1.5' , margin: '0.25em'}}>(ManaKiranaPrice)</p>
-        <h6 style={{ color: 'forestgreen' }}>:</h6>
-        <h6 className="discounted-price" style={{ color: 'forestgreen', fontWeight: 600, fontSize: '30px', marginLeft: '0.5em' , margin: '0.25em'}}>
-          &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
-        </h6>
-      </div>
-      )}
+            {/* Quantity Selector */}
+            <div>
+              <label htmlFor="quantityDropdown" className="text-sm font-medium text-green-700">
+                Number Of Packs:
+              </label>
+              <select
+                id="quantityDropdown"
+                className="w-full border border-green-500 rounded mt-1 p-2"
+                onChange={handleQtyChange}
+                value={selectedQty}
+              >
+                {[...Array(10).keys()].map((x) => (
+                  <option key={x + 1} value={x + 1}>
+                    {x + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-      <div className="discount-container" style={{ display: 'flex', alignItems: 'center' }}>
-        <h6 style={{ color: 'forestgreen' , margin: '0.25em'}}>You Save</h6>
-        <h6 style={{ color: '#937c0c' , margin: '0.25em'}}> (&#x20b9;{getPrice(selectedQuantity, detail.financials) } * {selectedQty} - &#x20b9;{getDprice(selectedQuantity, detail.financials)} * {selectedQty})</h6>
-        <h6 style={{ color: 'forestgreen' , margin: '0.25em'}}>:</h6>
-        <h6 className="discounted-price" style={{ color: 'forestgreen',  margin: '0.25em',fontWeight: 600, fontSize: '20px', marginLeft: '0.5em' }}>
-          &#x20b9;{(getPrice(selectedQuantity, detail.financials) * selectedQty -getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
-        </h6>
-      </div>
+            {/* Price Information */}
+            <div className="flex flex-col space-y-2">
+              <div>
+                <span className="text-green-700">MRP:</span>{' '}
+                <span className="line-through text-gray-500">
+                  &#x20b9;{getPrice(selectedQuantity, selectedDetail?.financials).toFixed(2)}
+                </span>
+                <span className="text-green-700"> (Per Pack)</span>
+              </div>
+              <div>
+                <span className="text-green-700">Discount Price:</span>{' '}
+                <span className="text-green-700 font-semibold">
+                  &#x20b9;{getDprice(selectedQuantity, selectedDetail?.financials).toFixed(2)}
+                </span>
+                <span className="text-green-700"> (Per Pack)</span>
+              </div>
+              {/* Show discount percentage if available */}
+              {getDiscount(selectedQuantity, selectedDetail?.financials) > 0 && (
+                <div>
+                  <span className="text-green-700">Discount:</span>{' '}
+                  <span className="text-red-500 font-semibold">
+                    {getDiscount(selectedQuantity, selectedDetail?.financials)}% Off
+                  </span>
+                </div>
+              )}
+              {selectedQty > 1 && (
+                <div>
+                  <span className="text-green-700">Price for {selectedQty} Packs:</span>{' '}
+                  <span className="text-green-700 font-semibold">
+                    &#x20b9;{(getDprice(selectedQuantity, selectedDetail?.financials) * selectedQty).toFixed(2)}
+                  </span>
+                </div>
+              )}
+            </div>
 
-      
-      <div className="discount-percent-container" style={{ display: 'flex', alignItems: 'center' }}>
-      <Button className="discounted-percent" style={{ backgroundColor:'floralwhite', color: '#937c0c' , fontWeight: 600, fontSize: '16px',marginBottom:'1em' }}>On purchage enjoy Discount of {getDiscount(selectedQuantity,detail.financials)}% </Button>
-      </div>
-    </div>
-  )}
-    {selectedQuantity && getDiscount(selectedQuantity, detail.financials) <= 0 && (
-
-<div className="mrp-container" style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5em' }}>
-  <span style={{ color: 'forestgreen' }}>
-    <h6>MRP </h6>
-  </span>
-  <span style={{ color: 'forestgreen', fontSize: '10px', marginLeft: '0.5em', lineHeight: '1.5' }}>(Max Retail Price):</span>
-  <h6 style={{ color: 'forestgreen' }}>:</h6>
-  <h6 style={{ margin: '0.25em',color: '#937c0c', fontWeight: 600, fontSize: '20px', marginLeft: '0.5em', lineHeight: '1.5' }} >
-    &#x20b9;{(getPrice(selectedQuantity, detail.financials)).toFixed(2)} 
-    </h6> <p style={{ color: '#937c0c' ,fontSize:'15px'}}>Per Pack</p>
-</div> )}
-      { selectedQty >1 && getDiscount(selectedQuantity, detail.financials) <= 0 &&(
-        <div className="mkp-container" style={{ display: 'flex', alignItems: 'center', border:' 2px solid #937c0c',borderRadius:'4px',padding:'3px', marginBottom:'1em'}}>
-          <h6 style={{ color: 'forestgreen' }}>MRP of {selectedQty} Packs</h6>
-          <p style={{color: 'forestgreen', fontSize: '10px', marginLeft: '0.5em', lineHeight: '1.5' , margin: '0.25em'}}>(ManaKiranaPrice)</p>
-          <h6 style={{ color: 'forestgreen' }}>:</h6>
-          <h6 className="discounted-price" style={{ color: 'forestgreen', fontWeight: 600, fontSize: '30px', marginLeft: '0.5em' , margin: '0.25em'}}>
-            &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
-          </h6>
+            {/* Add to Cart Button */}
+            <button
+              className="bg-green-500 text-white rounded p-2 hover:bg-green-600 transition"
+              onClick={addToCartHandler}
+            >
+              Add to Cart
+            </button>
+          </div>
         </div>
-        )}
- 
-   
-
-
-
-    <Button
-      className="cart-button"
-      style={{ backgroundColor: 'forestgreen', borderColor: 'forestgreen' }}
-      onClick={addToCartHandler}
-    >
-      ADD TO CART
-    </Button>
-  </div>
-  </Col>  
-          
-          </Row>
-        )
-      ))
-   
-
       )}
+
+      {/* Similar Items Section at the Bottom */}
+{product.details.length > 1 && (
+  <div className="mt-10 mb-20">
+    <h3 className="text-xl font-semibold text-gray-700 mb-4">Similar Items</h3>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {product.details
+        .filter((detail) => detail.brand !== selectedBrand)
+        .map((detail) => (
+          <div
+            key={detail.brand}
+            className="border border-gray-200 p-4 rounded-lg shadow-md cursor-pointer"
+            onClick={() => handleSimilarItemClick(detail.brand, detail.financials[0]?.quantity)}
+          >
+            <Link
+              to={`/product/${product._id}`}
+              state={{ brand: detail.brand, quantity: detail.financials[0]?.quantity }}
+            >
+              <img
+                src={detail.images[0]?.image}
+                alt={detail.brand}
+                className="w-full h-40 object-cover mb-4 rounded"
+              />
+              <h4 className="text-lg font-semibold text-green-700">{detail.brand}</h4>
+              {/* Show discount percentage if available */}
+              {getDiscount(selectedQuantity, selectedDetail?.financials) > 0 && (
+                <div>
+                  <span className="text-green-700">Discount:</span>{' '}
+                  <span className="text-red-500 font-semibold">
+                    {getDiscount(selectedQuantity, selectedDetail?.financials)}% Off
+                  </span>
+                </div>
+              )}
+            </Link>
+          </div>
+        ))}
+    </div>
+  </div>
+)}
+
     </>
+  )}
+</div>
+
   );
 };
 
 export default ProductScreen;
-const getPrice = (selectedQuantity, financials) => {
 
+// Helper functions for price and discount calculations
+const getPrice = (selectedQuantity, financials) => {
+  if (!financials) return 0;
   const selectedFinancial = financials.find((financial) => financial.quantity.toString() === selectedQuantity);
-  // console.log(selectedQuantity+'   financials  '+financials+'  selectedFinancial  '+selectedFinancial)
   return selectedFinancial ? selectedFinancial.price : 0;
 };
 
 const getDprice = (selectedQuantity, financials) => {
+  if (!financials) return 0;
   const selectedFinancial = financials.find((financial) => financial.quantity.toString() === selectedQuantity);
   return selectedFinancial ? selectedFinancial.dprice : 0;
 };
 
-
-
 const getDiscount = (selectedQuantity, financials) => {
+  if (!financials) return 0;
   const selectedFinancial = financials.find((financial) => financial.quantity.toString() === selectedQuantity);
   return selectedFinancial ? selectedFinancial.Discount : 0;
 };
-
+;

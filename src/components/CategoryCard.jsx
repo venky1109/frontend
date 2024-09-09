@@ -7,9 +7,9 @@ const CategoryCard = ({ name, image, className }) => {
 
   return (
     <Link to={`/category/${encodedCategoryName}`} className={`block ${className}`}>
-      <div className="relative text-center mx-0 group p-1"> {/* Decreased padding around the card */}
+      <div className="relative text-center mx-0 group p-1 "> {/* Decreased padding around the card */}
         {/* Image Container */}
-        <div className="w-full sm:w-40 sm:h-40 max-w-full max-h-full rounded-md overflow-hidden mx-auto relative border border-dotted border-gray-300">
+        <div className="w-full sm:w-52 sm:h-52 max-w-full max-h-full rounded-md overflow-hidden mx-auto relative">
           {/* Apply animation to the image */}
           <img
             src={image}

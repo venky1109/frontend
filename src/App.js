@@ -25,7 +25,7 @@ const App = () => {
   }, [dispatch]);
 
   return (
-<div className="min-h-screen flex flex-col ">
+<div className="select-none min-h-screen flex flex-col  ">
   <ToastContainer />
   <Header />
 
