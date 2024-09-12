@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -92,11 +90,15 @@ const ProductScreen = () => {
     navigate('/cart');
   };
 
+  const goBackHandler = () => {
+    navigate(-1); // Go back to the previous page in the browser history
+  };
+
   return (
     <div className="mt-24">
-  <Link to="/" className="bg-green-800 text-white font-semibold rounded p-2 hover:bg-green-500 transition">
-    Go Back
-  </Link>
+ <button onClick={goBackHandler} className="text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block">
+          Go Back
+        </button>
   {isLoading ? (
     <Loader />
   ) : error ? (
@@ -105,7 +107,7 @@ const ProductScreen = () => {
     <>
       {/* Main Product Section */}
       {selectedDetail && (
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 mt-9 border-b border-gray-200">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4  border-b border-gray-200">
           {/* Image Section */}
           <div className="w-full md:w-1/3 flex-shrink-0">
             <h4 className="text-2xl font-semibold text-center text-green-700 mb-4 mt-2">
@@ -247,37 +249,62 @@ const ProductScreen = () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {product.details
         .filter((detail) => detail.brand !== selectedBrand)
-        .map((detail) => (
-          <div
-            key={detail.brand}
-            className="border border-gray-200 p-4 rounded-lg shadow-md cursor-pointer"
-            onClick={() => handleSimilarItemClick(detail.brand, detail.financials[0]?.quantity)}
-          >
-            <Link
-              to={`/product/${product._id}`}
-              state={{ brand: detail.brand, quantity: detail.financials[0]?.quantity }}
+        .map((detail) => {
+          const financials = detail.financials;
+          const quantity = financials[0]?.quantity.toString();
+          const discount = getDiscount(quantity, financials);
+          // const dprice = getDprice(quantity, financials);
+
+          return (
+            <div
+              key={detail.brand}
+              className="border border-gray-200 p-4 rounded-lg shadow-md cursor-pointer"
+              onClick={() => handleSimilarItemClick(detail.brand, quantity)}
             >
-              <img
-                src={detail.images[0]?.image}
-                alt={detail.brand}
-                className="w-full h-40 object-cover mb-4 rounded"
-              />
-              <h4 className="text-lg font-semibold text-green-700">{detail.brand}</h4>
-              {/* Show discount percentage if available */}
-              {getDiscount(selectedQuantity, selectedDetail?.financials) > 0 && (
-                <div>
-                  <span className="text-green-700">Discount:</span>{' '}
-                  <span className="text-red-500 font-semibold">
-                    {getDiscount(selectedQuantity, selectedDetail?.financials)}% Off
+              <Link
+                to={`/product/${product._id}`}
+                state={{ brand: detail.brand, quantity: quantity }}
+              >
+                <img
+                  src={detail.images[0]?.image}
+                  alt={detail.brand}
+                  className="w-full h-40 object-cover mb-4 rounded"
+                />
+                <h4 className="text-lg font-semibold text-green-700">{detail.brand}</h4>
+                {/* Show discount percentage if available */}
+                {discount > 0 && (
+                  <div>
+                    <span className="text-green-700">Discount:</span>{' '}
+                    <span className="text-red-500 font-semibold">
+                      {discount}% Off
+                    </span>
+                  </div>
+                )}
+                {/* <div>
+                  <span className="text-green-700">Discount Price:</span>{' '}
+                  <span className="text-green-700 font-semibold">
+                    &#x20b9;{dprice.toFixed(2)}
                   </span>
-                </div>
-              )}
-            </Link>
-          </div>
-        ))}
+                  <span className="text-green-700"> (Per Pack)</span>
+                </div> */}
+              </Link>
+            </div>
+          );
+        })}
     </div>
   </div>
 )}
+
+
+{/* Before Changes:
+Previously, the discount price and percentage were calculated based on the currently selected brand's details (selectedDetail), leading to incorrect values for the similar items.
+
+After Changes:
+Each similar item now displays:
+
+Its unique discount percentage (discount).
+Its independent discounted price (dprice).
+These values are calculated based on the financials array associated with that specific item's brand. */}
 
     </>
   )}

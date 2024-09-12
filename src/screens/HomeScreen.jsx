@@ -29,7 +29,7 @@ const HomeScreen = () => {
   const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
 
     // Fetch promotions using the generated hook
-    const { data: promotions, error, isLoading } = useFetchPromotionsQuery();
+    const { data: promotions } = useFetchPromotionsQuery();
 
   useEffect(() => {
     if (categoriesData && categoriesData.categories) {

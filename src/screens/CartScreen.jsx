@@ -30,13 +30,16 @@ const CartScreen = () => {
     navigate('/login?redirect=/shipping');
   };
 
+  const goBackHandler = () => {
+    navigate(-1);
+  }
 
   return (
     <div className="flex flex-col md:flex-row mt-20 mb-20">
       <div className="md:w-2/3 p-4">
-        <Link to="/" className="text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block">
-          Go Back
-        </Link>
+      <button onClick={goBackHandler} className='text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block'>
+            Go Back
+          </button>
         <h5 className="text-xl font-semibold mb-4">Shopping Cart</h5>
         {cartItems.length === 0 ? (
           <Message>Your cart is empty</Message>
