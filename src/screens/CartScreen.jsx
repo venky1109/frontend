@@ -30,7 +30,7 @@ const CartScreen = () => {
     navigate('/login?redirect=/shipping');
   };
 
-  const goBackHandler = () => {
+   const goBackHandler = () => {
     navigate(-1);
   }
 

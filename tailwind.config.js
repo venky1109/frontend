@@ -4,6 +4,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // colors:{
+      //   customGreen:'#B3D3AF' ,
+      //   customOneGreen:'99B895'
+      // },
       keyframes: {
         letterReveal: {
           '0%': { opacity: 0, transform: 'translateY(100%)' },

@@ -151,13 +151,13 @@ const HomeScreen = () => {
             {categoryTitle}
           </h5>
           {/* Categories Section */}
-          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4 bg-gray-300 rounded-md p-5">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6  rounded-md p-5">
           {categories.map((category) => (
                 <CategoryCard
                   key={category}
                   name={category}
                   image={getCategoryImage(category)} // Dynamically set the image
-                  className="border border-dotted border-gray-300 p-2 sm:p-1" // Use smaller padding for mobile screens
+                  className=" p-2 sm:p-1" // Use smaller padding for mobile screens
                 />
               ))}
           </div>
