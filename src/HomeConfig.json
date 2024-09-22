@@ -1,16 +1,7 @@
 {
+  "whatsappNumber": ["7330790568"],
+  "phoneNumber":["7330790568"],
   "sections": [
-    {
-      "type": "banner",
-      "title": "Main Banner",
-      "sequence": 1,
-      "props": {
-        "type": "BodyBanner",
-        "images": ["path/to/banner1.jpg", "path/to/banner2.jpg"],
-        "dimensions": { "height": "300px", "width": "100%" }
-      },
-      "styles": "mt-20"
-    },
     {
       "type": "category",
       "title": "Featured Categories",
@@ -30,42 +21,8 @@
           { "key": "HEALTH_&_HYGIENE", "name": "HEALTH & HYGIENE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" }
         ]
       }
-    },
-    { 
-      "type": "promotion",
-      "title": "Special offers",
-      "description": "Get 50% off on all products.",
-      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
-      "sequence": 3
-     
-    },
-    { 
-      "type": "promotion",
-      "title": "Summer Sale",
-      "description": "Enjoy our summer sale with 30% off.",
-      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
-      "sequence": 4
-    },
-    { 
-      "type": "promotion",
-      "title": "Clearance Event",
-      "description": "Huge discounts on clearance items.",
-      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
-      "sequence": 5
-    },
-    { 
-      "type": "promotion",
-      "title": "Summer Sale",
-      "description": "Huge discounts on clearance items.",
-      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
-      "sequence": 6
-    },
-    { 
-      "type": "promotion",
-      "title": "Clearance Event",
-      "description": "Huge discounts on clearance items.",
-      "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Spices_300.png?alt=media&token=77abf4e4-e321-4ae1-8a91-5211f133621f",
-      "sequence": 7
     }
   ]
 }
+
+
