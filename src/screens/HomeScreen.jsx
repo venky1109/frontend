@@ -131,7 +131,7 @@ const HomeScreen = () => {
                     />
                   </div>
                 ))}
-                {/* Duplicate Promotion Sections to Ensure Continuous Scrolling
+                {/* Duplicate Promotion Sections to Ensure Continuous Scrolling */}
                 {promotionSections.map((promotion, index) => (
                   <div
                     key={`duplicate-${index}`}
@@ -143,7 +143,7 @@ const HomeScreen = () => {
                       image={promotion.image || ''} // Provide fallback for image if needed
                     />
                   </div>
-                ))} */}
+                ))}
               </div>
             </div>
           </div>
@@ -161,11 +161,11 @@ const HomeScreen = () => {
                 />
               ))}
           </div>
-          <h5 className="text-2xl font-serif text-green-800 mb-4 mt-8 semi-bold">
+          <h5 className="text-2xl font-serif text-green-800 mb-4 mt-2 semi-bold">
             All Products
           </h5>
           {/* Products Section */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-4  bg-gray-300 rounded-md p-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-gray-300 rounded-md p-1">
             {products.map((product) => (
               <Product key={product._id} product={product} />
             ))}
