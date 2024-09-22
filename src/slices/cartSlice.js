@@ -40,18 +40,74 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const { productId, brand, quantity } = action.payload;
-      console.log(`Before removal: ${JSON.stringify(state.cartItems)}`);
+      // console.log(`Before removal: ${JSON.stringify(state.cartItems)}`);
       
       // Remove the specific item from the cart based on productId, brand, and quantity
       state.cartItems = state.cartItems.filter(
         (item) => !(item.productId === productId && item.brand === brand && item.quantity === quantity)
       );
       
-      console.log(`After removal: ${JSON.stringify(state.cartItems)}`);
+      // console.log(`After removal: ${JSON.stringify(state.cartItems)}`);
 
       // Update the cart state after removal
       return updateCart(state);
     },
+    updateCartProduct: (state, action) => {
+      const updatedProduct = action.payload;
+      // console.log('Received updated product:', updatedProduct);
+    
+      // Loop through the cart items and attempt to update the matching item
+      state.cartItems = state.cartItems.map((item) => {
+        // console.log('Checking cart item:', item);
+    
+        // Check if the productId matches
+        if (item.productId === updatedProduct._id.toString()) {
+          // console.log('Matching productId found:', item.productId);
+    
+          // Find matching detail (brandId)
+          const matchingDetails = updatedProduct.details.find(
+            (detail) => detail._id.toString() === item.brandId
+          );
+    
+          if (matchingDetails) {
+            // console.log('Matching brandId (detailId) found:', item.brandId);
+    
+            // Find matching financial (financialId)
+            const matchingFinancial = matchingDetails.financials.find(
+              (financial) => financial._id.toString() === item.financialId
+            );
+    
+            if (matchingFinancial) {
+              // console.log('Matching financialId found:', item.financialId);
+              // console.log('Updated financial details:', matchingFinancial);
+    
+              // Update the item with new prices, stock, and discount
+              return {
+                ...item,
+                dprice: matchingFinancial.dprice,  // Update discount price
+                price: matchingFinancial.price,    // Update regular price
+                countInStock: matchingFinancial.countInStock,  // Update stock availability
+                Discount: matchingFinancial.Discount,  // Update discount
+              };
+            } else {
+              // console.log('No matching financialId found for financialId:', item.financialId);
+            }
+          } else {
+            // console.log('No matching brandId (detailId) found for brandId:', item.brandId);
+          }
+        } else {
+          // console.log('No matching productId found for productId:', item.productId);
+        }
+        
+        // Return the original item if no match was found
+        return item;
+      });
+    
+      // Recalculate the cart prices after the product update
+      // console.log('Updated cart items:', state.cartItems);
+      return updateCart(state);
+    }
+    ,
     saveShippingAddress: (state, action) => {
       state.shippingAddress = action.payload;
       localStorage.setItem('cart', JSON.stringify(state));
@@ -74,6 +130,7 @@ const cartSlice = createSlice({
 export const {
   addToCart,
   removeFromCart,
+  updateCartProduct,
   saveShippingAddress,
   savePaymentMethod,
   clearCartItems,

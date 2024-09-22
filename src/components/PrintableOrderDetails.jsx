@@ -11,7 +11,7 @@ const PrintableOrderDetails = ({ order }) => {
             <h2 className="text-xl font-bold">Mana Kirana</h2>
             <p className="text-sm text-gray-600">
               <i>
-                <u>manakirana.online</u>
+                <u>manakirana.com</u>
               </i>
             </p>
           </div>

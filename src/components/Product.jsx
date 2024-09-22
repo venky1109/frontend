@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../slices/cartSlice';
 import { Link } from 'react-router-dom';
-// import { FaShoppingBag } from 'react-icons/fa';
 import { FaCartPlus } from "react-icons/fa6";
 import FloatingCartIcon from './FloatingCartIcon'; 
 
@@ -11,14 +10,11 @@ const Product = ({ product, keyword }) => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const [selectedQty, setSelectedQty] = useState(1);
   const [showQuantityControls, setShowQuantityControls] = useState(false);
-  // const [isAddedToCart, setIsAddedToCart] = useState(false);
   const productImageRefs = useRef([]); // Array of refs for each product
   const floatingCartIconRef = useRef(null);
 
-  // const isDown = useRef(false); 
-  // const startX = useRef(0); 
-  // const scrollLeft = useRef(0); 
   const scrollContainersRef = useRef({});
+  const quantityScrollContainersRef = useRef({}); // Refs for quantity scroll containers
   const selectedButtonsRef = useRef({});
   const dispatch = useDispatch();
 
@@ -103,21 +99,26 @@ const Product = ({ product, keyword }) => {
     setShowQuantityControls(false);
   };
 
-  const handleQtyChange = (newQty) => {
+  const handleQtyChange = useCallback((newQty) => {
     if (newQty >= 1 && newQty <= 9) {
       setSelectedQty(newQty);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showQuantityControls) {
       addToCartHandler();
     }
-  };
+  }, [selectedQty]);
 
-  const addToCartHandler = (index) => {
+  const addToCartHandler = useCallback((index) => {
     const selectedDetail = product.details.find((detail) => detail.brand === selectedBrand) || {};
     const selectedFinancial = selectedDetail.financials?.find(
       (financial) => financial.quantity.toString() === selectedQuantity.toString()
     );
     const imageElement = productImageRefs.current[index]; // Get the specific ref for the clicked product
     const cartElement = floatingCartIconRef.current;
-  
+
     if (imageElement && cartElement) {
       const imageRect = imageElement.getBoundingClientRect();
       const cartRect = cartElement.getBoundingClientRect();
@@ -129,20 +130,19 @@ const Product = ({ product, keyword }) => {
       clonedImage.style.top = `${imageRect.top}px`;
       clonedImage.style.width = `${imageRect.width}px`;
       clonedImage.style.height = `${imageRect.height}px`;
-      clonedImage.style.transition = 'all 0.75s ease'; // Smooth transition
-      clonedImage.style.borderRadius = '50%'; // Make the cloned image rounded
-      clonedImage.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Add a shadow to enhance the round effect
-
+      clonedImage.style.transition = 'all 0.75s ease';
+      clonedImage.style.borderRadius = '50%';
+      clonedImage.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
 
       document.body.appendChild(clonedImage);
 
       requestAnimationFrame(() => {
-        clonedImage.style.left = `${cartRect.left + cartRect.width / 2 - imageRect.width / 4}px`; // Centered on cart icon
-        clonedImage.style.top = `${cartRect.top + cartRect.height / 2 - imageRect.height / 4}px`; // Centered on cart icon
-        clonedImage.style.width = `${imageRect.width / 2}px`; // Decrease size
-        clonedImage.style.height = `${imageRect.height / 2}px`; // Decrease size
-        clonedImage.style.opacity = '0.7'; // Adjust opacity for smooth effect
-        clonedImage.style.transform = 'scale(0.5)'; // Scale down the image
+        clonedImage.style.left = `${cartRect.left + cartRect.width / 2 - imageRect.width / 4}px`;
+        clonedImage.style.top = `${cartRect.top + cartRect.height / 2 - imageRect.height / 4}px`;
+        clonedImage.style.width = `${imageRect.width / 2}px`;
+        clonedImage.style.height = `${imageRect.height / 2}px`;
+        clonedImage.style.opacity = '0.7';
+        clonedImage.style.transform = 'scale(0.5)';
       });
 
       clonedImage.addEventListener('transitionend', () => {
@@ -156,7 +156,7 @@ const Product = ({ product, keyword }) => {
       category: product.category,
       brand: selectedBrand,
       quantity: selectedQuantity,
-      units:selectedFinancial.units,
+      units: selectedFinancial.units,
       price: selectedFinancial ? selectedFinancial.price : 0,
       dprice: selectedFinancial ? selectedFinancial.dprice : 0,
       Discount: selectedFinancial ? selectedFinancial.Discount : 0,
@@ -166,12 +166,15 @@ const Product = ({ product, keyword }) => {
       brandId: selectedDetail?._id,
       countInStock: 10
     }));
-     // Update state to show quantity controls
-     setShowQuantityControls(true);
-  };
 
-  const handleMouseInteraction = (e, index, action) => {
-    const scrollContainer = scrollContainersRef.current[index];
+    setShowQuantityControls(true);
+  }, [selectedBrand, selectedQuantity, selectedQty, product, dispatch]);
+
+  const handleMouseInteraction = (e, index, action, scrollType = 'brand') => {
+    const scrollContainer = scrollType === 'brand' 
+      ? scrollContainersRef.current[index] 
+      : quantityScrollContainersRef.current[index]; // Handle different scroll types
+
     if (!scrollContainer) return;
 
     if (action === 'down') {
@@ -190,153 +193,161 @@ const Product = ({ product, keyword }) => {
   };
 
   return (
-    <><div className="flex flex-wrap gap-4 justify-center">
-      {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
-        <div
-          key={detailIndex}
-          className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
-        >
-          <Link
-            to={`/product/${product._id}`}
-            state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
+    <>
+      <div className="flex flex-wrap gap-4 justify-center">
+        {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
+          <div
+            key={detailIndex}
+            className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
           >
-            <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
-              {detail.images?.map((image, imageIndex) => (
-                <img
-                  key={imageIndex}
-                  src={image.image}
-                  ref={el => productImageRefs.current[detailIndex] = el} // Assign ref for each image
-                  className="w-full h-full object-cover transition-transform duration-250 ease-in-out transform hover:scale-110"
-                  alt={`${product.name}`}
-                  onLoad={(e) => e.target.style.visibility = 'visible'} // Ensure image is visible when loaded
-                  style={{ visibility: 'hidden' }} // Hide image until fully loaded
-                />
-              ))}
-              {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-                <div className="absolute top-2 left-2 bg-green-700 text-white px-1 py-0.5 rounded-lg text-xs">
-                  <p>{getDiscount(selectedQuantity, detail.financials)}% off</p>
-                </div>
-              )}
-            </div>
-          </Link>
-
-          <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-            <p className="text-sm font-serif  text-maroon-600">{product.name}</p>
-
-            <div className="flex flex-col mt-1 space-y-1">
-              {/* Brand Scroll */}
-              <div className="flex items-center">
-                <div
-                  ref={(el) => (scrollContainersRef.current[detailIndex] = el)}
-                  className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide"
-                  onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down')}
-                  onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up')}
-                  onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up')}
-                  onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move')}
-                >
-                  {product.details.map((brandDetail) => (
-                    <button
-                      key={brandDetail.brand}
-                      ref={(el) => {
-                        if (brandDetail.brand === selectedBrand) selectedButtonsRef.current[detailIndex] = el;
-                      } }
-                      onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
-                      className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
-                          ? 'bg-gray-100 text-black border-gray-500'
-                          : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
-                      aria-label={`Select brand ${brandDetail.brand}`}
-                    >
-                      {brandDetail.brand}
-                    </button>
-                  ))}
-                </div>
+            <Link
+              to={`/product/${product._id}`}
+              state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
+            >
+              <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
+                {detail.images?.map((image, imageIndex) => (
+                  <img
+                    key={imageIndex}
+                    src={image.image}
+                    ref={el => productImageRefs.current[detailIndex] = el}
+                    className="w-full h-full object-cover transition-transform duration-250 ease-in-out transform hover:scale-110"
+                    alt={`${product.name}`}
+                    onLoad={(e) => e.target.style.visibility = 'visible'}
+                    style={{ visibility: 'hidden' }}
+                  />
+                ))}
+                {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
+                  <div className="absolute top-2 left-2 bg-green-700 text-white px-1 py-0.5 rounded-lg text-xs">
+                    <p>{getDiscount(selectedQuantity, detail.financials)}% off</p>
+                  </div>
+                )}
               </div>
+            </Link>
 
-              <div className="flex items-center">
-                <div className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide w-full">
-                  {detail.financials.map((financial, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleQuantityChange(financial.quantity.toString())}
-                      className={`px-2 py-0.5 rounded-lg border ${selectedQuantity === financial.quantity.toString()
-                          ? 'bg-gray-100 text-black border-gray-500'
-                          : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} text-xs`}
-                    >
-                      {financial.quantity}{financial.units}
-                    </button>
-                  ))}
+            <div className="mt-2 text-center flex-1 flex flex-col justify-between">
+              <p className="text-sm font-serif text-maroon-600">{product.name}</p>
+
+              <div className="flex flex-col mt-1 space-y-1">
+                {/* Brand Scroll */}
+                <div className="flex items-center">
+                  <div
+                    ref={(el) => (scrollContainersRef.current[detailIndex] = el)}
+                    className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide"
+                    onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'brand')}
+                    onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
+                    onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
+                    onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'brand')}
+                  >
+                    {product.details.map((brandDetail) => (
+                      <button
+                        key={brandDetail.brand}
+                        ref={(el) => {
+                          if (brandDetail.brand === selectedBrand) selectedButtonsRef.current[detailIndex] = el;
+                        }}
+                        onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
+                        className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
+                            ? 'bg-gray-100 text-black border-gray-500'
+                            : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
+                        aria-label={`Select brand ${brandDetail.brand}`}
+                      >
+                        {brandDetail.brand}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Grouped Price, Cart, Quantity Controls, and Multiple Qty Price */}
-              <div className="flex items-center justify-between mt-2 space-x-2">
-                {/* Price and Multiple Qty Price Group */}
-                <div className="flex flex-col ml-3">
-                  <div className="text-sm text-gray-900">
-                    {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
-                      <>
-                        <span className="line-through text-gray-400">
-                          &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
-                        </span><br />
-                        <span className=" bg-gray-100 font-semibold text-black-700">
-                          &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
+                {/* Quantity Scroll */}
+                <div className="flex items-center">
+                  <div
+                    ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
+                    className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide w-full"
+                    onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'quantity')}
+                    onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
+                    onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
+                    onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'quantity')}
+                  >
+                    {detail.financials.map((financial, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleQuantityChange(financial.quantity.toString())}
+                        className={`px-2 py-0.5 rounded-lg border ${selectedQuantity === financial.quantity.toString()
+                            ? 'bg-gray-100 text-black border-gray-500'
+                            : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} text-xs`}
+                      >
+                        {financial.quantity}{financial.units}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Grouped Price, Cart, Quantity Controls, and Multiple Qty Price */}
+                <div className="flex items-center justify-between mt-2 space-x-2">
+                  {/* Price and Multiple Qty Price Group */}
+                  <div className="flex flex-col ml-3">
+                    <div className="text-sm text-gray-900">
+                      {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
+                        <>
+                          <span className="line-through text-gray-400">
+                            &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
+                          </span><br />
+                          <span className="bg-gray-100 font-semibold text-black-700">
+                            &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
+                          </span>
+                        </>
+                      ) : (
+                        <span>&#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
+                      )}
+                    </div>
+
+                    {/* Price for Multiple Packs */}
+                    {selectedQuantity && selectedQty > 1 && (
+                      <div className="text-sm font-medium text-gray-800">
+                        {selectedQty}xpacks{' '}
+                        <span className="text-green-900">
+                          &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
                         </span>
-                      </>
-                    ) : (
-                      <span>&#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
+                      </div>
                     )}
                   </div>
 
-                  {/* Price for Multiple Packs */}
-                  {selectedQuantity && selectedQty > 1 && (
-                    <div className=" text-sm font-medium text-gray-800">
-                      {selectedQty}xpacks{' '}
-                      <span className=" text-green-900">
-                        &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Cart and Quantity Controls */}
-                <div className="flex items-center space-x-2">
-                  {showQuantityControls ? (
-                    <div className="flex m-3 bg-green-700 items-center space-x-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
+                  {/* Cart and Quantity Controls */}
+                  <div className="flex items-center space-x-2">
+                    {showQuantityControls ? (
+                      <div className="flex m-3 bg-green-700 items-center space-x-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
+                        <button
+                          className="text-white px-2 py-0.5"
+                          onClick={() => handleQtyChange(selectedQty - 1)}
+                          aria-label="Decrease Quantity"
+                        >
+                          -
+                        </button>
+                        <span className="text-sm text-white font-semibold">{selectedQty}</span>
+                        <button
+                          className="text-white px-2 py-0.5"
+                          onClick={() => handleQtyChange(selectedQty + 1)}
+                          aria-label="Increase Quantity"
+                        >
+                          +
+                        </button>
+                      </div>
+                    ) : (
                       <button
-                        className="text-white px-2 py-0.5 "
-                        onClick={() => handleQtyChange(selectedQty - 1)}
-                        aria-label="Decrease Quantity"
+                        className="ml-auto flex items-center justify-center bg-gray-100 p-2 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
+                        onClick={() => addToCartHandler(detailIndex)}
+                        aria-label="Add Product to Cart"
                       >
-                        -
+                        <FaCartPlus className="w-8 h-8 text-green-800" />
                       </button>
-                      <span className="text-sm text-white  font-semibold">{selectedQty}</span>
-                      <button
-                        className="text-white px-2 py-0.5  "
-                        onClick={() => handleQtyChange(selectedQty + 1)}
-                        aria-label="Increase Quantity"
-                      >
-                        +
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      className="ml-auto flex items-center justify-center bg-gray-100 p-2 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
-                      onClick={() => addToCartHandler(detailIndex)} 
-                      aria-label="Add Product to Cart"
-                    >
-                      {/* <FaShoppingBag className="w-8 h-8 text-gray-700" /> */}
-                      <FaCartPlus  className="w-8 h-8 text-green-800" /> 
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )
-      )}
-    </div><FloatingCartIcon ref={floatingCartIconRef} /></>
-  
+        ))}
+      </div>
+      <FloatingCartIcon ref={floatingCartIconRef} />
+    </>
   );
 };
 
@@ -363,5 +374,3 @@ const getDiscount = (selectedQuantity, financials) => {
   );
   return selectedFinancial ? selectedFinancial.Discount : 0;
 };
-
-

@@ -1,3 +1,4 @@
+
 import { PRODUCTS_URL } from '../constants';
 import { apiSlice } from './apiSlice';
 
@@ -50,6 +51,25 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, { productId }) => [{ type: 'Product', id: productId }],
     }),
+
+    getFinancialDetails: builder.query({
+      query: ({ productId, detailId, financialId }) => ({
+        url: `${PRODUCTS_URL}/${productId}/details/${detailId}/financials/${financialId}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, { productId }) => [{ type: 'Product', id: productId }],
+    }),
+    batchGetFinancialDetails: builder.query({
+      query: (items) => ({
+        url: `${PRODUCTS_URL}/financials/batch`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Ensure JSON content type
+        },
+        data: { items }, // Axios uses `data` for the POST body
+      }),
+    }),
+   
 
     // Mutation to create a new product
     createProduct: builder.mutation({
@@ -140,6 +160,8 @@ export const {
   useGetProductDetailsQuery,
   useCreateProductDetailMutation,
   useCreateFinancialDetailMutation,
+  useGetFinancialDetailsQuery,
+  useBatchGetFinancialDetailsQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useUploadProductImageMutation,

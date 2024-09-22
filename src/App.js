@@ -4,12 +4,14 @@ import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import FloatingCartIcon from './components/FloatingCartIcon';
-
 import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
+import { useWebSocket } from './hooks/useWebSocket';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
+  useWebSocket(); 
   const dispatch = useDispatch();
 
   useEffect(() => {

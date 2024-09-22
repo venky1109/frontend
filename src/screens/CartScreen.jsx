@@ -3,20 +3,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
-import { addToCart, removeFromCart } from '../slices/cartSlice';
-
+import { addToCart, removeFromCart  } from '../slices/cartSlice';
+// import io from 'socket.io-client';
+// import { BASE_URL } from '../constants';  // Import BASE_URL
+// const socket = io(BASE_URL);
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(() => {
-    // Scroll to the top of the page when the component is mounted
-    window.scrollTo(0, 0);
-  }, []);
+
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  useEffect(() => {
+    // Scroll to the top of the page when the component is mounted
+    window.scrollTo(0, 0);
 
+    }, []);
 
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));

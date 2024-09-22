@@ -40,7 +40,7 @@ const MyProfile = ({ onProfileUpdate }) => {  // Accept onProfileUpdate prop
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
       );
 
-      console.log('Geocoding API Response:', response.data); // Log the entire response for debugging
+      // console.log('Geocoding API Response:', response.data); // Log the entire response for debugging
 
       const results = response.data.results;
 
