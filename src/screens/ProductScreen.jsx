@@ -66,6 +66,7 @@ const ProductScreen = () => {
   };
 
   const handleSimilarItemClick = (brand, quantity) => {
+    window.scrollTo(0, 0);
     setSelectedBrand(brand);
     setSelectedQuantity(quantity);
     setAddedToCart(false); // Reset the state on similar item click
@@ -130,7 +131,7 @@ const ProductScreen = () => {
       ) : (
         <>
           {selectedDetail && (
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 border-b border-gray-200">
+            <div className="mt-10 mb-20 flex flex-col md:flex-row items-start md:items-center  gap-4 p-4 border-b border-gray-200">
               <div className="w-full md:w-1/3 flex-shrink-0">
                 <h4 className="text-2xl font-semibold text-center text-green-700 mb-4 mt-2">
                   {selectedBrand} {product.name}

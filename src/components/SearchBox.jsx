@@ -33,7 +33,13 @@ const SearchBox = () => {
   const handleSuggestionClick = (suggestion) => {
     setKeyword('');
     setSuggestions([]);
-    navigate(`/product/${suggestion._id}`);
+    navigate(`/product/${suggestion._id}`, {
+      state: {
+        brand: suggestion.details[0]?.brand, // Assuming the first brand is selected; adjust as needed
+        quantity: suggestion.quantity, // Adjust this field based on your product's structure
+        qty: 1, // Assuming a default quantity of 1; adjust as needed
+      },
+    });
   };
 
   const handleSearch = () => {
@@ -45,7 +51,7 @@ const SearchBox = () => {
   };
 
   return (
-    <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
+    <div className="relative w-full max-w-md  md:max-w-lg lg:max-w-xl">
       {/* Show loader while data is loading */}
       {isLoading && <Loader />}
       {/* Show error message if there is an error */}
