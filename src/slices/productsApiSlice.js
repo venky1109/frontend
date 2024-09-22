@@ -6,7 +6,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Query to get products
     getProducts: builder.query({
-      query: ({ keyword, pageNumber }) => ({
+      query: ({ keyword = '', pageNumber = 1 } = {} ) => ({
         url: PRODUCTS_URL,
         method: 'GET', // Explicitly specify method for axios
         params: { keyword, pageNumber },

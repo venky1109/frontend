@@ -190,7 +190,7 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
           <OtpInput
             value={otp}
             onChange={setOtp}
-            OTPLength={6}
+            OTPLength={4}
             otpType="number"
             autoFocus
             className="opt-container"
