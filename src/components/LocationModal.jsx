@@ -23,7 +23,7 @@ const LocationModal = ({ setLocation, closeModal }) => {
             );
           
             const data = await response.json();
-            console.log(data)
+            // console.log(data)
             if (data && data.address) {
               const { city, state, postcode, county } = data.address;
               const address = `${city || county}, ${state}, ${postcode}`;

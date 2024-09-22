@@ -10,6 +10,13 @@ export const useWebSocket = () => {
   useEffect(() => {
     const socket = io(BASE_URL);
 
+      // Emit the current cart to the server on connection
+      socket.on('connect', () => {
+        const localStorageCart = JSON.parse(localStorage.getItem('cart')) || { cartItems: [] };
+        // console.log('Client connected, sending cart:', localStorageCart.cartItems);
+        socket.emit('clientCart', localStorageCart.cartItems);  // Send current cart to server
+      });
+
     socket.on('productUpdate', (updatedProduct) => {
     //   console.log('Received productUpdate from server:', updatedProduct);
 

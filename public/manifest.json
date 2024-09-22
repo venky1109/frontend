@@ -11,6 +11,11 @@
       "src": "/images/ManaKiranaLogoWithName512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/images/ManaKiranaLogo1024x1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
     }
   ],
   "screenshots": [
@@ -18,17 +23,19 @@
       "src": "/images/mob_screen_1.jpg",
       "sizes": "427x751",
       "type": "image/png",
-      "form_factor": "narrow"  
+      "form_factor": "narrow"
     },
     {
       "src": "/images/desk_screen_1.jpg",
       "sizes": "1882x857",
       "type": "image/png",
-      "form_factor": "wide" 
+      "form_factor": "wide"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "description": "ManaKirana is an online grocery store."
 }

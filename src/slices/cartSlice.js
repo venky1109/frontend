@@ -38,6 +38,18 @@ const cartSlice = createSlice({
       // Update the cart state
       return updateCart(state, item);
     },
+
+    updateCartItemQuantity: (state, action) => {
+      const { productId, brand, quantity, newQty } = action.payload;
+      const existingItem = state.cartItems.find(
+        (item) => item.productId === productId && item.brand === brand && item.quantity === quantity
+      );
+
+      if (existingItem) {
+        existingItem.qty = newQty; // Update the quantity
+      }
+    },
+
     removeFromCart: (state, action) => {
       const { productId, brand, quantity } = action.payload;
       // console.log(`Before removal: ${JSON.stringify(state.cartItems)}`);
@@ -51,8 +63,7 @@ const cartSlice = createSlice({
 
       // Update the cart state after removal
       return updateCart(state);
-    },
-    updateCartProduct: (state, action) => {
+    },updateCartProduct: (state, action) => {
       const updatedProduct = action.payload;
       // console.log('Received updated product:', updatedProduct);
     
@@ -135,6 +146,9 @@ export const {
   savePaymentMethod,
   clearCartItems,
   resetCart,
+  updateCartItemQuantity,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
+
+

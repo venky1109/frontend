@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../slices/cartSlice';
 import { Link } from 'react-router-dom';
 import { FaCartPlus } from "react-icons/fa6";
@@ -11,7 +12,11 @@ const CategoryScreenCard = ({ product }) => {
   const [showQuantityControls, setShowQuantityControls] = useState({});
   const productImageRefs = useRef([]);
   const floatingCartIconRef = useRef(null);
+  const scrollContainersRef = useRef({});
   const dispatch = useDispatch();
+
+  // Access the cart state from Redux
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
   useEffect(() => {
     const initialQuantities = {};
@@ -22,26 +27,47 @@ const CategoryScreenCard = ({ product }) => {
       const firstQuantity = detail.financials[0]?.quantity.toString();
       initialQuantities[index] = firstQuantity;
       initialQtys[index] = 1;
-      initialShowControls[index] = false;
+
+      // Check if the item is already in the cart for the given quantity
+      const cartItem = cartItems.find(
+        (item) =>
+          item.productId === product._id &&
+          item.brand === detail.brand &&
+          item.quantity === firstQuantity
+      );
+
+      initialShowControls[index] = !!cartItem;
+      if (cartItem) {
+        initialQtys[index] = cartItem.qty; // Set the initial quantity from the cart
+      }
     });
 
     setSelectedQuantities(initialQuantities);
     setSelectedQtys(initialQtys);
     setShowQuantityControls(initialShowControls);
-  }, [product.details]);
+  }, [product.details, product._id, cartItems]);
 
   const handleQuantityChange = (detailIndex, quantity) => {
     setSelectedQuantities((prevState) => ({
       ...prevState,
-      [detailIndex]: quantity
+      [detailIndex]: quantity,
     }));
+
+    const cartItem = cartItems.find(
+      (item) =>
+        item.productId === product._id &&
+        item.brand === product.details[detailIndex].brand &&
+        item.quantity === quantity
+    );
+
     setSelectedQtys((prevState) => ({
       ...prevState,
-      [detailIndex]: 1
+      [detailIndex]: cartItem ? cartItem.qty : 1, // Set the quantity from cart if it exists
     }));
+
     setShowQuantityControls((prevState) => ({
       ...prevState,
-      [detailIndex]: false
+      [detailIndex]: !!cartItem, // Show controls only if item is in the cart
     }));
   };
 
@@ -49,34 +75,39 @@ const CategoryScreenCard = ({ product }) => {
     if (newQty >= 1 && newQty <= 9) {
       setSelectedQtys((prevState) => ({
         ...prevState,
-        [detailIndex]: newQty
+        [detailIndex]: newQty,
       }));
-      // Dispatch to add to cart whenever quantity changes
       const detail = product.details[detailIndex];
       const selectedQuantity = selectedQuantities[detailIndex];
-      const selectedFinancial = detail.financials.find(financial => financial.quantity.toString() === selectedQuantity);
-      dispatch(addToCart({
-        name: product.name,
-        productId: product._id,
-        category: product.category,
-        brand: detail.brand,
-        quantity: selectedQuantity,
-        units: selectedFinancial?.units,
-        price: selectedFinancial ? selectedFinancial.price : 0,
-        dprice: selectedFinancial ? selectedFinancial.dprice : 0,
-        Discount: selectedFinancial ? selectedFinancial.Discount : 0,
-        image: detail.images[0]?.image,
-        qty: newQty,
-        financialId: selectedFinancial?._id,
-        brandId: detail._id,
-        countInStock: 10,
-      }));
+      const selectedFinancial = detail.financials.find(
+        (financial) => financial.quantity.toString() === selectedQuantity
+      );
+      dispatch(
+        addToCart({
+          name: product.name,
+          productId: product._id,
+          category: product.category,
+          brand: detail.brand,
+          quantity: selectedQuantity,
+          units: selectedFinancial?.units,
+          price: selectedFinancial ? selectedFinancial.price : 0,
+          dprice: selectedFinancial ? selectedFinancial.dprice : 0,
+          Discount: selectedFinancial ? selectedFinancial.Discount : 0,
+          image: detail.images[0]?.image,
+          qty: newQty,
+          financialId: selectedFinancial?._id,
+          brandId: detail._id,
+          countInStock: 10,
+        })
+      );
     }
   };
 
   const addToCartHandler = (detailIndex, detail) => {
     const selectedQuantity = selectedQuantities[detailIndex];
-    const selectedFinancial = detail.financials.find(financial => financial.quantity.toString() === selectedQuantity);
+    const selectedFinancial = detail.financials.find(
+      (financial) => financial.quantity.toString() === selectedQuantity
+    );
 
     const imageElement = productImageRefs.current[detailIndex];
     const cartElement = floatingCartIconRef.current;
@@ -111,46 +142,81 @@ const CategoryScreenCard = ({ product }) => {
       });
     }
 
-    dispatch(addToCart({
-      name: product.name,
-      productId: product._id,
-      category: product.category,
-      brand: detail.brand,
-      quantity: selectedQuantity,
-      units: selectedFinancial?.units,
-      price: selectedFinancial ? selectedFinancial.price : 0,
-      dprice: selectedFinancial ? selectedFinancial.dprice : 0,
-      Discount: selectedFinancial ? selectedFinancial.Discount : 0,
-      image: detail.images[0]?.image,
-      qty: selectedQtys[detailIndex],
-      financialId: selectedFinancial?._id,
-      brandId: detail._id,
-      countInStock: 10,
-    }));
+    dispatch(
+      addToCart({
+        name: product.name,
+        productId: product._id,
+        category: product.category,
+        brand: detail.brand,
+        quantity: selectedQuantity,
+        units: selectedFinancial?.units,
+        price: selectedFinancial ? selectedFinancial.price : 0,
+        dprice: selectedFinancial ? selectedFinancial.dprice : 0,
+        Discount: selectedFinancial ? selectedFinancial.Discount : 0,
+        image: detail.images[0]?.image,
+        qty: selectedQtys[detailIndex],
+        financialId: selectedFinancial?._id,
+        brandId: detail._id,
+        countInStock: 10,
+      })
+    );
 
     setShowQuantityControls((prevState) => ({
       ...prevState,
-      [detailIndex]: true
+      [detailIndex]: true,
     }));
+  };
+
+  const handleMouseInteraction = (e, index, action) => {
+    const scrollContainer = scrollContainersRef.current[index];
+    if (!scrollContainer) return;
+
+    if (action === 'down') {
+      scrollContainer.classList.add('active');
+      scrollContainer.dataset.startX = e.pageX - scrollContainer.offsetLeft;
+      scrollContainer.dataset.scrollLeft = scrollContainer.scrollLeft;
+    } else if (action === 'move') {
+      if (!scrollContainer.classList.contains('active')) return;
+      e.preventDefault();
+      const x = e.pageX - scrollContainer.offsetLeft;
+      const walk = (x - scrollContainer.dataset.startX) * 2;
+      scrollContainer.scrollLeft = scrollContainer.dataset.scrollLeft - walk;
+    } else {
+      scrollContainer.classList.remove('active');
+    }
   };
 
   return (
     <>
       {product.details.map((detail, detailIndex) => (
-        <div key={`${product._id}-${detail.brand}`} className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs">
-          <Link to={`/product/${product._id}`} state={{ brand: detail.brand, quantity: selectedQuantities[detailIndex], qty: selectedQtys[detailIndex] }}>
+        <div
+          key={`${product._id}-${detail.brand}`}
+          className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
+        >
+          <Link
+            to={`/product/${product._id}`}
+            state={{
+              brand: detail.brand,
+              quantity: selectedQuantities[detailIndex],
+              qty: selectedQtys[detailIndex],
+            }}
+          >
             <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
               {detail.images?.map((image, imageIndex) => (
                 <img
                   key={imageIndex}
                   src={image.image}
-                  ref={el => productImageRefs.current[detailIndex] = el}
+                  ref={(el) => (productImageRefs.current[detailIndex] = el)}
                   className="w-full h-full object-cover transition-transform duration-250 ease-in-out transform hover:scale-110"
                   alt={`${product.name}`}
                 />
               ))}
               <span className="absolute top-2 left-2 bg-green-700 text-white px-1 py-0.5 rounded-lg text-xs">
-                {getDiscount(selectedQuantities[detailIndex], detail.financials)}% off
+                {getDiscount(
+                  selectedQuantities[detailIndex],
+                  detail.financials
+                )}
+                % off
               </span>
             </div>
           </Link>
@@ -160,16 +226,32 @@ const CategoryScreenCard = ({ product }) => {
 
             {/* Display Units and Quantity Options */}
             <div className="flex items-center">
-              <div className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide w-full">
+              <div 
+                ref={(el) => (scrollContainersRef.current[`units-${detailIndex}`] = el)}
+                className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide w-full"
+                onMouseDown={(e) => handleMouseInteraction(e, `units-${detailIndex}`, 'down')}
+                onMouseLeave={() => handleMouseInteraction(null, `units-${detailIndex}`, 'up')}
+                onMouseUp={() => handleMouseInteraction(null, `units-${detailIndex}`, 'up')}
+                onMouseMove={(e) => handleMouseInteraction(e, `units-${detailIndex}`, 'move')}
+              >
                 {detail.financials.map((financial, index) => (
                   <button
                     key={index}
-                    onClick={() => handleQuantityChange(detailIndex, financial.quantity.toString())}
-                    className={`px-2 py-0.5 rounded-lg border ${selectedQuantities[detailIndex] === financial.quantity.toString()
-                      ? 'bg-gray-100 text-black border-gray-500'
-                      : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} text-xs`}
+                    onClick={() =>
+                      handleQuantityChange(
+                        detailIndex,
+                        financial.quantity.toString()
+                      )
+                    }
+                    className={`px-2 py-0.5 rounded-lg border ${
+                      selectedQuantities[detailIndex] ===
+                      financial.quantity.toString()
+                        ? 'bg-gray-100 text-black border-gray-500'
+                        : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'
+                    } text-xs`}
                   >
-                    {financial.quantity}{financial.units}
+                    {financial.quantity}
+                    {financial.units}
                   </button>
                 ))}
               </div>
@@ -179,18 +261,36 @@ const CategoryScreenCard = ({ product }) => {
             <div className="flex items-center justify-between mt-2 space-x-2">
               {/* Price and Multiple Qty Price Group */}
               <div className="flex flex-col ml-3">
-                <div className="text-sm text-gray-900">
-                  {selectedQuantities[detailIndex] && getDiscount(selectedQuantities[detailIndex], detail.financials) > 0 ? (
+                <div className="text-md text-gray-900">
+                  {selectedQuantities[detailIndex] &&
+                  getDiscount(
+                    selectedQuantities[detailIndex],
+                    detail.financials
+                  ) > 0 ? (
                     <>
                       <span className="line-through text-gray-400 mr-2">
-                        &#x20b9;{getPrice(selectedQuantities[detailIndex], detail.financials).toFixed(2)}
-                      </span> 
+                        &#x20b9;
+                        {getPrice(
+                          selectedQuantities[detailIndex],
+                          detail.financials
+                        ).toFixed(2)}
+                      </span>
                       <span className="bg-gray-100 font-semibold text-black-700">
-                        &#x20b9;{getDprice(selectedQuantities[detailIndex], detail.financials).toFixed(2)}
+                        &#x20b9;
+                        {getDprice(
+                          selectedQuantities[detailIndex],
+                          detail.financials
+                        ).toFixed(2)}
                       </span>
                     </>
                   ) : (
-                    <span>&#x20b9;{getPrice(selectedQuantities[detailIndex], detail.financials).toFixed(2)}</span>
+                    <span>
+                      &#x20b9;
+                      {getPrice(
+                        selectedQuantities[detailIndex],
+                        detail.financials
+                      ).toFixed(2)}
+                    </span>
                   )}
                 </div>
 
@@ -199,7 +299,13 @@ const CategoryScreenCard = ({ product }) => {
                   <div className="text-xs font-small font-bold text-gray-800">
                     {selectedQtys[detailIndex]}x Packs{' '}
                     <span className="text-green-900">
-                      &#x20b9;{(getDprice(selectedQuantities[detailIndex], detail.financials) * selectedQtys[detailIndex]).toFixed(2)}
+                      &#x20b9;
+                      {(
+                        getDprice(
+                          selectedQuantities[detailIndex],
+                          detail.financials
+                        ) * selectedQtys[detailIndex]
+                      ).toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -211,15 +317,21 @@ const CategoryScreenCard = ({ product }) => {
                   <div className="flex m-3 bg-green-700 items-center space-x-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
                     <button
                       className="text-white px-2 py-0.5"
-                      onClick={() => handleQtyChange(detailIndex, selectedQtys[detailIndex] - 1)}
+                      onClick={() =>
+                        handleQtyChange(detailIndex, selectedQtys[detailIndex] - 1)
+                      }
                       aria-label="Decrease Quantity"
                     >
                       -
                     </button>
-                    <span className="text-sm text-white font-semibold">{selectedQtys[detailIndex]}</span>
+                    <span className="text-sm text-white font-semibold">
+                      {selectedQtys[detailIndex]}
+                    </span>
                     <button
                       className="text-white px-2 py-0.5"
-                      onClick={() => handleQtyChange(detailIndex, selectedQtys[detailIndex] + 1)}
+                      onClick={() =>
+                        handleQtyChange(detailIndex, selectedQtys[detailIndex] + 1)
+                      }
                       aria-label="Increase Quantity"
                     >
                       +
@@ -267,4 +379,3 @@ const getDiscount = (selectedQuantity, financials) => {
   );
   return selectedFinancial ? selectedFinancial.Discount : 0;
 };
-

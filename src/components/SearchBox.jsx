@@ -1,83 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { FaSearch } from 'react-icons/fa'; // Import the search icon
+import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import suggestionsData from '../suggestions.json'; // Import the flat file
+import { useGetProductsQuery } from '../slices/productsApiSlice';
+import Loader from '../components/Loader'; // Import a loader component for loading state
+import Message from '../components/Message'; // Import a message component for error state
 
 const SearchBox = () => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
+  // Fetch products from the backend
+  const { data: productsData, isLoading, error } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
+
   useEffect(() => {
-    if (keyword.trim().length >= 3) {
-      const filteredSuggestions = suggestionsData
-        .filter((suggestion) =>
-          suggestion.toLowerCase().includes(keyword.toLowerCase())
-        )
-        .slice(0, 4); // Trim suggestions to 4
+    if (productsData && productsData.products && keyword.trim().length >= 3) {
+      const filteredSuggestions = productsData.products.filter((product) => {
+        const matchesProductName = product.name.toLowerCase().includes(keyword.toLowerCase());
+        const matchesBrandName = product.details.some((detail) =>
+          detail.brand.toLowerCase().includes(keyword.toLowerCase())
+        );
+
+        return matchesProductName || matchesBrandName;
+      });
+
       setSuggestions(filteredSuggestions);
     } else {
-      setSuggestions([]); // Clear suggestions if less than 3 characters
+      setSuggestions([]);
     }
-  }, [keyword]);
-
-  const submitHandler = (e) => {
-    if (e) e.preventDefault();
-
-    let searchQuery = keyword.trim();
-
-    if (!searchQuery) {
-      if (suggestions.length > 0) {
-        searchQuery = suggestions[0];
-      } else {
-        return; // Do nothing if no keyword and no suggestions
-      }
-    }
-
-
-    navigate(`/search/${searchQuery}`);
-    setKeyword(''); // Clear the input field after submission
-    setSuggestions([]); // Clear suggestions after submission
-  };
+  }, [keyword, productsData]);
 
   const handleSuggestionClick = (suggestion) => {
-    setKeyword(''); // Clear the keyword when a suggestion is clicked
-    setSuggestions([]); // Clear suggestions after click
-    navigate(`/search/${suggestion}`);
+    setKeyword('');
+    setSuggestions([]);
+    navigate(`/product/${suggestion._id}`);
+  };
+
+  const handleSearch = () => {
+    if (keyword.trim()) {
+      navigate(`/search?query=${keyword}`);
+      setKeyword('');
+      setSuggestions([]);
+    }
   };
 
   return (
-    <div className="relative w-full">
-      <form onSubmit={submitHandler} className="flex items-center w-full">
-        <div className="relative w-full">
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-700" />
-          <input
-            type="text"
-            name="q"
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
-            placeholder="Search Groceries..."
-            className="w-full sm:w-80 md:w-96 lg:w-[32rem] pl-10 px-10 py-2 border-2 border-gray-200 rounded-md focus:outline-none"
-            autoComplete="off"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                submitHandler(e);
-              }
-            }}
-          />
-        </div>
-      </form>
-      {/* Render suggestions */}
-      {keyword !== '' && suggestions.length > 2 && (
-        <ul className="absolute left-0 mt-1 w-full sm:w-80 md:w-96 lg:w-[32rem] bg-white border border-gray-300 rounded-md shadow-lg z-10">
+    <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
+      {/* Show loader while data is loading */}
+      {isLoading && <Loader />}
+      {/* Show error message if there is an error */}
+      {error && <Message variant="danger">{error?.data?.message || error.message}</Message>}
+
+      <div className="flex items-center border border-gray-300 rounded-lg bg-white p-2">
+        <input
+          type="text"
+          className="flex-grow outline-none text-gray-700 p-2"
+          placeholder="Search for products or brands..."
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+        <button onClick={handleSearch} className="p-2 text-gray-500">
+          <FaSearch />
+        </button>
+      </div>
+      {suggestions.length > 0 && (
+        <ul className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-10">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
+              className="p-2 hover:bg-gray-200 cursor-pointer"
               onClick={() => handleSuggestionClick(suggestion)}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100"
             >
-              {suggestion}
+              {suggestion.name}
             </li>
           ))}
         </ul>

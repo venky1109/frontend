@@ -29,7 +29,7 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      console.log('Service Worker registered with scope:', registration.scope);
+      // console.log('Service Worker registered with scope:', registration.scope);
 
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
@@ -38,13 +38,13 @@ function registerValidSW(swUrl, config) {
             if (installingWorker.state === 'installed') {
               if (navigator.serviceWorker.controller) {
                 // New content is available; please refresh.
-                console.log('New content is available and will be used when all tabs are closed.');
+                // console.log('New content is available and will be used when all tabs are closed.');
                 if (config && config.onUpdate) {
                   config.onUpdate(registration);
                 }
               } else {
                 // Content is cached for offline use.
-                console.log('Content is cached for offline use.');
+                // console.log('Content is cached for offline use.');
                 if (config && config.onSuccess) {
                   config.onSuccess(registration);
                 }
@@ -80,7 +80,7 @@ function checkValidServiceWorker(swUrl, config) {
       }
     })
     .catch(() => {
-      console.log('No internet connection found. App is running in offline mode.');
+      // console.log('No internet connection found. App is running in offline mode.');
     });
 }
 
