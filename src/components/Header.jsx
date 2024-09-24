@@ -1,14 +1,13 @@
-
-
 import { useEffect, useRef, useState } from 'react';
-import { FaUserCircle, FaWhatsapp, FaPhone } from 'react-icons/fa'; // WhatsApp Icon
+import { FaUserCircle } from 'react-icons/fa'; // WhatsApp Icon
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import SearchBox from './SearchBox';
 import logo from '../assets/ManaKiranaLogoWithName.gif';
 import LoginScreen from './LoginScreen';
 import Account from './Account';
-import HomeConfig from '../HomeConfig.json'
+import ContactUsBanner from './ContactUsBanner';
+// import HomeConfig from '../HomeConfig.json';
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -20,8 +19,8 @@ const Header = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showAccountForm, setShowAccountForm] = useState(false);
 
-  const [whatsappNumber] = useState(HomeConfig.whatsappNumber?.[0] || 'No Number Available');
-  const [phoneNumber] = useState(HomeConfig.phoneNumber?.[0] || 'No Number Available' )
+  // const [whatsappNumber] = useState(HomeConfig.whatsappNumber?.[0] || 'No Number Available');
+  // const [phoneNumber] = useState(HomeConfig.phoneNumber?.[0] || 'No Number Available' )
 
   const toggleLoginForm = () => {
     setShowLoginForm((prev) => !prev);
@@ -61,27 +60,13 @@ const Header = () => {
           </Link>
 
 
-<div className="flex-grow flex space-y-1 mr-5">
-  <SearchBox />
-  <div className="flex items-center space-x-2 bg-gray-200 rounded-md p-3 m-3">
-    {/* First line: Order from */}
-    <div className="text-gray-500 font-bold text-xs">
-      Order from:
-    </div>
-    
-    {/* Second line: WhatsApp */}
-    <div className="flex items-center space-x-2">
-      <FaWhatsapp className="text-green-700" size={30} />
-      <span className="text-gray-500 font-bold text-xs">WhatsApp: {whatsappNumber}</span>
-    </div>
-    
-    {/* Third line: Phone */}
-    <div className="flex items-center space-x-2 ml-2">
-      <FaPhone className="text-green-700" size={25} /> {/* Replace this with your phone icon */}
-      <span className="text-gray-500 font-bold text-xs">Phone: {phoneNumber}</span>
-    </div>
-  </div>
+<div className="flex-grow flex mr-5 space-x-1">
+    <SearchBox />
 </div>
+<div className="hidden md:flex">
+    <ContactUsBanner />
+  </div>
+
 
 
 

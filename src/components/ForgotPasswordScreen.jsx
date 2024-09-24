@@ -139,7 +139,7 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
             <OtpInput
               value={otp}
               onChange={setOtp}
-              OTPLength={4}
+              OTPLength={6}
               otpType="number"
               autoFocus
               className="opt-container"
