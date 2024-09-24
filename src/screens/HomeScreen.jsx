@@ -14,12 +14,12 @@ import { useNavigate } from 'react-router-dom'; // Import JSON configuration
 // import Product from '../components/Product'; // Import Product component for displaying products
 const AdvertisingBanner = React.lazy(() => import('../components/Advertise'));
 const PromotionCard = React.lazy(() => import('../components/PromotionCard'));
-const Product = React.lazy(() => import('../components/Product')); // For react-router-dom v6
+// const Product = React.lazy(() => import('../components/Product')); // For react-router-dom v6
 
 const HomeScreen = () => {
   const adv = advertise.find((item) => item.type === 'BodyBanner');
   const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const scrollContainerRef = useRef(null);
   const scrollSpeed = 0; // Adjust scroll speed
     const navigate = useNavigate();
@@ -40,9 +40,9 @@ const HomeScreen = () => {
     if (categoriesData && categoriesData.categories) {
       setCategories(categoriesData.categories);
     }
-    if (productsData && productsData.products) {
-      setProducts(productsData.products);
-    }
+    // if (productsData && productsData.products) {
+    //   setProducts(productsData.products);
+    // }
   }, [categoriesData, productsData]);
 
   // Define the auto-scroll function outside of useEffect
@@ -181,7 +181,7 @@ const HomeScreen = () => {
             ))}
           </div>
 
-          <h5 className="text-2xl font-serif text-green-800 mb-4 mt-2 semi-bold">
+          {/* <h5 className="text-2xl font-serif text-green-800 mb-4 mt-2 semi-bold">
             All Products
           </h5>
 
@@ -191,7 +191,7 @@ const HomeScreen = () => {
                 <Product product={product} />
               </Suspense>
             ))}
-          </div>
+          </div> */}
         </div>
       )}
     </>
