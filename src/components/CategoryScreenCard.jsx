@@ -222,7 +222,32 @@ const CategoryScreenCard = ({ product }) => {
           </Link>
 
           <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-            <p className="text-sm font-serif text-maroon-600">{detail.brand}</p>
+          <p className="text-sm font-serif text-maroon-600">
+  {(() => {
+    const brandWords = detail.brand.toLowerCase().split(' ');
+    const productWords = product.name.toLowerCase().split(' ');
+
+    // Combine both brand and product words into a set to remove duplicates
+    const combinedWords = [...new Set([...brandWords, ...productWords])];
+
+    // Rebuild the final string (capitalize the first letter of each word)
+    const finalString = combinedWords
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    return finalString;
+  })()}
+</p>
+
+
+
+
+
+
+
+
+
+
 
             {/* Display Units and Quantity Options */}
             <div className="flex items-center">
