@@ -9,18 +9,33 @@
       "styles": "mt-4 bg-gray-100 p-8 rounded-md",
       "productsPerCategory": 5,
       "customization": {
-        "categories": [
-          { "key": "SNACKS", "name": "SNACKS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fsnack.jpg?alt=media&token=7140eff2-c0a7-43ac-8ef8-698cc20de7ec" },
-          { "key": "dryfruits", "name": "DryFruits", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fdry_fruits.jpg?alt=media&token=64c02ea8-ad75-423e-9483-ae4f360cca4b" },
-          { "key": "FLOUR_SEMIGRANS", "name": "FLOUR & SEMIGRAINS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fflours.jpg?alt=media&token=8df8ae7f-df3d-498e-bc69-9cc1c2c6e312" },
-          { "key": "BEAUTY_PRODUCTS", "name": "BEAUTY PRODUCTS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fbeauty.jpg?alt=media&token=a48501f3-13e5-47ce-96e7-3dcb2164fd18" },
-          { "key": "NUTRITIONAL_MILK_MIXERS", "name": "NUTRITIONAL MILK MIXERS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fhealth_drinks.jpg?alt=media&token=d6f1c41f-117e-42e0-971d-fc7bc3377c94" },
-          { "key": "pooja_needs", "name": "Pooja Needs", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fpooja_needs.jpg?alt=media&token=def2bf2e-e293-425d-a850-93d3f3045f6a" },
-          { "key": "DAILY_NEEDS", "name": "DAILY NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Ffood_grains.jpg?alt=media&token=4aba5077-b170-430a-8859-5d9ed34a86bd" },
-          { "key": "spices", "name": "Spices", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fspices.jpg?alt=media&token=d9f51236-0490-4a27-9d0a-3cefeaaa94e3" },
-          { "key": "HEALTH_&_HYGIENE", "name": "HEALTH & HYGIENE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" }
-        ]
-      }
+        
+          "categories": [
+            { "key": "BATH_BODY", "name": "BATH & BODY", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "BISCUITS_CHOCOLATES", "name": "BISCUITS & CHOCOLATES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fsnack.jpg?alt=media&token=7140eff2-c0a7-43ac-8ef8-698cc20de7ec" },
+            { "key": "CLEANING_ESSENTIALS", "name": "CLEANING ESSENTIALS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "DAILY_NEEDS", "name": "DAILY NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Ffood_grains.jpg?alt=media&token=4aba5077-b170-430a-8859-5d9ed34a86bd" },
+            { "key": "DRYFRUITS", "name": "DRYFRUITS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fdry_fruits.jpg?alt=media&token=64c02ea8-ad75-423e-9483-ae4f360cca4b" },
+            { "key": "FEMININE_HYGIENE", "name": "FEMININE HYGIENE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "FLOURS", "name": "FLOURS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fflours.jpg?alt=media&token=8df8ae7f-df3d-498e-bc69-9cc1c2c6e312" },
+            { "key": "FOOD_ADDITIVES", "name": "FOOD ADDITIVES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "GROOMING", "name": "GROOMING", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "HAIRCARE", "name": "HAIRCARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fbeauty.jpg?alt=media&token=a48501f3-13e5-47ce-96e7-3dcb2164fd18" },
+            { "key": "HEALTH_WELLNESS", "name": "HEALTH & WELLNESS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "HOME_NEEDS", "name": "HOME NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "NUTRITIONAL_MILK_MIXERS", "name": "NUTRITIONAL MILK MIXERS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fhealth_drinks.jpg?alt=media&token=d6f1c41f-117e-42e0-971d-fc7bc3377c94" },
+            { "key": "OILS", "name": "OILS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "ORALCARE", "name": "ORALCARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "POOJA_NEEDS", "name": "POOJA NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fpooja_needs.jpg?alt=media&token=def2bf2e-e293-425d-a850-93d3f3045f6a" },
+            { "key": "RICE_PULSES", "name": "RICE & PULSES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" },
+            { "key": "SKINCARE", "name": "SKINCARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fbeauty.jpg?alt=media&token=a48501f3-13e5-47ce-96e7-3dcb2164fd18" },
+            { "key": "SNACKS_BREAKFAST", "name": "SNACKS & BREAKFAST", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fsnack.jpg?alt=media&token=7140eff2-c0a7-43ac-8ef8-698cc20de7ec" },
+            { "key": "SPICES_MASALAS", "name": "SPICES & MASALAS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fspices.jpg?alt=media&token=d9f51236-0490-4a27-9d0a-3cefeaaa94e3" },
+            { "key": "TEA_COFFEE", "name": "TEA & COFFEE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH.jpg?alt=media&token=c51ab4f8-2696-4c2e-93ca-2f9035e6f3f8" }
+          ]
+        }
+        
+      
     }
   ]
 }

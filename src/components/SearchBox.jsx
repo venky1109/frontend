@@ -236,7 +236,7 @@ const SearchBox = () => {
 
       {/* Loader and Error Handling */}
       <div className="absolute top-12 left-0 right-0">
-        {isLoading && <Loader />}
+        {/* {isLoading && <Loader />} */}
         {error && <Message variant="danger">{error?.data?.message || error.message}</Message>}
       </div>
 

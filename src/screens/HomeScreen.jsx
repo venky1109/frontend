@@ -106,13 +106,13 @@ const HomeScreen = () => {
   return (
     <>
       <div className="mt-20">
-        <Suspense fallback={<Loader />}>
+        {/* <Suspense fallback={<Loader />}> */}
           <AdvertisingBanner
             images={adv.images}
             height={adv.dimensions.height}
             width={adv.dimensions.width}
           />
-        </Suspense>
+        {/* </Suspense> */}
       </div>
 
       {isCategoriesLoading || isProductsLoading ? (
@@ -130,21 +130,23 @@ const HomeScreen = () => {
               className="overflow-x-scroll scrollbar-hide"
             >
               <div className="flex whitespace-nowrap animate-scroll">
+              <Suspense fallback={<Loader />}>
                 {promotionSections.map((promotion, index) => (
                   <div
                     key={index}
                     className="inline-block mb-4 mr-3 w-[48%]"
                   >
-                    <Suspense fallback={<Loader />}>
+                   
                       <PromotionCard
                         title={promotion.title || 'Title'}
                         description={promotion.description || 'Description'}
                         image={promotion.image || ''} 
 			 onClick={() => handleCardClick(promotion)} 
                       />
-                    </Suspense>
+                   
                   </div>
-                ))}
+                  
+                ))} </Suspense>
 
                 {promotionSections.map((promotion, index) => (
                   <div
