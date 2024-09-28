@@ -33,12 +33,15 @@ const ProductScreen = () => {
   useEffect(() => {
     if (product && selectedBrand) {
       const detail = product.details.find((detail) => detail.brand === selectedBrand);
-      setSelectedDetail(detail);
-      if (detail && detail.financials.length > 0) {
-        setSelectedQuantity(detail.financials[0].quantity.toString());
+      if (detail) {
+        setSelectedDetail(detail);
+        if (detail.financials && detail.financials.length > 0) {
+          setSelectedQuantity(detail.financials[0].quantity.toString());
+        }
       }
     }
-  }, [selectedBrand, product]);
+  }, [product, selectedBrand]);
+  
 
   // Reset "Added to Cart" when quantity, brand, or qty changes
   useEffect(() => {
@@ -116,6 +119,14 @@ const ProductScreen = () => {
     navigate(-1); // Go back to the previous page in the browser history
   };
 
+
+  useEffect(() => {
+    if (product && product.details.length > 0) {
+      setSelectedBrand(product.details[0].brand); // Default to the first brand for the new product
+    }
+  }, [product]);
+    
+
   return (
     <div className="mt-24">
       <button
@@ -130,7 +141,7 @@ const ProductScreen = () => {
         <Message variant="danger">{error?.data?.message || error.error}</Message>
       ) : (
         <>
-          {selectedDetail && (
+          {product && product.details && selectedDetail && (
             <div className="mt-10 mb-20 flex flex-col md:flex-row items-start md:items-center  gap-4 p-4 border-b border-gray-200">
               <div className="w-full md:w-1/3 flex-shrink-0">
                 <h4 className="text-2xl font-semibold text-center text-green-700 mb-4 mt-2">

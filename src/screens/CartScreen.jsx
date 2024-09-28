@@ -3,26 +3,27 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
-import { addToCart, removeFromCart  } from '../slices/cartSlice';
-// import io from 'socket.io-client';
-// import { BASE_URL } from '../constants';  // Import BASE_URL
-// const socket = io(BASE_URL);
+import { addToCart, removeFromCart } from '../slices/cartSlice';
+
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  useEffect(() => {
-    // Scroll to the top of the page when the component is mounted
-    window.scrollTo(0, 0);
+  const userInfo = useSelector((state) => state.auth.userInfo); // Assuming you have userInfo
 
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const addToCartHandler = (product, qty) => {
-    dispatch(addToCart({ ...product, qty }));
+    if (qty === 0) {
+      removeFromCartHandler(product.productId, product.brand, product.quantity);
+    } else {
+      dispatch(addToCart({ ...product, qty }));
+    }
   };
 
   const removeFromCartHandler = (productId, brand, quantity) => {
@@ -30,27 +31,30 @@ const CartScreen = () => {
   };
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=/shipping');
+    if (!userInfo) {
+      navigate('/login?redirect=/shipping');
+    } else {
+      navigate('/shipping');
+    }
   };
 
-   const goBackHandler = () => {
+  const goBackHandler = () => {
     navigate(-1);
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row mt-20 mb-20">
       <div className="md:w-2/3 p-4">
-      <button onClick={goBackHandler} className='text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block'>
-            Go Back
-          </button>
+        <button onClick={goBackHandler} className="text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block">
+          Go Back
+        </button>
         <h5 className="text-xl font-semibold mb-4">Shopping Cart</h5>
         {cartItems.length === 0 ? (
           <Message>Your cart is empty</Message>
         ) : (
           <ul className="space-y-4">
             {cartItems.map((item) => (
-              
-              <li key={`${item.productId}-${item.financialId}`}className="flex items-center border-b pb-4">
+              <li key={`${item.productId}-${item.financialId}`} className="flex items-center border-b pb-4">
                 <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
                 <div className="flex-1">
                   <Link to={`/product/${item.productId}`} className="text-green-700 font-semibold hover:text-green-900">
@@ -97,7 +101,7 @@ const CartScreen = () => {
       <div className="md:w-1/3 p-4">
         <div className="border p-4 rounded-lg">
           <h5 className="text-lg font-semibold mb-4">
-            Subtotal ({cartItems.length} items) : &#x20b9;{cartItems.reduce((acc, item) => acc + item.dprice * item.qty, 0).toFixed(2)}
+            Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)} items) : &#x20b9;{cartItems.reduce((acc, item) => acc + item.dprice * item.qty, 0).toFixed(2)}
           </h5>
           <button
             type="button"
