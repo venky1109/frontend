@@ -48,17 +48,33 @@ const Product = ({ product, keyword }) => {
       return discount > bestBrand.discount ? { brand: detail.brand, discount } : bestBrand;
     }, { brand: '', discount: 0 }).brand;
   }, [product.details, calculateMaxDiscount]);
-
+  
   useEffect(() => {
-    const brand = keyword
+    // Check if a keyword was provided and filter brand based on that, else use the memoized brand with the highest discount
+    let brand = keyword
       ? product.details.find((detail) => detail.brand.toLowerCase().includes(keyword.toLowerCase()))?.brand
-      : getBrandWithHighestDiscount;
-
-    const quantity = maxDiscountQuantity(brand);
-
+      : getBrandWithHighestDiscount;  // Use the memoized value directly, not as a function
+    
+    // If no brand is found, pick the first available brand
+    if (!brand) {
+      brand = product.details[0]?.brand || ''; // Set the first brand as default
+    }
+  
+    // Get the quantity for the selected brand
+    let quantity = maxDiscountQuantity(brand);
+  
+    // If no valid quantity is found or quantity is zero, select the first available quantity
+    if (!quantity || quantity === 0) {
+      const firstDetail = product.details.find((detail) => detail.brand === brand);
+      quantity = firstDetail ? firstDetail.financials[0]?.quantity : ''; // Set the first available quantity as default
+    }
+  
+    // Set the selected brand and quantity
     setSelectedBrand(brand);
     setSelectedQuantity(quantity.toString());
   }, [keyword, product.details, getBrandWithHighestDiscount, maxDiscountQuantity]);
+  
+  
 
   const scrollToSelectedButton = (detailIndex) => {
     const button = selectedButtonsRef.current[detailIndex];
@@ -104,13 +120,6 @@ const Product = ({ product, keyword }) => {
       setSelectedQty(newQty);
     }
   }, []);
-
-  useEffect(() => {
-    if (showQuantityControls) {
-      addToCartHandler();
-    }
-  }, [selectedQty]);
-
   const addToCartHandler = useCallback((index) => {
     const selectedDetail = product.details.find((detail) => detail.brand === selectedBrand) || {};
     const selectedFinancial = selectedDetail.financials?.find(
@@ -169,6 +178,15 @@ const Product = ({ product, keyword }) => {
 
     setShowQuantityControls(true);
   }, [selectedBrand, selectedQuantity, selectedQty, product, dispatch]);
+
+  useEffect(() => {
+    if (showQuantityControls) {
+      addToCartHandler();
+    }
+  }, [showQuantityControls, addToCartHandler]);
+  
+
+  
 
   const handleMouseInteraction = (e, index, action, scrollType = 'brand') => {
     const scrollContainer = scrollType === 'brand' 

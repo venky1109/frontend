@@ -56,7 +56,9 @@ const CategoryScreen = () => {
   return (
     <>
       {isLoading ? (
+         <div className='mt-24'>
         <Loader />
+        </div>
       ) : error ? (
         <Message variant="danger">{error?.data?.message || error.error}</Message>
       ) : (
