@@ -16,12 +16,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
           console.log('Login response:', data); // Log the full response
           console.log('Token received:', data.token); // Log the token specifically
     
-          if (data.token) {
-            localStorage.setItem('authToken', data.token);
-            console.log('Token stored in local storage:', localStorage.getItem('authToken')); // Log the stored token
-          } else {
-            console.error('Token not found in response');
-          }
+          // if (data.token) {
+          //   localStorage.setItem('authToken', data.token);
+          //   console.log('Token stored in local storage:', localStorage.getItem('authToken')); // Log the stored token
+          // } else {
+          //   console.error('Token not found in response');
+          // }
         } catch (error) {
           console.error('Error logging in:', error);
         }

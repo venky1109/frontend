@@ -6,11 +6,12 @@ import { logout } from './authSlice'; // Import the logout action
 // Custom baseQuery function using axios
 const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
-  async ({ url, method, data, params }) => {
+  async ({ url, method, data, params,token }) => {
     // console.log('Request sent to:', baseUrl + url); // Log the URL being requested
     // console.log('Request method:', method); // Log the request method
     // console.log('Request data:', data); // Log the request payload
     // console.log('Request params:', params); // Log any query parameters
+    
 
     try {
       const result = await axios({
@@ -21,6 +22,7 @@ const axiosBaseQuery =
         withCredentials: true, // Include credentials such as cookies
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include the token
         },
       });
       return { data: result.data };
@@ -37,7 +39,9 @@ const axiosBaseQuery =
 
 // Custom baseQuery function that handles 401 Unauthorized responses
 async function baseQueryWithAuth(args, api, extra) {
-  const result = await axiosBaseQuery({ baseUrl: BASE_URL })(args);
+  const token = api.getState().auth.userInfo?.token; // Get token from state
+  console.log('Token used for API request:', token);
+  const result = await axiosBaseQuery({ baseUrl: BASE_URL })({ ...args, token });
 
   // Check if the response contains a 401 error
   if (result.error && result.error.status === 401) {
