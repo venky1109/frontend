@@ -56,7 +56,7 @@ const CategoryScreen = () => {
   return (
     <>
       {isLoading ? (
-         <div className='mt-24'>
+         <div >
         <Loader />
         </div>
       ) : error ? (

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
-// import Loader from '../components/Loader'; // Import a loader component for loading state
-import Message from '../components/Message'; // Import a message component for error state
+// import Loader from '../components/Loader'; 
+import Message from '../components/Message'; 
 
 const SearchBox = () => {
   const navigate = useNavigate();
@@ -30,24 +30,29 @@ const SearchBox = () => {
     }
   }, [keyword, productsData]);
 
-  const handleSuggestionClick = (suggestion) => {
-    if (suggestion && suggestion._id) {
-      setKeyword(''); // Clear the search box
-      setSuggestions([]); // Clear suggestions
-      // console.log('Navigating to product:', suggestion._id); // Log the product ID
-      navigate(`/product/${suggestion._id}`); // Navigate to product page
-    } else {
-      // console.log('Invalid product suggestion selected.');
-    }
-  };
-  
-
   const handleSearch = () => {
     if (keyword.trim()) {
-      navigate(`/search?query=${keyword}`);
+      // If there are suggestions, navigate to the SearchScreen with the suggestions
+      if (suggestions.length > 0) {
+        navigate(`/search?query=${keyword}`, { state: { suggestions } });
+      } else {
+        // Navigate to the search screen even if there are no suggestions (for broader search)
+        navigate(`/search?query=${keyword}`);
+      }
+
+      // Clear the search box and suggestions
       setKeyword('');
       setSuggestions([]);
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    // Navigate to the selected product page
+    navigate(`/product/${suggestion._id}`);
+
+    // Clear the search box and suggestions
+    setKeyword('');
+    setSuggestions([]);
   };
 
   return (
@@ -80,7 +85,7 @@ const SearchBox = () => {
             <li
               key={index}
               className="p-2 hover:bg-gray-200 cursor-pointer"
-              onClick={() => handleSuggestionClick(suggestion)}
+              onClick={() => handleSuggestionClick(suggestion)} // Handle suggestion click
             >
               {suggestion.name}
             </li>
