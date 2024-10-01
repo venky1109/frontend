@@ -40,7 +40,7 @@ const axiosBaseQuery =
 // Custom baseQuery function that handles 401 Unauthorized responses
 async function baseQueryWithAuth(args, api, extra) {
   const token = api.getState().auth.userInfo?.token; // Get token from state
-  console.log('Token used for API request:', token);
+  // console.log('Token used for API request:', token);
   const result = await axiosBaseQuery({ baseUrl: BASE_URL })({ ...args, token });
 
   // Check if the response contains a 401 error

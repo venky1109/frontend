@@ -234,62 +234,62 @@ export default function Footer() {
     <>
       {/* Mobile Footer */}
       <footer className="fixed bottom-0 left-0 w-full bg-white shadow-md z-50 block md:hidden">
-        <div className="container mx-auto flex justify-between items-center p-2 sm:p-1">
-          {/* Home Icon */}
-          <Link to="/" className="flex flex-col items-center">
-            <FontAwesomeIcon icon={faHome} className="h-6 w-6 sm:h-5 sm:w-5 text-green-900" />
-          </Link>
+  <div className="container mx-auto flex justify-between items-center px-4 py-2 sm:px-2 sm:py-1">
+    {/* Home Icon */}
+    <Link to="/" className="flex flex-col items-center">
+      <FontAwesomeIcon icon={faHome} className="h-6 w-6 sm:h-5 sm:w-5 text-green-900" />
+    </Link>
 
-          <div className="flex items-center space-x-4 rounded-md">
-            <div className='bg-gray-200 p-1 rounded-md'>
-              {/* WhatsApp */}
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
-                <FaWhatsapp className="text-green-700" size={20} />
-                <span className="text-gray-500 font-semibold text-sm sm:text-md">{whatsappNumber}</span>
-              </a>
-            </div>
+    <div className="flex items-center space-x-4 rounded-md">
+      <div className="bg-gray-200 p-2 rounded-md">
+        {/* WhatsApp */}
+        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
+          <FaWhatsapp className="text-green-700" size={20} />
+          <span className="text-gray-500 font-semibold text-sm sm:text-md">{whatsappNumber}</span>
+        </a>
+      </div>
 
-            <div className='bg-gray-200 p-1 rounded-md'>
-              {/* Phone */}
-              <div className="flex items-center space-x-2">
-                <FaPhone className="text-green-700" size={20} />
-                <span className="text-gray-500 font-semibold text-sm sm:text-md">{phoneNumber}</span>
-              </div>
-            </div>
+      <div className="bg-gray-200 p-2 rounded-md">
+  {/* Phone */}
+  <a href={`tel:${phoneNumber}`} className="flex items-center space-x-2">
+    <FaPhone className="text-green-700" size={20} />
+    <span className="text-gray-500 font-semibold text-sm sm:text-md">{phoneNumber}</span>
+  </a>
+</div>
+    </div>
+
+    {/* User Account Icon */}
+    {userInfo ? (
+      <div className="relative">
+        <button onClick={toggleAccountForm} ref={userIconRef} className="focus:outline-none">
+          <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-green-900" />
+        </button>
+        {showAccountForm && (
+          <div
+            ref={accountFormRef}
+            className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10"
+          >
+            <Account onClose={() => setShowAccountForm(false)} />
           </div>
-
-          {/* User Account Icon */}
-          {userInfo ? (
-            <div className="relative">
-              <button onClick={toggleAccountForm} ref={userIconRef} className="focus:outline-none">
-                <FaUserCircle className="h-6 w-6 sm:h-5 sm:w-5 text-green-900" />
-              </button>
-              {showAccountForm && (
-                <div
-                  ref={accountFormRef}
-                  className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10"
-                >
-                  <Account onClose={() => setShowAccountForm(false)} />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="relative">
-              <button onClick={toggleLoginForm} ref={userIconRef} className="focus:outline-none">
-                <FaUserCircle className="h-6 w-6 sm:h-5 sm:w-5 text-green-900" />
-              </button>
-              {showLoginForm && (
-                <div
-                  ref={loginFormRef}
-                  className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4"
-                >
-                  <LoginScreen onClose={() => setShowLoginForm(false)} />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </footer>
+        )}
+      </div>
+    ) : (
+      <div className="relative">
+        <button onClick={toggleLoginForm} ref={userIconRef} className="focus:outline-none">
+          <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-green-900" />
+        </button>
+        {showLoginForm && (
+          <div
+            ref={loginFormRef}
+            className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4"
+          >
+            <LoginScreen onClose={() => setShowLoginForm(false)} />
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+</footer>
 
       {/* Desktop Footer */}
       <footer className="hidden md:block bg-green-800 text-white py-8">
