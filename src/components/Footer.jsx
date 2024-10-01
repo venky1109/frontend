@@ -234,7 +234,7 @@ export default function Footer() {
     <>
       {/* Mobile Footer */}
       <footer className="fixed bottom-0 left-0 w-full bg-white shadow-md z-50 block md:hidden">
-  <div className="container mx-auto flex justify-between items-center px-4 py-2 sm:px-2 sm:py-1">
+  <div className="container mx-auto flex justify-between items-center px-2 py-4 sm:px-1 sm:py-3">
     {/* Home Icon */}
     <Link to="/" className="flex flex-col items-center">
       <FontAwesomeIcon icon={faHome} className="h-6 w-6 sm:h-5 sm:w-5 text-green-900" />
@@ -243,7 +243,7 @@ export default function Footer() {
     <div className="flex items-center space-x-4 rounded-md">
       <div className="bg-gray-200 p-2 rounded-md">
         {/* WhatsApp */}
-        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
+        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center">
           <FaWhatsapp className="text-green-700" size={20} />
           <span className="text-gray-500 font-semibold text-sm sm:text-md">{whatsappNumber}</span>
         </a>
@@ -251,7 +251,7 @@ export default function Footer() {
 
       <div className="bg-gray-200 p-2 rounded-md">
   {/* Phone */}
-  <a href={`tel:${phoneNumber}`} className="flex items-center space-x-2">
+  <a href={`tel:${phoneNumber}`} className="flex items-center">
     <FaPhone className="text-green-700" size={20} />
     <span className="text-gray-500 font-semibold text-sm sm:text-md">{phoneNumber}</span>
   </a>
