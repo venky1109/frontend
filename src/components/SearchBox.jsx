@@ -80,17 +80,24 @@ const SearchBox = () => {
 
       {/* Suggestions Dropdown */}
       {suggestions.length > 0 && (
-        <ul className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-10">
-          {suggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              className="p-2 hover:bg-gray-200 cursor-pointer"
-              onClick={() => handleSuggestionClick(suggestion)} // Handle suggestion click
-            >
-              {suggestion.name}
-            </li>
-          ))}
-        </ul>
+      <ul className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-10">
+      {suggestions.map((suggestion, index) => (
+        <li
+          key={index}
+          className="p-2 hover:bg-gray-200 cursor-pointer"
+          onClick={() => handleSuggestionClick(suggestion)} // Handle suggestion click
+          tabIndex={0} // Make it focusable with tab key
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSuggestionClick(suggestion); // Handle Enter key press
+            }
+          }}
+        >
+          {suggestion.name}
+        </li>
+      ))}
+    </ul>
+    
       )}
     </div>
   );
