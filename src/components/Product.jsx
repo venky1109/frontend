@@ -147,11 +147,11 @@ const Product = ({ product, keyword }) => {
 
       requestAnimationFrame(() => {
         clonedImage.style.left = `${cartRect.left + cartRect.width / 2 - imageRect.width / 4}px`;
-        clonedImage.style.top = `${cartRect.top + cartRect.height / 2 - imageRect.height / 4}px`;
+        clonedImage.style.top = `${cartRect.top + cartRect.height / 4}px`;
         clonedImage.style.width = `${imageRect.width / 2}px`;
         clonedImage.style.height = `${imageRect.height / 2}px`;
         clonedImage.style.opacity = '0.7';
-        clonedImage.style.transform = 'scale(0.5)';
+        clonedImage.style.transform = 'scale(1)';
       });
 
       clonedImage.addEventListener('transitionend', () => {

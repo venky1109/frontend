@@ -3,8 +3,8 @@ const advertise = [
     "_id": "1",
     "type": "BodyBanner",
     "images": [
-      { "image": "/images/banner.jpg" },
-      { "image": "/images/BodyBannerSpices.jpg" }
+      { "image": "/images/1.jpg" },
+      { "image": "/images/2.jpg" }
     ],
     "dimensions": {
       "width": '100%',
