@@ -185,7 +185,7 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
         {sendOTPloading && <CgSpinner size={20} className="animate-spin inline-block mr-2" />}
         Send OTP via SMS
       </button>
-      {/* {showOTP && ( */}
+      {showOTP && (
         <>
         <div className="opt-container flex justify-center items-center mt-4">
   <OtpInput
@@ -243,7 +243,7 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
             </>
           )}
         </>
-      {/* )} */}
+       )} 
     </form>
     <div className="text-center mt-4">
       <span className="text-gray-600">Already have an account? </span>
