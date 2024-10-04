@@ -185,16 +185,19 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
         {sendOTPloading && <CgSpinner size={20} className="animate-spin inline-block mr-2" />}
         Send OTP via SMS
       </button>
-      {showOTP && (
+      {/* {showOTP && ( */}
         <>
-          <OtpInput
-            value={otp}
-            onChange={setOtp}
-            OTPLength={6}
-            otpType="number"
-            autoFocus
-            className="opt-container"
-          />
+        <div className="opt-container flex justify-center items-center mt-4">
+  <OtpInput
+    value={otp}
+    onChange={setOtp}
+    OTPLength={6}
+    otpType="number"
+    autoFocus
+    // className=" max-w-xs space-x-0"
+  />
+</div>
+
           <button
             type="button"
             onClick={verifyOTP}
@@ -240,7 +243,7 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
             </>
           )}
         </>
-      )}
+      {/* )} */}
     </form>
     <div className="text-center mt-4">
       <span className="text-gray-600">Already have an account? </span>
