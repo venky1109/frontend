@@ -56,7 +56,7 @@ const OrderScreen = () => {
       <h1 className="text-2xl font-semibold  mt-20">Order {order._id}</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
         <div className="md:col-span-2">
-          <div className="bg-white p-4 rounded shadow mb-4">
+          {/* <div className="bg-white p-4 rounded shadow mb-4">
             <h2 className="text-xl font-semibold">Shipping</h2>
             <p><strong>Name: </strong>{order.user.name}</p>
             <p><strong>Phone Number: </strong><a href={`call to:${order.user.phoneNo}`}>{order.user.phoneNo}</a></p>
@@ -66,13 +66,21 @@ const OrderScreen = () => {
             ) : (
               <Message variant='info'><b>Order Successfully Placed and Delivery In Progress</b></Message>
             )}
-          </div>
+          </div> */}
+          <div className="bg-white p-4 rounded shadow mb-4">
+  <h2 className="text-xl font-semibold">Shipping</h2>
+  <p><strong>Name: </strong>{order.user.name}</p>
+  <p><strong>Phone Number: </strong><a href={`call to:${order.user.phoneNo}`}>{order.user.phoneNo}</a></p>
+  <p><strong>Address: </strong>{order.shippingAddress.street}, {order.shippingAddress.city} {order.shippingAddress.postalCode}</p>
+  </div>
+ 
+
 
           <div className="bg-white p-4 rounded shadow mb-4">
             <h2 className="text-xl font-semibold">Payment Method</h2>
             <p><strong>Method: </strong>{order.paymentMethod}</p>
             {order.isPaid ? (
-              <Message variant='success'>Paid on {order.paidAt}</Message>
+              <Message variant='success'>Paid</Message>
             ) : (
               <Message variant='info'><b>Please Pay Amount of <span className="text-brown-600">&#x20b9;{order.totalPrice}</span> at Delivery time</b></Message>
             )}
@@ -159,6 +167,80 @@ const OrderScreen = () => {
           >
             Continue Shopping
           </button>
+          <div className="md:col-span-2 mt-4">
+  <div className="bg-white p-4 rounded shadow mb-2">
+    <h2 className="text-xl font-semibold">Order Track</h2>
+    <div className="text-gray-500">
+    {/* Order Status */}
+    {order.isDelivered ? (
+      <Message variant='success'>Order Delivered</Message>
+    ) : order.isDispatched ? (
+      <Message variant='info'>Order Dispatched and Delivery In Progress</Message>
+    ) : order.isPacked ? (
+      <Message variant='info'>Order Packed and Ready for Dispatch</Message>
+    ) : (
+      <Message variant='info'><b>Order Successfully Placed and Packing In Progress</b></Message>
+    )}
+    </div>
+
+    {/* Vertical Progress Bar with Milestones */}
+    <div className="relative w-1/2 mx-auto mt-4">
+      {/* Background Red Line */}
+      <div className="absolute top-0 left-1 w-2 bg-red-500 h-full rounded"></div>
+
+      {/* Green Progress Line */}
+      <div
+        className={`absolute top-0 left-1 w-2 bg-green-500 rounded transition-all duration-500`}
+        style={{
+          height: order.isDelivered
+            ? '100%' // 100% if delivered
+            : order.isPaid
+            ? '85%' // 85% if paid
+            : order.isDispatched
+            ? '65%' // 65% if dispatched
+            : order.isPacked
+            ? '50%' // 50% if packed
+            : '25%', // 25% if placed
+        }}
+      ></div>
+
+      {/* Milestones */}
+      <div className="relative flex flex-col items-start space-y-8">
+        {/* Order Placed */}
+        <div className="flex items-center space-x-4">
+          <div className={`w-4 h-4 rounded-full ${order ? 'bg-green-800' : 'bg-red-800'}`}></div>
+          <span className="text-sm font-semibold text-gray-500 ">Order Placed</span>
+        </div>
+
+        {/* Order Packed */}
+        <div className="flex items-center space-x-4">
+          <div className={`w-4 h-4 rounded-full ${order.isPacked ? 'bg-green-800' : 'bg-red-800'}`}></div>
+          <span className="text-sm font-semibold text-gray-500 ">Order Packed</span>
+        </div>
+
+        {/* Order Dispatched */}
+        <div className="flex items-center space-x-4">
+          <div className={`w-4 h-4 rounded-full ${order.isDispatched ? 'bg-green-800' : 'bg-red-800'}`}></div>
+          <span className="text-sm font-semibold text-gray-500 ">Order Dispatched</span>
+        </div>
+
+        {/* Order Paid */}
+        <div className="flex items-center space-x-4">
+          <div className={`w-4 h-4 rounded-full ${order.isPaid ?'bg-green-800' : 'bg-red-800'}`}></div>
+          <span className="text-sm font-semibold text-gray-500 ">Order Paid</span>
+        </div>
+
+        {/* Order Delivered */}
+        <div className="flex items-center space-x-4">
+          <div className={`w-4 h-4 rounded-full ${order.isDelivered ? 'bg-green-800' : 'bg-red-800'}`}></div>
+          <span className="text-sm font-semibold text-gray-500 ">Order Delivered</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
           {/* {loadingDeliver && <Loader />}
 
