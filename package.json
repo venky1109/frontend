@@ -34,7 +34,7 @@
     "workbox-webpack-plugin": "^7.1.0"
   },
   "scripts": {
-    "start": "serve -s build",
+    "start": "node server.js",
     "startdev": "react-scripts start --disable-host-check",
     "build": "react-scripts build",
     "test": "react-scripts test",
