@@ -4,9 +4,27 @@ const app = express();
 
 // Set security headers for clickjacking protection
 app.use((req, res, next) => {
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('Content-Security-Policy', "frame-ancestors 'self';");
-  next();
+//   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+//   res.setHeader('Content-Security-Policy', "frame-ancestors 'self';");
+//   next();
+// Enforce HTTPS with HSTS
+res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+
+res.setHeader(
+    'Content-Security-Policy',
+    "frame-ancestors 'self' https://manakirana.com https://manakirana.online https://etrug.app;"
+  );
+
+// Prevent clickjacking
+res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+
+// Prevent MIME type sniffing
+res.setHeader('X-Content-Type-Options', 'nosniff');
+
+// Set Referrer Policy
+res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+
+next();
 });
 
 // Serve the static files from the React build directory
