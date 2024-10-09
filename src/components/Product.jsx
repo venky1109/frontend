@@ -243,7 +243,10 @@ const Product = ({ product, keyword }) => {
             </Link>
 
             <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-              <p className="text-sm font-serif text-maroon-600">{product.name}</p>
+            <p className="text-sm font-serif text-maroon-600" style={{ whiteSpace: 'pre-line' }}>
+  {product.name.replace('(', '\n(')}
+</p>
+
 
               <div className="flex flex-col mt-1 space-y-1">
                 {/* Brand Scroll */}

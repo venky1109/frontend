@@ -222,7 +222,7 @@ const CategoryScreenCard = ({ product }) => {
           </Link>
 
           <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-          <p className="text-sm font-serif text-maroon-600">
+          <p className="text-sm font-serif text-maroon-600" style={{ whiteSpace: 'pre-line' }}>
   {(() => {
     const brandWords = detail.brand.toLowerCase().split(' ');
     const productWords = product.name.toLowerCase().split(' ');
@@ -235,19 +235,9 @@ const CategoryScreenCard = ({ product }) => {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
 
-    return finalString;
+    return finalString.replace('(', '\n(');
   })()}
 </p>
-
-
-
-
-
-
-
-
-
-
 
             {/* Display Units and Quantity Options */}
             <div className="flex items-center">
