@@ -13,6 +13,8 @@ const CartScreen = () => {
   const { cartItems } = cart;
 
   const userInfo = useSelector((state) => state.auth.userInfo); // Assuming you have userInfo
+  const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+const subtotal = cartItems.reduce((acc, item) => acc + item.dprice * item.qty, 0).toFixed(2);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -99,20 +101,20 @@ const CartScreen = () => {
         )}
       </div>
       <div className="md:w-1/3 p-4">
-        <div className="border p-4 rounded-lg">
-          <h5 className="text-lg font-semibold mb-4">
-            Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)} items) : &#x20b9;{cartItems.reduce((acc, item) => acc + item.dprice * item.qty, 0).toFixed(2)}
-          </h5>
-          <button
-            type="button"
-            className="bg-green-500 text-white py-2 px-4 rounded w-full hover:bg-green-600"
-            disabled={cartItems.length === 0}
-            onClick={checkoutHandler}
-          >
-            Proceed To Checkout
-          </button>
-        </div>
-      </div>
+  <div className="border p-4 rounded-lg">
+    <h5 className="text-lg font-semibold mb-4">
+      Subtotal ({totalItems} items) : &#x20b9;{subtotal}
+    </h5>
+    <button
+      type="button"
+      className="bg-green-500 text-white py-2 px-4 rounded w-full hover:bg-green-600"
+      disabled={cartItems.length === 0}
+      onClick={checkoutHandler}
+    >
+      Proceed To Checkout
+    </button>
+  </div>
+</div>
     </div>
   );
 };
