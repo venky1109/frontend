@@ -1,4 +1,6 @@
-import { FaPhone, FaWhatsapp } from 'react-icons/fa';
+import {  FaWhatsapp } from 'react-icons/fa';
+import { TbDeviceLandlinePhone } from "react-icons/tb";
+
 import { useState } from 'react';
 import HomeConfig from '../HomeConfig.json';
 
@@ -26,7 +28,7 @@ const ContactUsBanner = () => {
       <div className='bg-gray-200 p-2 rounded-md'>
         {/* Third line: Phone */}
         <div className="flex items-center space-x-2">
-          <FaPhone className="text-green-700" size={24} />
+          <TbDeviceLandlinePhone className="text-green-700" size={24} />
           <span className="text-gray-500 font-semibold text-sm sm:text-md">{phoneNumber}</span>
         </div>
       </div>

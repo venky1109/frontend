@@ -44,7 +44,7 @@ const FloatingCartIcon = React.forwardRef((props, ref) => {
   return (
     <div
       className={`fixed z-50 ${
-        isFooterVisible ? 'bottom-24' : 'bottom-20'
+        isFooterVisible ? 'bottom-24' : 'bottom-28'
       } right-4 lg:inset-y-1/2 lg:right-4 lg:bottom-auto transition-all duration-300 ease-in-out `}
     >
       <div className="relative" ref={ref} onClick={handleCartClick}>

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FaUserCircle, FaPhone, FaWhatsapp } from 'react-icons/fa';
+import { FaUserCircle, FaWhatsapp } from 'react-icons/fa';
+import { TbDeviceLandlinePhone } from "react-icons/tb";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
@@ -72,49 +73,63 @@ export default function Footer() {
         {/* WhatsApp */}
         <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center">
           <FaWhatsapp className="text-green-700" size={20} />
-          <span className="text-gray-500 font-semibold text-sm sm:text-md">{whatsappNumber}</span>
+          <span className="text-gray-500 font-semibold text-sm sm:text-md ml-1">{whatsappNumber}</span>
         </a>
       </div>
 
       <div className="bg-gray-200 p-2 rounded-md">
   {/* Phone */}
   <a href={`tel:${phoneNumber}`} className="flex items-center">
-    <FaPhone className="text-green-700" size={20} />
-    <span className="text-gray-500 font-semibold text-sm sm:text-md">{phoneNumber}</span>
+    <TbDeviceLandlinePhone className="text-green-700" size={20} />
+    <span className="text-gray-500 font-semibold text-sm sm:text-md ml-1">{phoneNumber}</span>
   </a>
 </div>
     </div>
 
-    {/* User Account Icon */}
-    {userInfo ? (
-      <div className="relative">
-        <button onClick={toggleAccountForm} ref={userIconRef} className="focus:outline-none">
-          <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-green-900" />
-        </button>
-        {showAccountForm && (
-          <div
-            ref={accountFormRef}
-            className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10"
-          >
-            <Account onClose={() => setShowAccountForm(false)} />
-          </div>
-        )}
-      </div>
-    ) : (
-      <div className="relative">
-        <button onClick={toggleLoginForm} ref={userIconRef} className="focus:outline-none">
-          <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-green-900" />
-        </button>
-        {showLoginForm && (
-          <div
-            ref={loginFormRef}
-            className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4"
-          >
-            <LoginScreen onClose={() => setShowLoginForm(false)} />
-          </div>
-        )}
-      </div>
-    )}
+  
+    <div className="relative">
+  {userInfo ? (
+    <div className="flex flex-col items-center">
+      {/* Green icon and greeting when user is logged in */}
+      <button onClick={toggleAccountForm} ref={userIconRef} className="focus:outline-none">
+        <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-yellow-900" />
+      </button>
+      {/* <div className="text-green-900 text-sm mt-1">Hi {userInfo.name}</div> */}
+      <div className="text-green-900 text-sm mt-1">
+  Hi {userInfo.name.substring(0, 5)}{userInfo.name.length > 5 && '...'}
+</div>
+
+
+      {/* Account Form */}
+      {showAccountForm && (
+        <div
+          ref={accountFormRef}
+          className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10"
+        >
+          <Account onClose={() => setShowAccountForm(false)} />
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="flex flex-col items-center">
+      {/* Grey icon when user is not logged in */}
+      <button onClick={toggleLoginForm} ref={userIconRef} className="focus:outline-none">
+        <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-gray-500" />
+      </button>
+
+      {/* Login Form */}
+      {showLoginForm && (
+        <div
+          ref={loginFormRef}
+          className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4"
+        >
+          <LoginScreen onClose={() => setShowLoginForm(false)} />
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
   </div>
 </footer>
 

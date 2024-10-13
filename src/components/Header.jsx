@@ -308,48 +308,60 @@ const Header = () => {
             <ContactUsBanner />
           </div>
 
-          {/* User Account Icon - Visible only on medium screens and larger */}
           <div className="hidden md:flex items-center space-x-4">
-            {userInfo ? (
-              <div className="relative">
-                <button
-                  onClick={toggleAccountForm}
-                  ref={userIconRef}
-                  className="text-xl text-green-700 focus:outline-none"
-                >
-                  <FaUserCircle size={40} />
-                </button>
+  {userInfo ? (
+    <div className="mr-5 ml-5 relative flex flex-col items-center"> {/* Center-align vertically and horizontally */}
+      {/* Button for logged-in user with green icon */}
+      <button
+        onClick={toggleAccountForm}
+        ref={userIconRef}
+        className="text-xl text-yellow-700 focus:outline-none flex justify-center"
+      >
+        <FaUserCircle size={40} />
+      </button>
+      <div className="flex items-center space-x-1">
+  <div className="text-green-900 text-md font-semibold">Hi</div>
+  <div className="text-green-900 text-md font-semibold">{userInfo.name}</div>
+</div>
 
-                {showAccountForm && (
-                  <div
-                    ref={accountFormRef}
-                    className="absolute right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
-                  >
-                    <Account onClose={() => setShowAccountForm(false)} />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="relative">
-                <button
-                  onClick={toggleLoginForm}
-                  ref={userIconRef}
-                  className="text-xl text-green-700 focus:outline-none"
-                >
-                  <FaUserCircle size={40} />
-                </button>
 
-                {showLoginForm && (
-                  <div
-                    ref={loginFormRef}
-                    className="absolute right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
-                  >
-                    <LoginScreen onClose={() => setShowLoginForm(false)} />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+
+
+      {/* Account form */}
+      {showAccountForm && (
+        <div
+          ref={accountFormRef}
+          className="absolute right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+        >
+          <Account onClose={() => setShowAccountForm(false)} />
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="relative flex flex-col items-center"> {/* Center-align vertically and horizontally */}
+      {/* Button for non-logged-in user with grey icon */}
+      <button
+        onClick={toggleLoginForm}
+        ref={userIconRef}
+        className="text-xl text-gray-500 focus:outline-none flex justify-center"
+      >
+        <FaUserCircle size={40} />
+      </button>
+
+      {/* Login form */}
+      {showLoginForm && (
+        <div
+          ref={loginFormRef}
+          className="absolute right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+        >
+          <LoginScreen onClose={() => setShowLoginForm(false)} />
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
+
         </div>
       </nav>
     </header>
