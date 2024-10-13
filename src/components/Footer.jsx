@@ -81,7 +81,7 @@ export default function Footer() {
   {/* Phone */}
   <a href={`tel:${phoneNumber}`} className="flex items-center">
     <TbDeviceLandlinePhone className="text-green-700" size={20} />
-    <span className="text-gray-500 font-semibold text-sm sm:text-md ml-1">{phoneNumber}</span>
+    <span className="text-gray-500 font-semibold text-sm sm:text-md ml-1">297898</span>
   </a>
 </div>
     </div>
