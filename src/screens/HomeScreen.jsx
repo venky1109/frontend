@@ -131,13 +131,12 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <div className="mt-4 mb-24">
-          <div className="mt-2 pt-2 relative overflow-hidden">
+          {/* <div className="mt-2 pt-2 relative overflow-hidden">
             <div
               className="overflow-x-scroll scrollbar-hide"
               onScroll={handleScroll} // Optional, if you have custom scroll logic
             >
               <div className="flex whitespace-nowrap animate-scroll">
-                {/* Map through the promotion sections and render them */}
                 {promotionSections.map((promotion, index) => (
                   <div key={index} className="inline-block mb-4 mr-3 w-[48%]">
                     <PromotionCard
@@ -148,7 +147,6 @@ const HomeScreen = () => {
                     />
                   </div>
                 ))}
-                {/* Duplicate cards for seamless scrolling */}
                 {promotionSections.map((promotion, index) => (
                   <div
                     key={`duplicate-${index}`}
@@ -164,7 +162,7 @@ const HomeScreen = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
 
           <h5 className="text-2xl font-serif text-green-800 mb-4 semi-bold">
             {categoryTitle}
