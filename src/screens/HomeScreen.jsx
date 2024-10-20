@@ -108,7 +108,7 @@ const HomeScreen = () => {
   );
   const categoryTitle = categorySection ? categorySection.title : 'Categories';
 
-  const promotionSections = promotions || [];
+  // const promotionSections = promotions || [];
 
   return (
     <>

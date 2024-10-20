@@ -98,6 +98,7 @@ const ProductScreen = () => {
         brand: selectedBrand,
         quantity: selectedQuantity,
         price: selectedFinancial.price,
+        units: selectedFinancial?.units,
         dprice: selectedFinancial.dprice,
         Discount: selectedFinancial.Discount,
         image: selectedDetail.images[0]?.image,
