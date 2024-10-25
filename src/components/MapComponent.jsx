@@ -1,20 +1,27 @@
 import React, { useEffect, useRef } from 'react';
 
-const loadGoogleMapsScript = () => {
-  return new Promise((resolve, reject) => {
-    if (typeof window.google === 'object' && typeof window.google.maps === 'object') {
-      resolve();
-      return;
-    }
+// Caching the script load promise to avoid reloading
+let googleMapsScriptPromise;
 
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = (error) => reject(error);
-    document.head.appendChild(script);
-  });
+const loadGoogleMapsScript = () => {
+  if (!googleMapsScriptPromise) {
+    googleMapsScriptPromise = new Promise((resolve, reject) => {
+      if (typeof window.google === 'object' && typeof window.google.maps === 'object') {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = (error) => reject(error);
+      document.head.appendChild(script);
+    });
+  }
+  
+  return googleMapsScriptPromise;
 };
 
 const MapComponent = ({ latitude, longitude }) => {
@@ -22,7 +29,7 @@ const MapComponent = ({ latitude, longitude }) => {
 
   useEffect(() => {
     let map;
-    
+
     const initializeMap = async () => {
       try {
         await loadGoogleMapsScript();
@@ -45,6 +52,14 @@ const MapComponent = ({ latitude, longitude }) => {
     if (latitude && longitude) {
       initializeMap();
     }
+
+    // Cleanup when the component is unmounted
+    return () => {
+      if (map) {
+        // Optionally, you could clean up the map instance if needed
+        // Example: map = null;
+      }
+    };
   }, [latitude, longitude]);
 
   return (
