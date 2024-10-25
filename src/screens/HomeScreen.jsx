@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useGetAllCategoriesQuery } from '../slices/categoryApiSlice';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
-import { useFetchPromotionsQuery } from '../slices/promotionsAPISlice';
+// import { useFetchPromotionsQuery } from '../slices/promotionsAPISlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import advertise from '../advertise';

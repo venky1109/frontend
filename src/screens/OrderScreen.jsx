@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef , useEffect,useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -7,10 +7,15 @@ import { useGetOrderDetailsQuery } from '../slices/ordersApiSlice';
 const OrderScreen = () => {
   const { id: orderId } = useParams();
   const navigate = useNavigate();
-  const { data: order, isLoading, error } = useGetOrderDetailsQuery(orderId);
+  const { data: order, isLoading: queryLoading, error, refetch } = useGetOrderDetailsQuery(orderId);
   const printableContentRef = useRef(null);
+  const [loading, setLoading] = useState(true); // Track loading manually
    // Conditionally set formattedOrderDate to avoid accessing order.createdAt before order is defined
-   const formattedOrderDate = order ? new Date(order.createdAt).toLocaleDateString('en-GB', {
+   useEffect(() => {
+    setLoading(true); // Set to true whenever orderId changes
+    refetch().then(() => setLoading(false)); // Refetch and update loading state
+  }, [orderId, refetch]);
+   const formattedOrderDate = order ? new Date(order.createdAt).toLocaleDateString('en-GB', { 
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -19,39 +24,6 @@ const OrderScreen = () => {
   const handleContinueShopping = () => {
     navigate('/');
   };
-
-  if (isLoading) return <Loader />;
-  if (error) return <Message variant="danger">{error.data?.message || "An error occurred"}</Message>;
-
-  if (!order) return null;
-
-  // const shareMessage = `
-  //   ${order.isPaid ? 'Invoice' : 'Order'} Number: ${order._id}
-  //   Status: ${order.isPaid ? 'Paid' : 'Unpaid'}
-  //   Total Amount: ₹${order.totalPrice}
-  //   Supplier: MANA KIRANA
-  //   Address: 5-85, Uppalaguptham, Near Laxmi Cheruvu, Amalapuram, Samanasa, Dr BR Ambedkar Konaseema, Andhra Pradesh, 533213
-  //   GSTIN/UIN: 37AHPPV7362L1ZA
-  // `;
-
-  // const handleDownloadPDF = async () => {
-  //   const input = printableContentRef.current;
-  //   if (input) {
-  //     const canvas = await html2canvas(input);
-  //     const imgData = canvas.toDataURL('image/png');
-  //     const pdf = new jsPDF('p', 'mm', 'a4');
-  //     const pdfWidth = pdf.internal.pageSize.getWidth();
-  //     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  //     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  //     pdf.save(`Order_${order._id}.pdf`);
-  //   }
-  // };
-
-  // const handleNativeShare = async () => {
-  //   // First, create and download the PDF
-  //   await handleDownloadPDF();
-  //   alert("PDF downloaded. Share as needed via your preferred app.");
-  // };
 
   const handlePrint = () => {
     const printContents = printableContentRef.current.innerHTML;
@@ -121,7 +93,9 @@ const OrderScreen = () => {
     printWindow.document.close();
     printWindow.print();
   };
-  
+  if (loading || queryLoading) return <Loader />; // Use either loading state or queryLoading
+
+  if (error) return <Message variant="danger">{error?.data?.message || error.message}</Message>;
 
   return (
     <>
