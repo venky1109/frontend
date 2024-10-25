@@ -3,15 +3,21 @@ import { Link } from 'react-router-dom';
 import { useGetMyOrdersQuery } from '../slices/ordersApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { toggleAccountFormExternally } from './Header'; // Import toggle function
+// import { toggleAccountFormExternally } from './Header'; // Import toggle function
+import { toggleAccountFormExternally as toggleHeaderForm } from './Header'; // Import from Header
+import { toggleAccountFormExternally as toggleFooterForm } from './Footer'; // Import from Footer
+
 
 const MyOrders = () => {
   const { data: orders, isLoading, error } = useGetMyOrdersQuery();
 
 
   const handleDetailsClick = () => {
-    // setIsVisible(false); // Hide MyOrders screen
-    toggleAccountFormExternally(); // Open Account form from Header
+    if (window.innerWidth >= 768) { // Check if large screen
+      toggleHeaderForm && toggleHeaderForm(); // Call Header toggle function for large screens
+    } else {
+      toggleFooterForm && toggleFooterForm(); // Call Footer toggle function for small screens
+    }
   };
 
   return (

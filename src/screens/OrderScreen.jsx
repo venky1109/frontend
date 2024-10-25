@@ -152,31 +152,31 @@ const OrderScreen = () => {
                 <Message>Order is empty</Message>
               ) : (
                 <table className="min-w-full border border-gray-200">
-  <thead>
-    <tr>
-      <th className="text-left">Name</th>
-      <th>Brand</th>
-      <th>Wt</th>
-      <th>Qty</th>
-      <th>Price</th>
-      <th>Qty x Price</th> {/* New column for Qty x Price */}
-      <th>Total</th>
-    </tr>
-  </thead>
-  <tbody>
-    {order.orderItems.map((item, index) => (
-      <tr key={index}>
-        <td className="text-left">{item.name}</td>
-        <td>{item.brand}</td>
-        <td>{item.quantity} {item.units}</td>
-        <td>{item.qty}</td>
-        <td>&#x20b9;{item.price}</td>
-        <td>{item.qty} x &#x20b9;{item.price}</td> {/* Display Qty x Price */}
-        <td>&#x20b9;{item.price * item.qty}</td> {/* Total price */}
-      </tr>
-    ))}
-  </tbody>
-</table>
+                <thead>
+                  <tr>
+                    <th className="text-left">Name</th>
+                    <th>Brand</th>
+                    <th>Wt</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Qty x Price</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {order.orderItems.map((item, index) => (
+                    <tr key={index}>
+                      <td className="text-left">{item.name}</td>
+                      <td>{item.brand}</td>
+                      <td>{item.quantity} {item.units}</td>
+                      <td>{item.qty}</td>
+                      <td>&#x20b9;{item.price}</td>
+                      <td>{item.qty} x &#x20b9;{item.price}</td>
+                      <td>&#x20b9;{item.price * item.qty}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
               )}
             </div>

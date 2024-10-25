@@ -10,8 +10,9 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import LoginScreen from './LoginScreen'; // Import the LoginScreen component
 import Account from './Account'; // Import the Account component
 import homeConfig from '../HomeConfig.json'; // Import the homeConfig file
+let toggleAccountFormExternally;
 
-export default function Footer() {
+const Footer = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const { whatsappNumber, phoneNumber } = homeConfig; // Extract numbers from the homeConfig file
   const currentYear = new Date().getFullYear();
@@ -34,6 +35,12 @@ export default function Footer() {
     setShowAccountForm((prev) => !prev);
     setShowLoginForm(false); // Ensure login form is closed when profile form is opened
   };
+
+  // toggleAccountFormExternally = () => {
+  //   setShowAccountForm((prev) => !prev);
+  //   setShowLoginForm(false);
+  // };
+  toggleAccountFormExternally = toggleAccountForm; // Assign function for external use
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -181,3 +188,5 @@ export default function Footer() {
     </>
   );
 }
+export { toggleAccountFormExternally }; // Export external reference
+export default Footer;
