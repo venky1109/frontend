@@ -151,32 +151,35 @@ const OrderScreen = () => {
               {order.orderItems.length === 0 ? (
                 <Message>Order is empty</Message>
               ) : (
-                <table className="min-w-full border border-gray-200">
-                <thead>
-                  <tr>
-                    <th className="text-left">Name</th>
-                    <th>Brand</th>
-                    <th>Wt</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Qty x Price</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.orderItems.map((item, index) => (
-                    <tr key={index}>
-                      <td className="text-left">{item.name}</td>
-                      <td>{item.brand}</td>
-                      <td>{item.quantity} {item.units}</td>
-                      <td>{item.qty}</td>
-                      <td>&#x20b9;{item.price}</td>
-                      <td>{item.qty} x &#x20b9;{item.price}</td>
-                      <td>&#x20b9;{item.price * item.qty}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                <div className="overflow-x-auto">
+  <table className="min-w-full border border-gray-200">
+    <thead>
+    <tr>
+        <th className="text-left px-4 py-2 min-w-[150px] text-sm sm:text-base">Name</th>
+        <th className="px-4 py-2 min-w-[120px] text-sm sm:text-base">Brand</th>
+        <th className="px-4 py-2 min-w-[80px] text-sm sm:text-base">Weight</th>
+        <th className="px-4 py-2 min-w-[80px] text-sm sm:text-base">Qty</th>
+        <th className="px-4 py-2 min-w-[80px] text-sm sm:text-base">Price</th>
+        <th className="px-4 py-2 min-w-[120px] text-sm sm:text-base">Qty x Price</th>
+        <th className="px-4 py-2 min-w-[100px] text-sm sm:text-base">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {order.orderItems.map((item, index) => (
+        <tr key={index} className="text-sm sm:text-base">
+          <td className="text-left px-2 py-2">{item.name}</td>
+          <td className="px-2 py-2">{item.brand}</td>
+          <td className="px-2 py-2">{item.quantity} {item.units}</td>
+          <td className="px-2 py-2">{item.qty}</td>
+          <td className="px-2 py-2">&#x20b9;{item.price}</td>
+          <td className="px-2 py-2">{item.qty} x &#x20b9;{item.price}</td>
+          <td className="px-2 py-2">&#x20b9;{item.price * item.qty}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 
               )}
             </div>
