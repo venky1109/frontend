@@ -30,16 +30,16 @@ const HomeScreen = () => {
   const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
 
   // Fetch promotions using the generated hook
-  const { data: promotions } = useFetchPromotionsQuery();
+  // const { data: promotions } = useFetchPromotionsQuery();
 
   useEffect(() => {
     if (categoriesData && categoriesData.categories) {
       setCategories(categoriesData.categories);
     }
     if (productsData && productsData.products) {
-      const dailyNeedsProducts = productsData.products.filter(product => product.category === 'MANA KIRANA CUSTOMISED PACKAGES');
-      setProducts(dailyNeedsProducts);
-      // setProducts(productsData.products);
+      // const dailyNeedsProducts = productsData.products.filter(product => product.category === 'MANA KIRANA CUSTOMISED PACKAGES');
+      // setProducts(dailyNeedsProducts);
+      setProducts(productsData.products);
     }
   }, [categoriesData, productsData]);
 
@@ -65,10 +65,10 @@ const HomeScreen = () => {
     navigate(`/category/${categoryName}`);
   }, [navigate]);
 
-  const handleCardClick = useCallback((promotion) => {
-    const categoryId = promotion.categoryId || 'default-category';
-    navigate(`/category/${categoryId}`);
-  }, [navigate]);
+  // const handleCardClick = useCallback((promotion) => {
+  //   const categoryId = promotion.categoryId || 'default-category';
+  //   navigate(`/category/${categoryId}`);
+  // }, [navigate]);
 
   const getCategoryImage = useCallback((categoryName) => {
     const categoryCustomization = homeConfig.sections
@@ -108,7 +108,7 @@ const HomeScreen = () => {
       ) : (
         <div className="mt-4 mb-24">
           <h5 className="text-2xl font-serif text-green-800 mb-4 semi-bold">
-            {categoryTitle}
+            {categoryTitle.toUpperCase()}
           </h5>
 
           <React.Suspense fallback={<Loader />}>
@@ -126,7 +126,7 @@ const HomeScreen = () => {
           </React.Suspense>
 
           <h5 className="text-2xl font-serif text-green-800 mb-4 mt-2 semi-bold">
-          MANA KIRANA CUSTOMISED PACKAGES
+          MANA KIRANA PRODUCTS
           </h5>
 
           <React.Suspense fallback={<Loader />}>
