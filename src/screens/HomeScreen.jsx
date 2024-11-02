@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useGetAllCategoriesQuery } from '../slices/categoryApiSlice';
-import { useGetProductsQuery } from '../slices/productsApiSlice';
+import { useGetProductsByCategoryQuery } from '../slices/productsApiSlice';
 // import { useFetchPromotionsQuery } from '../slices/promotionsAPISlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -27,7 +27,12 @@ const HomeScreen = () => {
   const { data: categoriesData, isLoading: isCategoriesLoading, error: categoriesError } = useGetAllCategoriesQuery();
   
   // Fetch all products
-  const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
+  // const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
+// Define the category name you want to filter by
+const categoryName = 'BUDGET FRIENDLY PACKAGES';
+
+// Fetch products by category directly using useGetProductsByCategoryQuery
+const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsByCategoryQuery(categoryName);
 
   // Fetch promotions using the generated hook
   // const { data: promotions } = useFetchPromotionsQuery();
@@ -36,11 +41,17 @@ const HomeScreen = () => {
     if (categoriesData && categoriesData.categories) {
       setCategories(categoriesData.categories);
     }
-    if (productsData && productsData.products) {
-      // const dailyNeedsProducts = productsData.products.filter(product => product.category === 'MANA KIRANA CUSTOMISED PACKAGES');
-      // setProducts(dailyNeedsProducts);
-      setProducts(productsData.products);
-    }
+    // if (productsData && productsData.products) {
+    //   const dailyNeedsProducts = productsData.products.filter(product => product.category === 'BUDGET FRIENDLY PACKAGES');
+    //   setProducts(dailyNeedsProducts);
+    //   console.log("Filtered daily needs products:", dailyNeedsProducts);
+    //   // setProducts(productsData.products);
+    // }
+    // Set products directly from productsData for the specified category
+  if (productsData && productsData.products) {
+    setProducts(productsData.products);
+    console.log("Retrieved products for category:", categoryName, productsData.products);
+  }
   }, [categoriesData, productsData]);
 
   // Define the auto-scroll function outside of useEffect
@@ -126,7 +137,7 @@ const HomeScreen = () => {
           </React.Suspense>
 
           <h5 className="text-2xl font-serif text-green-800 mb-4 mt-2 semi-bold">
-          MANA KIRANA PRODUCTS
+          MANA KIRANA BUDGET FRIENDLY PACKAGES
           </h5>
 
           <React.Suspense fallback={<Loader />}>
