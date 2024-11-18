@@ -240,6 +240,7 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
               >
                 Register
               </button>
+
             </>
           )}
         </>
@@ -254,6 +255,24 @@ const RegisterScreen = ({ onClose, onSwitchToLogin }) => {
       >
         Login
       </button>
+      <div className="mt-2 text-sm text-gray-600 text-center">
+                  By continuing, I accept{" "}
+                  <a
+                    href="/terms.html"
+                    target="_blank"
+                    className="text-green-700 hover:underline"
+                  >
+                    Terms and Conditions
+                  </a>{" "}
+                  &{" "}
+                  <a
+                    href="/privacy.html"
+                    target="_blank"
+                    className="text-green-700 hover:underline"
+                  >
+                    Privacy Policy
+                  </a>.
+                </div>
     </div>
     {isLoading && <Loader />}
   </div>
