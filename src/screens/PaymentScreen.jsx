@@ -4,61 +4,120 @@ import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { savePaymentMethod } from '../slices/cartSlice';
+import { handleOnlinePayment } from '../slices/paymentApiSlice';
 
 const PaymentScreen = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
-  const { shippingAddress } = cart;
+  const { shippingAddress, cartItems, totalPrice, itemsPrice, shippingPrice } = cart;
+
+  const userInfo = useSelector((state) => state.auth.userInfo); // Access userInfo from auth slice
+
+  const paymentState = useSelector((state) => state.payment);
+  const { loading, paymentResponse, error } = paymentState || {};
 
   useEffect(() => {
-    // Check if shippingAddress is defined and contains necessary fields
     if (
       !shippingAddress ||
-      !shippingAddress.street ||  // Adjust field names according to your state structure
+      !shippingAddress.street ||
       !shippingAddress.city ||
       !shippingAddress.postalCode
     ) {
       navigate('/shipping');
     }
-  }, [navigate, shippingAddress]);
+
+    // Save cart details to localStorage when the component is mounted
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
+    localStorage.setItem('itemsPrice', itemsPrice);
+    localStorage.setItem('shippingPrice', shippingPrice);
+    localStorage.setItem('totalPrice', totalPrice);
+  }, [navigate, shippingAddress, cartItems, itemsPrice, shippingPrice, totalPrice]);
   
 
-  const [paymentMethod, setPaymentMethod] = useState('PayPal');
+  useEffect(() => {
+    if (paymentResponse?.data?.status === 'NEW' && paymentResponse?.data?.payment_links?.web) {
+      // Redirect to HDFC bank payment URL
+      window.location.href = paymentResponse.data.payment_links.web;
+    }
+  }, [paymentResponse]);
 
-  const dispatch = useDispatch();
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  const handlePaymentSelection = (method) => {
+    setPaymentMethod(method);
+    dispatch(savePaymentMethod(method));
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(savePaymentMethod(paymentMethod));
-    navigate('/placeorder');
+
+    if (!userInfo?.phoneNo) {
+      alert('Phone number is missing in your profile.');
+      return;
+    }
+
+    if (paymentMethod === 'Cash/UPI') {
+      navigate('/placeorder');
+    } else if (paymentMethod === 'Online') {
+      dispatch(
+        handleOnlinePayment({
+          order_id: `order_${Date.now()}_${userInfo.phoneNo}`, // Use phone number from userInfo
+          amount: totalPrice, // Use totalPrice from cart
+          customerId: userInfo.phoneNo, // Use phoneNo from userInfo
+        })
+      );
+    } else {
+      alert('Please select a payment method.');
+    }
   };
 
   return (
     <FormContainer>
-     
       <CheckoutSteps step1 step2 step3 />
-      <h1 className="text-2xl font-semibold mb-6">Payment Method</h1>
+      <h1 className="text-2xl font-semibold mb-6">Select Payment Method</h1>
       <form onSubmit={submitHandler}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Select Method</label>
-          <div className="mt-2">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                name="paymentMethod"
-                value="PayPal"
-                checked={paymentMethod === 'PayPal'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              <span className="ml-2 text-gray-700">Cash/UPI Payment On Delivery</span>
-            </label>
-          </div>
+        <div className="flex flex-col gap-4">
+          {/* Cash/UPI Button */}
+          <button
+            type="button"
+            onClick={() => handlePaymentSelection('Cash/UPI')}
+            className={`w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-sm ${
+              paymentMethod === 'Cash/UPI' ? 'ring-2 ring-offset-2 ring-green-500' : ''
+            } hover:bg-green-700 focus:outline-none`}
+          >
+            Cash/UPI Payment On Delivery
+          </button>
+
+          {/* Online Payment Button */}
+          <button
+            type="button"
+            onClick={() => handlePaymentSelection('Online')}
+            className={`w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm ${
+              paymentMethod === 'Online' ? 'ring-2 ring-offset-2 ring-indigo-500' : ''
+            } hover:bg-indigo-700 focus:outline-none`}
+          >
+            Online Payment
+          </button>
         </div>
 
+        {/* Loading Indicator */}
+        {loading && <p className="text-blue-500 mt-4">Processing payment...</p>}
+
+        {/* Error Message */}
+        {error && (
+          <p className="text-red-500 mt-4">
+            {typeof error === 'string' ? error : error.message || 'An error occurred'}
+          </p>
+        )}
+
+        {/* Continue Button */}
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="w-full bg-gray-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-4"
+          disabled={!paymentMethod || loading}
         >
           Continue
         </button>
