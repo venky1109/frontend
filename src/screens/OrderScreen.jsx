@@ -116,7 +116,22 @@ const OrderScreen = () => {
               <p><strong className="text-md font-semibold">Invoice Date:</strong> {formattedOrderDate}</p>
 </div>
               <p>
-  {order.isPaid ? <strong className="text-md font-semibold">Invoice Number</strong> : <strong>Order Number</strong>}: {order._id}
+  {/* {order.isPaid ? <strong className="text-md font-semibold">Invoice Number</strong> : <strong>Order Number</strong>}: {order._id} */}
+  {order.isPaid ? (
+  <div>
+    <p>
+      <strong className="text-md font-semibold">Invoice Number</strong>: {order._id}
+    </p>
+    <p>
+      <strong className="text-md font-semibold">Payment Reference</strong>: {order.orderId}
+    </p>
+  </div>
+) : (
+  <p>
+    <strong>Order Number</strong>: {order._id}
+  </p>
+)}
+
 </p>
 <strong className="text-md font-semibold"><i>Customer Details:</i></strong>
               <p><strong className="text-md font-semibold">Name: </strong>{order.user.name}</p>
@@ -249,53 +264,69 @@ const OrderScreen = () => {
 
               {/* Vertical Progress Bar with Milestones */}
               <div className="relative w-1/2 mx-auto mt-4">
-                {/* Background Red Line */}
-                <div className="absolute top-0 left-1 w-2 bg-red-500 h-full rounded"></div>
+  {/* Background Red Line */}
+  <div className="absolute top-0 left-1 w-2 bg-red-500 h-full rounded"></div>
 
-                {/* Green Progress Line */}
-                <div
-                  className="absolute top-0 left-1 w-2 bg-green-500 rounded transition-all duration-500"
-                  style={{
-                    height: order.isDelivered
-                      ? '100%'    // 100% if delivered
-                      : order.isPaid
-                      ? '85%'     // 85% if paid
-                      : order.isDispatched
-                      ? '65%'     // 65% if dispatched
-                      : order.isPacked
-                      ? '50%'     // 50% if packed
-                      : '25%',    // 25% if placed
-                  }}
-                ></div>
+  {/* Green Progress Line */}
+  <div
+    className="absolute top-0 left-1 w-2 bg-green-500 rounded transition-all duration-500"
+    style={{
+      height: order.isDelivered
+        ? '100%' // 100% if delivered
+        : order.isDispatched
+        ? '85%' // 85% if dispatched
+        : order.isPacked
+        ? '65%' // 65% if packed
+        : order.isPaid
+        ? '50%' // 50% if paid but not packed
+        : '25%', // 25% if only placed
+    }}
+  ></div>
 
-                {/* Milestones */}
-                <div className="relative flex flex-col items-start space-y-8 mt-4">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-4 h-4 rounded-full ${order ? 'bg-green-800' : 'bg-red-800'}`}></div>
-                    <span className="text-sm font-semibold text-gray-500">Order Placed</span>
-                  </div>
+  {/* Milestones */}
+  <div className="relative flex flex-col items-start space-y-8 mt-4">
+    {/* Order Paid (Moved Up if Packed is False) */}
+  
 
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-4 h-4 rounded-full ${order.isPacked ? 'bg-green-800' : 'bg-red-800'}`}></div>
-                    <span className="text-sm font-semibold text-gray-500">Order Packed</span>
-                  </div>
+    <div className="flex items-center space-x-4">
+      <div className={`w-4 h-4 rounded-full ${order ? 'bg-green-800' : 'bg-red-800'}`}></div>
+      <span className="text-sm font-semibold text-gray-500">Order Placed</span>
+    </div>
+    {order.isPaid && !order.isPacked && (
+      <div className="flex items-center space-x-4">
+        <div className="w-4 h-4 rounded-full bg-green-800"></div>
+        <span className="text-sm font-semibold text-gray-500">Order Paid</span>
+      </div>
+    )}
 
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-4 h-4 rounded-full ${order.isDispatched ? 'bg-green-800' : 'bg-red-800'}`}></div>
-                    <span className="text-sm font-semibold text-gray-500">Order Dispatched</span>
-                  </div>
+    {/* Order Packed */}
+    <div className="flex items-center space-x-4">
+      <div className={`w-4 h-4 rounded-full ${order.isPacked ? 'bg-green-800' : 'bg-red-800'}`}></div>
+      <span className="text-sm font-semibold text-gray-500">Order Packed</span>
+    </div>
 
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-4 h-4 rounded-full ${order.isPaid ? 'bg-green-800' : 'bg-red-800'}`}></div>
-                    <span className="text-sm font-semibold text-gray-500">Order Paid</span>
-                  </div>
+    {/* Order Dispatched */}
+    <div className="flex items-center space-x-4">
+      <div className={`w-4 h-4 rounded-full ${order.isDispatched ? 'bg-green-800' : 'bg-red-800'}`}></div>
+      <span className="text-sm font-semibold text-gray-500">Order Dispatched</span>
+    </div>
 
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-4 h-4 rounded-full ${order.isDelivered ? 'bg-green-800' : 'bg-red-800'}`}></div>
-                    <span className="text-sm font-semibold text-gray-500">Order Delivered</span>
-                  </div>
-                </div>
-              </div>
+    {/* Order Paid (Standard Position if Packed is True) */}
+    {!(!order.isPacked && order.isPaid) && (
+      <div className="flex items-center space-x-4">
+        <div className={`w-4 h-4 rounded-full ${order.isPaid ? 'bg-green-800' : 'bg-red-800'}`}></div>
+        <span className="text-sm font-semibold text-gray-500">Order Paid</span>
+      </div>
+    )}
+
+    {/* Order Delivered */}
+    <div className="flex items-center space-x-4">
+      <div className={`w-4 h-4 rounded-full ${order.isDelivered ? 'bg-green-800' : 'bg-red-800'}`}></div>
+      <span className="text-sm font-semibold text-gray-500">Order Delivered</span>
+    </div>
+  </div>
+</div>
+
             </div>
           </div>
           </div>

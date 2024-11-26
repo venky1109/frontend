@@ -50,7 +50,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
     // Set products directly from productsData for the specified category
   if (productsData && productsData.products) {
     setProducts(productsData.products);
-    console.log("Retrieved products for category:", categoryName, productsData.products);
+    // console.log("Retrieved products for category:", categoryName, productsData.products);
   }
   }, [categoriesData, productsData]);
 

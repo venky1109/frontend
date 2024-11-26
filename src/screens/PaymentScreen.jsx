@@ -64,7 +64,7 @@ const PaymentScreen = () => {
     } else if (paymentMethod === 'Online') {
       dispatch(
         handleOnlinePayment({
-          order_id: `order_${Date.now()}_${userInfo.phoneNo}`, // Use phone number from userInfo
+          order_id: `${Date.now()}_${userInfo.phoneNo}`, // Use phone number from userInfo
           amount: totalPrice, // Use totalPrice from cart
           customerId: userInfo.phoneNo, // Use phoneNo from userInfo
         })
