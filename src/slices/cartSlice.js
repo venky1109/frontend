@@ -135,6 +135,18 @@ const cartSlice = createSlice({
       state = initialState; // Reset the cart state to initial values
       localStorage.setItem('cart', JSON.stringify(state));
     },
+    clearAll: (state) => {
+      const initialState = {
+        cartItems: [],
+        shippingAddress: {},
+        itemsPrice: "0.00",
+        shippingPrice: "0.00",
+        totalPrice: "0.00",
+        paymentMethod: ""
+      };
+      Object.assign(state, initialState); // Reset state
+      localStorage.setItem('cart', JSON.stringify(state));
+    }    
   },
 });
 
@@ -146,6 +158,7 @@ export const {
   savePaymentMethod,
   clearCartItems,
   resetCart,
+  clearAll,
   updateCartItemQuantity,
 } = cartSlice.actions;
 

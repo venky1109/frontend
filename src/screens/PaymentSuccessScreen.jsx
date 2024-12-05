@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useCreateOrderMutation, usePayOrderMutation } from '../slices/ordersApiSlice';
-import { clearCartItems } from '../slices/cartSlice';
+import { clearAll } from '../slices/cartSlice';
 
 const PaymentSuccessScreen = () => {
   const [searchParams] = useSearchParams();
@@ -78,7 +78,7 @@ const PaymentSuccessScreen = () => {
         }).unwrap();
         
         // Clear cart items and navigate to the order page
-        dispatch(clearCartItems());
+        dispatch(clearAll());
         navigate(`/order/${createdOrder._id}`);
       } catch (err) {
         console.error('Error placing order:', err);
