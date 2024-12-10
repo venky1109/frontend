@@ -5,6 +5,8 @@ import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { savePaymentMethod } from '../slices/cartSlice';
 import { handleOnlinePayment } from '../slices/paymentApiSlice';
+import { useCreateOrderMutation } from '../slices/ordersApiSlice';
+import { toast } from 'react-toastify';
 
 const PaymentScreen = () => {
   const navigate = useNavigate();
@@ -12,7 +14,7 @@ const PaymentScreen = () => {
 
   const cart = useSelector((state) => state.cart);
   const { shippingAddress, cartItems, totalPrice, itemsPrice, shippingPrice } = cart;
-
+  const [createOrder, { isLoading: isCreatingOrder, error: createError }] = useCreateOrderMutation();
   const userInfo = useSelector((state) => state.auth.userInfo); // Access userInfo from auth slice
 
   const paymentState = useSelector((state) => state.payment);
@@ -62,15 +64,37 @@ const PaymentScreen = () => {
     if (paymentMethod === 'Cash/UPI') {
       navigate('/placeorder');
     } else if (paymentMethod === 'Online') {
+      createAndInitiatePayment(); // Call the async function here
+    } else {
+      toast.error('Please select a payment method.');
+    }
+    
+    
+  };
+  const createAndInitiatePayment = async () => {
+    try {
+      // Step 1: Create the order
+      const createdOrder = await createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: 'Online',
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        totalPrice: cart.totalPrice,
+      }).unwrap();
+
+      // Step 2: Initiate the payment
       dispatch(
         handleOnlinePayment({
-          order_id: `${Date.now()}_${userInfo.phoneNo}`, // Use phone number from userInfo
-          amount: totalPrice, // Use totalPrice from cart
-          customerId: userInfo.phoneNo, // Use phoneNo from userInfo
+          order_id: createdOrder._id, // Backend-created order ID
+          amount: cart.totalPrice, // Total amount
+          customerId: userInfo.phoneNo, // Customer phone number
+          cartItems: cart.cartItems, // Cart items for validation
         })
       );
-    } else {
-      alert('Please select a payment method.');
+    } catch (error) {
+      console.error('Error creating order or initiating payment:', error);
+      toast.error('Failed to initiate payment. Please try again.');
     }
   };
 
