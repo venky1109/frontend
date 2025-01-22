@@ -1,4 +1,4 @@
-// export const BASE_URL = process.env.NODE_ENV === 'develeopment' ? 'http://localhost:5000' : '';
+// export const BASE_URL ='http://localhost:5000';
 // export const BASE_URL = 'https://mkbackend.onrender.com'; // If using proxy
 // export const BASE_URL =
 //   process.env.NODE_ENV === 'development'
