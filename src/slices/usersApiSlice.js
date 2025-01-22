@@ -12,7 +12,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
+          // const { data } = await queryFulfilled;
+          await queryFulfilled;
           // console.log('Login response:', data); // Log the full response
           // console.log('Token received:', data.token); // Log the token specifically
     
