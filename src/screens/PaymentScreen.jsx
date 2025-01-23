@@ -14,7 +14,8 @@ const PaymentScreen = () => {
 
   const cart = useSelector((state) => state.cart);
   const { shippingAddress, cartItems, totalPrice, itemsPrice, shippingPrice } = cart;
-  const [createOrder, { isLoading: isCreatingOrder, error: createError }] = useCreateOrderMutation();
+  // const [createOrder, { isLoading: isCreatingOrder, error: createError }] = useCreateOrderMutation();
+  const [createOrder] = useCreateOrderMutation();
   const userInfo = useSelector((state) => state.auth.userInfo); // Access userInfo from auth slice
 
   const paymentState = useSelector((state) => state.payment);

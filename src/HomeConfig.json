@@ -11,8 +11,8 @@
       "customization": {
         
           "categories": [
-            { "key": "BATH_BODY", "name": "BATH & BODY", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fbath%20and%20body.jpg?alt=media&token=ec3bcf9d-f680-4250-947b-002e24ebbc33" },
-            { "key": "BISCUITS_CHOCOLATES", "name": "BISCUITS & CHOCOLATES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBiscuits%20and%20chocolates.jpg?alt=media&token=0124272f-f01b-43a3-a341-dd4e8e890d52" },
+            { "key": "BATH_BODY", "name": "BATH & BODY", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBATH%20%26%20BODY.jpg?alt=media&token=ad137b42-e71d-46f1-8769-d9ddbb6edc4c" },
+            { "key": "BISCUITS_CHOCOLATES", "name": "BISCUITS & CHOCOLATES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBISCUITS%20%26%20CHOCOLATES.jpg?alt=media&token=206c0c53-9c01-4810-af7c-7c08be0ac1f7" },
             { "key": "CLEANING_ESSENTIALS", "name": "CLEANING ESSENTIALS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FCleaning%20essentials.jpg?alt=media&token=69e742ea-1e51-495d-af4a-92e6a142afe2" },
             { "key": "DAILY_NEEDS", "name": "DAILY NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FDaily%20needs.jpg?alt=media&token=54bb4f8c-2fff-4612-9046-c89cd3ead5e4" },
             { "key": "DRYFRUITS", "name": "DRYFRUITS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fdry%20fruits.jpg?alt=media&token=e4bcb42c-c66a-4deb-a13c-990006f878d2" },
@@ -31,7 +31,8 @@
             { "key": "SKIN CARE", "name": "SKIN CARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fskincare.jpg?alt=media&token=92cb6365-6561-44bb-baf4-aae1f654f917" },
             { "key": "SNACKS_BREAKFAST", "name": "SNACKS & BREAKFAST", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fsnacksandbreakfast.jpg?alt=media&token=7ccca104-5756-4a46-b39e-4c64b36e0680" },
             { "key": "SPICES_MASALAS", "name": "SPICES & MASALAS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fspices.jpg?alt=media&token=d9f51236-0490-4a27-9d0a-3cefeaaa94e3" },
-            { "key": "TEA_COFFEE", "name": "TEA & COFFEE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fteaandcoffee.jpg?alt=media&token=fb74c78f-d368-4072-b6c1-d074a5810533" }
+            { "key": "TEA_COFFEE", "name": "TEA & COFFEE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2Fteaandcoffee.jpg?alt=media&token=fb74c78f-d368-4072-b6c1-d074a5810533" },
+            { "key": "BUDGET_FRIENDLY_PACKAGES", "name":"BUDGET FRIENDLY PACKAGES", "image":"https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBUDGET%20FRIENDLY%20PACKAGES.jpg?alt=media&token=914b4c01-33a3-4a75-98ab-6cedf94c6253"}         
           ]
         }
         
