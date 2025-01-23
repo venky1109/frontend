@@ -17,7 +17,8 @@ const PaymentScreen = () => {
   // const [createOrder, { isLoading: isCreatingOrder, error: createError }] = useCreateOrderMutation();
   const [createOrder] = useCreateOrderMutation();
   const userInfo = useSelector((state) => state.auth.userInfo); // Access userInfo from auth slice
-
+  // const [enableOnlinePayment, setEnableOnlinePayment] = useState(process.env.REACT_APP_ENABLE_ONLINE_PAYMENT === 'Y');
+  const [enableOnlinePayment] = useState(process.env.REACT_APP_ENABLE_ONLINE_PAYMENT === 'Y');
   const paymentState = useSelector((state) => state.payment);
   const { loading, paymentResponse, error } = paymentState || {};
 
@@ -117,7 +118,7 @@ const PaymentScreen = () => {
           </button>
 
           {/* Online Payment Button */}
-          <button
+          {enableOnlinePayment && ( <button
             type="button"
             onClick={() => handlePaymentSelection('Online')}
             className={`w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm ${
@@ -125,7 +126,7 @@ const PaymentScreen = () => {
             } hover:bg-indigo-700 focus:outline-none`}
           >
             Online Payment
-          </button>
+          </button>)}
         </div>
 
         {/* Loading Indicator */}
