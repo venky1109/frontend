@@ -4,10 +4,10 @@ import { useGetProductsByCategoryQuery } from '../slices/productsApiSlice';
 // import { useFetchPromotionsQuery } from '../slices/promotionsAPISlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import advertise from '../advertise';
+// import advertise from '../advertise';
 import homeConfig from '../HomeConfig.json';
 import { useNavigate } from 'react-router-dom';
-import AdvertisingBanner from '../components/Advertise';
+// import AdvertisingBanner from '../components/Advertise';
 import Product from '../components/Product';
 
 // Lazy load components to reduce initial bundle size
@@ -15,7 +15,7 @@ const CategoryCard = React.lazy(() => import('../components/CategoryCard'));
 // const PromotionCard = React.lazy(() => import('../components/PromotionCard'));
 
 const HomeScreen = () => {
-  const adv = advertise.find((item) => item.type === 'BodyBanner');
+  // const adv = advertise.find((item) => item.type === 'BodyBanner');
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const scrollContainerRef = useRef(null);
@@ -99,13 +99,71 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
 
   return (
     <>
-      <div className="mt-20">
+      {/* <div className="mt-20">
         <AdvertisingBanner
           images={adv.images}
           height={adv.dimensions.height}
           width={adv.dimensions.width}
         />
+      </div> */}
+   
+
+   <div className="container mx-auto  md:py-12 mt-20">
+  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8">
+    {/* First Section */}
+    <div className="rounded-md flex flex-col md:flex-row items-stretch justify-between bg-[rgb(33,180,201)] dark:bg-[rgb(33,180,201)] py-6 px-6 md:py-12 lg:px-12 md:w-8/12 lg:w-7/12 xl:w-8/12 2xl:w-9/12">
+      <div className="flex flex-col justify-center md:w-1/2">
+        <h1 className="text-3xl lg:text-4xl font-semibold text-gray-800 dark:text-white">
+          Exciting Offers on <span>Sri Maha Lakshmi Raitu Dairy Products</span>
+        </h1>
+        <p className="text-base lg:text-xl text-gray-800 dark:text-white mt-2">
+          Sample offers <span className="font-bold">discount percentage</span>
+        </p>
+        {/* Order Now Button */}
+        <button
+          onClick={() => handleCategoryCardClick("Eggs & Dairy")}
+          className="mt-4 bg-white text-[rgb(33,180,201)] font-bold py-2 px-4 rounded hover:bg-gray-100 transition-colors duration-300"
+        >
+          Order Now
+        </button>
+       
       </div>
+      <div className="md:w-1/2 mt-8 md:mt-0 flex justify-center md:justify-end">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FEggs%20%26%20Dairy.jpg?alt=media&token=749b1008-6f98-4633-91d6-b55fed2b4517"
+          alt="Eggs and Dairy"
+          className=""
+        />
+      </div>
+     
+    </div>
+
+    {/* Second Section */}
+    <div className="rounded-md md:w-4/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 bg-[rgb(34,197,94)] dark:bg-[rgb(34,197,94)] py-6 px-6 md:py-0 md:px-4 lg:px-6 flex flex-col justify-center relative">
+  <div className="flex flex-col justify-center">
+    <h1 className="text-3xl lg:text-4xl font-semibold text-gray-800 dark:text-white">
+      BUDGET FRIENDLY PACKS
+    </h1>
+    <p className="text-base lg:text-xl text-gray-800 dark:text-white">
+      Save Upto <span className="font-bold">33%</span>
+    </p>
+    {/* Order Now Button */}
+    <button
+      onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")}
+      className="mt-4 bg-white text-[rgb(34,197,94)] font-bold py-2 px-4 rounded hover:bg-gray-100 transition-colors duration-300"
+    >
+      Order Now
+    </button>
+  </div>
+</div>
+
+  </div>
+</div>
+
+
+
+
+
 
       {isCategoriesLoading || isProductsLoading ? (
         <Loader />
@@ -118,30 +176,30 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
         </Message>
       ) : (
         <div className="mt-4 mb-24">
-          <h5 className="text-2xl font-serif text-green-800 mb-4 semi-bold">
+          <h5 className="text-xl font-serif text-green-800 mt-8 semi-bold">
             {categoryTitle.toUpperCase()}
           </h5>
 
           <React.Suspense fallback={<Loader />}>
-            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 rounded-md p-5">
+            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 rounded-md bg-gradient-to-r from-green-100 to-green-200 gap-x-0 pt-3 pb-3 pl-2 pr-2">
               {categories.map((category) => (
                 <CategoryCard
                   key={category}
                   name={category}
                   image={getCategoryImage(category)}
                   onClick={() => handleCategoryCardClick(category)}
-                  className="p-2 sm:p-1"
+                  className="p-0 sm:p-0 lg:p-1"
                 />
               ))}
             </div>
           </React.Suspense>
 
-          <h5 className="text-2xl font-serif text-green-800 mb-4 mt-2 semi-bold">
-          MANA KIRANA BUDGET FRIENDLY PACKAGES
+          <h5 className="text-xl font-serif text-green-800 mb-4 mt-8 mb-0 semi-bold">
+          MK BUDGET FRIENDLY PACKS
           </h5>
 
           <React.Suspense fallback={<Loader />}>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-gray-300 rounded-md p-1">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-red-200 rounded-md p-1">
               {products.map((product) => (
                 <Product key={product._id} product={product} />
               ))}
