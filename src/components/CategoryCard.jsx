@@ -18,9 +18,9 @@ const CategoryCard = ({ name, image, className }) => {
           />
         </div>
         {/* Category Name on the Card Below the Image */}
-        <div className="mt-0.5"> {/* Decreased margin-top to reduce space */}
-          <h1 className="text-[10px] font-serif sm:text-sm md:text-base text-red-900 semi-bold uppercase">{name}</h1>
-        </div>
+        {/* <div className="mt-0.5"> {/* Decreased margin-top to reduce space */}
+          {/* <h1 className="text-[10px] font-serif sm:text-sm md:text-base text-red-900 semi-bold uppercase">{name}</h1> */}
+        {/* </div> */} 
       </div>
     </Link>
   );
