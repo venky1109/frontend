@@ -14,7 +14,9 @@ const CategoryCard = ({ name, image, className }) => {
           <img
             src={image}
             alt={name}
-            className="object-cover w-full h-full rounded-md transform transition-transform duration-500 ease-out group-hover:scale-125" // Zoom effect
+            // className="object-cover w-full h-full rounded-md transform transition-transform duration-500 ease-out group-hover:scale-125" // Zoom effect
+            className="object-cover w-full h-full rounded-md transform transition-transform duration-500 ease-out group-hover:translate-y-[-10px]"
+
           />
         </div>
         {/* Category Name on the Card Below the Image */}

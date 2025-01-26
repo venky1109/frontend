@@ -181,7 +181,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
           </h5>
 
           <React.Suspense fallback={<Loader />}>
-            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 rounded-md bg-gradient-to-r from-green-100 to-green-200 gap-x-0 pt-3 pb-3 pl-2 pr-2">
+            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 rounded-md  gap-x-0 pt-3 pb-3 pl-2 pr-2">
               {categories.map((category) => (
                 <CategoryCard
                   key={category}
@@ -199,7 +199,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
           </h5>
 
           <React.Suspense fallback={<Loader />}>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-red-200 rounded-md p-1">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-gray-200 rounded-md p-1">
               {products.map((product) => (
                 <Product key={product._id} product={product} />
               ))}
