@@ -1,141 +1,170 @@
-import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { FaUserCircle, FaWhatsapp } from 'react-icons/fa';
+import { useEffect, useState, useCallback  } from 'react';
+import { Link ,useNavigate } from 'react-router-dom';
+import {  FaWhatsapp } from 'react-icons/fa';
 import { TbDeviceLandlinePhone } from "react-icons/tb";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import logo from "../assets/ManaKiranaLogoWithName.gif";
+import mhlogo from "../assets/RaithuDairyLogo444x336.jpeg";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
-import LoginScreen from './LoginScreen'; // Import the LoginScreen component
-import Account from './Account'; // Import the Account component
 import homeConfig from '../HomeConfig.json'; // Import the homeConfig file
+// import { TbCategory2 } from "react-icons/tb";
+import { HiOutlineCurrencyRupee } from "react-icons/hi"; // Import Rupee Icon
+import { RiCustomerService2Fill } from "react-icons/ri";
+import { MdOutlineSavings } from "react-icons/md";
 let toggleAccountFormExternally;
 
-const Footer = () => {
-  const { userInfo } = useSelector((state) => state.auth);
+const Footer = ({ scrollToCategory }) => {
+  // const { userInfo } = useSelector((state) => state.auth);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { whatsappNumber, phoneNumber } = homeConfig; // Extract numbers from the homeConfig file
   const currentYear = new Date().getFullYear();
+  const [isFooterVisible, setIsFooterVisible] = useState(true);
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
   // State to manage the visibility of the login and account forms
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [showAccountForm, setShowAccountForm] = useState(false);
+  // const [showLoginForm, setShowLoginForm] = useState(false);
+  // const [showAccountForm, setShowAccountForm] = useState(false);
   
-  const loginFormRef = useRef(null);
-  const accountFormRef = useRef(null); // Ref for the account form
-  const userIconRef = useRef(null);  // Ref for the FaUserCircle icon
+  // const loginFormRef = useRef(null);
+  // const accountFormRef = useRef(null); // Ref for the account form
+  // const userIconRef = useRef(null);  // Ref for the FaUserCircle icon
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
+  const navigate = useNavigate();
 
-  const toggleLoginForm = () => {
-    setShowLoginForm((prev) => !prev);
-    setShowAccountForm(false);
-  };
+  const handleCategoryCardClick = useCallback((categoryName) => {
+    navigate(`/category/${categoryName}`);
+  }, [navigate]);
 
-  const toggleAccountForm = () => {
-    setShowAccountForm((prev) => !prev);
-    setShowLoginForm(false); // Ensure login form is closed when profile form is opened
-  };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       !loginFormRef.current?.contains(event.target) &&
+  //       !accountFormRef.current?.contains(event.target) &&
+  //       !userIconRef.current?.contains(event.target)
+  //     ) {
+  //       setShowLoginForm(false);
+  //       setShowAccountForm(false);
+  //     }
+  //   };
 
-  // toggleAccountFormExternally = () => {
-  //   setShowAccountForm((prev) => !prev);
-  //   setShowLoginForm(false);
-  // };
-  toggleAccountFormExternally = toggleAccountForm; // Assign function for external use
+  //   if (showLoginForm || showAccountForm) {
+  //     document.addEventListener('mousedown', handleClickOutside);
+  //   } else {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   }
 
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [showLoginForm, showAccountForm]);
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        !loginFormRef.current?.contains(event.target) &&
-        !accountFormRef.current?.contains(event.target) &&
-        !userIconRef.current?.contains(event.target)
-      ) {
-        setShowLoginForm(false);
-        setShowAccountForm(false);
+    const handleScroll = () => {
+      const currentScrollPosition = window.scrollY;
+
+      if (currentScrollPosition > lastScrollPosition) {
+        // User is scrolling up, hide the footer
+        setIsFooterVisible(false);
+      } else {
+        // User is scrolling down, show the footer
+        setIsFooterVisible(true);
       }
+
+      setLastScrollPosition(currentScrollPosition);
     };
 
-    if (showLoginForm || showAccountForm) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [showLoginForm, showAccountForm]);
+  }, [lastScrollPosition]);
 
   return (
     <>
       {/* Mobile Footer */}
-      <footer className="fixed bottom-0 left-0 w-full bg-white shadow-md z-50 block md:hidden">
-  <div className="container mx-auto flex justify-between items-center px-2 py-4 sm:px-1 sm:py-3">
+      <footer   className={`fixed bottom-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ${
+        isFooterVisible ? "translate-y-0" : "translate-y-full"
+      } block md:hidden`}>
+  <div className="container mx-auto flex justify-between items-center px-2 py-0 sm:px-1 sm:py-0">
     {/* Home Icon */}
     <Link to="/" className="flex flex-col items-center">
-      <FontAwesomeIcon icon={faHome} className="h-6 w-6 sm:h-5 sm:w-5 text-green-900" />
-    </Link>
+  <img 
+    src={logo}
+    alt="Home" 
+    className="h-9 w-9 sm:h-9 sm:w-9 object-contain ml-2"
+  />
+  <span className="text-xs text-green-900">Home</span>
+</Link>
 
-    <div className="flex items-center space-x-4 rounded-md">
-      <div className="bg-gray-200 p-2 rounded-md">
-        {/* WhatsApp */}
-        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center">
-          <FaWhatsapp className="text-green-700" size={20} />
-          <span className="text-gray-500 font-semibold text-sm sm:text-md ml-1">{whatsappNumber}</span>
-        </a>
+
+
+   {/* User Community Icon */}
+   <div className="relative flex flex-col items-center cursor-pointer">
+        <RiCustomerService2Fill
+          className="h-9 w-9 text-green-800 hover:text-green-700 transition"
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+        />
+        <span className="text-xs text-green-900">Say Hi To Order</span>
+
+        {/* Dropdown Menu */}
+        {isMenuOpen && (
+          <div className="absolute bottom-10 mb-3 bg-white shadow-lg rounded-md p-2 w-48 flex flex-col gap-2">
+            {/* WhatsApp */}
+            <div className="bg-gray-200 p-2 rounded-md">
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center"
+              >
+                <FaWhatsapp className="text-green-700" size={20} />
+                <span className="text-gray-500 font-semibold text-sm sm:text-md ml-2">
+                  {whatsappNumber}
+                </span>
+              </a>
+            </div>
+
+            {/* Phone */}
+            <div className="bg-gray-200 p-2 rounded-md">
+              <a
+                href={`tel:${phoneNumber}`}
+                className="flex items-center"
+              >
+                <TbDeviceLandlinePhone className="text-green-700" size={20} />
+                <span className="text-gray-500 font-semibold text-sm sm:text-md ml-2">
+                  {phoneNumber}
+                </span>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+      <div
+        onClick={() => handleCategoryCardClick("Eggs & Dairy")} 
+        className="flex flex-col items-center cursor-pointer"
+      >
+       <img 
+    src={mhlogo}
+    alt="sri maha lakshmi raithu dairy" 
+    className="h-10 w-10 sm:h-10 sm:w-10 object-contain ml-2"
+  />
+       <span className="text-xs text-green-900">SMLR Products</span>
       </div>
 
-      <div className="bg-gray-200 p-2 rounded-md">
-  {/* Phone */}
-  <a href={`tel:${phoneNumber}`} className="flex items-center">
-    <TbDeviceLandlinePhone className="text-green-700" size={20} />
-    <span className="text-gray-500 font-semibold text-sm sm:text-md ml-1">297898</span>
-  </a>
-</div>
-    </div>
+      <div
+        onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")} 
 
-  
-    <div className="relative">
-  {userInfo ? (
-    <div className="flex flex-col items-center">
-      {/* Green icon and greeting when user is logged in */}
-      <button onClick={toggleAccountForm} ref={userIconRef} className="focus:outline-none">
-        <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-yellow-900" />
-      </button>
-      {/* <div className="text-green-900 text-sm mt-1">Hi {userInfo.name}</div> */}
-      <div className="text-green-900 text-sm mt-1">
-  Hi {userInfo.name.substring(0, 5)}{userInfo.name.length > 5 && '...'}
-</div>
+        className="flex flex-col items-center cursor-pointer"
+      >
+        <div className="relative h-9 w-9">
+    <MdOutlineSavings className="absolute inset-0 h-full w-full text-green-800" />
+    <HiOutlineCurrencyRupee className="absolute inset-0 h-5 w-5 m-auto text-green-800" />
+  </div>
+       <span className="text-xs text-green-900">Budget Friendly</span>
+      </div>
 
-
-      {/* Account Form */}
-      {showAccountForm && (
-        <div
-          ref={accountFormRef}
-          className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10"
-        >
-          <Account onClose={() => setShowAccountForm(false)} />
-        </div>
-      )}
-    </div>
-  ) : (
-    <div className="flex flex-col items-center">
-      {/* Grey icon when user is not logged in */}
-      <button onClick={toggleLoginForm} ref={userIconRef} className="focus:outline-none">
-        <FaUserCircle className="h-7 w-7 sm:h-6 sm:w-6 text-gray-500" />
-      </button>
-
-      {/* Login Form */}
-      {showLoginForm && (
-        <div
-          ref={loginFormRef}
-          className="fixed bottom-20 left-0 right-0 mx-auto w-full max-w-xs bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4"
-        >
-          <LoginScreen onClose={() => setShowLoginForm(false)} />
-        </div>
-      )}
-    </div>
-  )}
-</div>
+      
+   
 
   </div>
 </footer>
