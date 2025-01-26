@@ -58,19 +58,19 @@ const SearchBox = () => {
   return (
     <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
       {/* Search Input */}
-      <div className="flex items-center border border-gray-300 rounded-lg bg-white p-2">
-        <input
-          type="text"
-          className="flex-grow outline-none text-gray-700 p-2"
-          placeholder="Search for products or brands..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          style={{ minHeight: '40px' }} 
-        />
-        <button onClick={handleSearch} className="p-2 text-gray-500">
-          <FaSearch />
-        </button>
-      </div>
+      <div className="flex items-center border border-gray-300 rounded-lg bg-white p-1 sm:p-2">
+    <input
+      type="text"
+      className="flex-grow outline-none text-gray-700 text-sm sm:text-base p-1 sm:p-2"
+      placeholder="Search for products or brands..."
+      value={keyword}
+      onChange={(e) => setKeyword(e.target.value)}
+      style={{ minHeight: '32px' }} // Smaller height for mobile
+    />
+    <button onClick={handleSearch} className="p-1 sm:p-2 text-gray-500">
+      <FaSearch />
+    </button>
+  </div>
 
       {/* Loader and Error Handling */}
       <div className="absolute top-12 left-0 right-0">
@@ -96,7 +96,7 @@ const SearchBox = () => {
           {suggestion.name}
         </li>
       ))}
-    </ul>
+      </ul>
     
       )}
     </div>
