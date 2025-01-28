@@ -17,11 +17,41 @@ module.exports = {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(100%)" },
         },
+        fallBounce: {
+          "0%": {
+            transform: "translateY(-100%) rotateY(0deg) scale(0.8)",
+            opacity: "1",
+          },
+          "50%": {
+            transform: "translateY(calc(var(--banner-height, 100px) - 50px)) rotateY(180deg) scale(1.1)",
+            opacity: "1",
+          },
+          "80%": {
+            transform: "translateY(calc(var(--banner-height, 100px) - 10px)) rotateY(360deg) scale(1)",
+            opacity: "1",
+          },
+          "90%": {
+            transform: "translateY(calc(var(--banner-height, 100px) - 40px)) rotateY(270deg) scale(1.05)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "translateY(calc(var(--banner-height, 100px) - 10px)) rotateY(360deg) scale(1)",
+            opacity: "0",
+          },
+        
+        },
+        flashZoom: {
+          "0%, 100%": { opacity: 0, transform: "scale(0.8)" },
+          "50%": { opacity: 1, transform: "scale(1.2)" },
+        },
       },
+    
       animation: {
         letterReveal: 'letterReveal 0.5s ease forwards',
         scroll: 'scroll 20s linear infinite',
         shine: "shine 2s linear infinite",
+        "fall-bounce": "fallBounce 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite",
+        flashZoom: "flashZoom 5s ease-in-out infinite",
       },
     },
   },

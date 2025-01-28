@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 // import AdvertisingBanner from '../components/Advertise';
 import Product from '../components/Product';
 import AdvertiseSlider from "../components/AdvertiseSlider";
+import MegaBanner  from '../components/MegaBanner';
+import ChildBanner from '../components/ChildBanner';
 
 
 // Lazy load components to reduce initial bundle size
@@ -110,56 +112,29 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
       </div> */}
    
 
-   <div className="container mx-auto  md:py-12 mt-24">
-  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8">
-  {/* <ShineEffectTest/> */}
-  <div className="relative overflow-hidden bg-gradient-to-r from-green-300 via-green-500 to-green-800 rounded-md p-6 w-11/12 md:w-8/12 lg:w-6/12 mx-auto">
-      {/* Shine Effect */}
-      <div className="absolute top-0 left-0 w-[150%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine"></div>
+   <div className="container mx-auto  mt-24 ">
+  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0   ">
+  
 
-      {/* Content */}
-      <div className="relative z-10">
-        <h1 className="text-red text-3xl font-semibold mb-2">
-          Exciting Offers on Sri Maha Lakshmi Raitu Dairy Products
-        </h1>
-        <p className="text-white text-lg">
-          Sample offers <span className="font-bold">discount percentage</span>
-        </p>
-        <button className="mt-4 bg-white text-[rgb(33,180,201)] font-bold py-2 px-4 rounded hover:bg-gray-100 transition-all duration-300">
-          Order Now
-        </button>
-      </div>
-    </div>
-
-
-
-
-    {/* Second Section */}
-    <div className="rounded-md md:w-4/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 bg-[rgb(34,197,94)] dark:bg-[rgb(34,197,94)] py-6 px-6 md:py-0 md:px-4 lg:px-6 flex flex-col justify-center relative">
-  <div className="flex flex-col justify-center">
-    <h1 className="text-3xl lg:text-4xl font-semibold text-gray-800 dark:text-white">
-      BUDGET FRIENDLY PACKS
-    </h1>
-    <p className="text-base lg:text-xl text-gray-800 dark:text-white">
-      Save Upto <span className="font-bold">33%</span>
-    </p>
-    {/* Order Now Button */}
-    <button
-      onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")}
-      className="mt-4 bg-white text-[rgb(34,197,94)] font-bold py-2 px-4 rounded hover:bg-gray-100 transition-colors duration-300"
-    >
-      Order Now
-    </button>
-  </div>
-</div>
+  <MegaBanner/>
 
   </div>
 </div>
 
 
-
+<div className="container mx-auto  ">
+  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0   ">
+  
 
 <AdvertiseSlider />
+</div>
+</div>
+
+
+<div className='mt-8'>
+<ChildBanner/>
+</div>
+
 
 
 
