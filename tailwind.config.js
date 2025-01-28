@@ -13,15 +13,15 @@ module.exports = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-100%)' }, // Adjust this value to match the total width of your content
         },
-        slowSpin: {  // Add the slowSpin keyframe definition
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
+        shine: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
         },
       },
       animation: {
         letterReveal: 'letterReveal 0.5s ease forwards',
         scroll: 'scroll 20s linear infinite',
-        slowSpin: 'slowSpin 2s linear infinite', // 5 seconds for slower spinning
+        shine: "shine 2s linear infinite",
       },
     },
   },
