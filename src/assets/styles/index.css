@@ -85,3 +85,24 @@ table th {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
 }
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@100..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+:root {
+  --default-font: 'Nunito Sans', sans-serif;
+  --telugu-font: 'Anek Telugu', sans-serif;
+}
+
+body {
+  font-family: var(--default-font);
+}
+
+.font-anek-telugu {
+  font-family: 'Anek Telugu', sans-serif;
+}
+
+.font-nunito-sans {
+  font-family: 'Nunito Sans', sans-serif;
+}

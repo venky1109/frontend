@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { FiMapPin } from "react-icons/fi"; // Location Icon
+// import { FiMapPin } from "react-icons/fi"; // Location Icon
 import { Autocomplete, LoadScript } from "@react-google-maps/api";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -109,11 +109,12 @@ const Header = () => {
   // Scroll event listener to show/hide location dropdown
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY === 0) {
+      if (location.pathname === "/" && window.scrollY === 0) {
         setShowLocationDropdown(true); // Show dropdown when scrolled to top
       } else {
         setShowLocationDropdown(false); // Hide dropdown on scroll
       }
+
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -125,7 +126,7 @@ const Header = () => {
     googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}
     libraries={GOOGLE_MAP_LIBRARIES}
     >
-      <header className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+      <header className="bg-yellow-600  rounded-b-md shadow-md fixed top-0 left-0 right-0 z-50">
         <nav
           className="container mx-auto flex flex-col md:flex-row items-center justify-between p-2 lg:p-2"
           ref={navbarRef}
@@ -136,21 +137,21 @@ const Header = () => {
               <img
                 src={logo}
                 alt="ManaKirana logo"
-                className="w-14 h-auto sm:w-16 lg:w-20"
+                className="w-14 h-auto sm:w-16 lg:w-20 "
               />
             </Link>
           </div>
 
           {/* Location Selector */}
           {showLocationDropdown && (
-            <div className="flex items-center w-full md:w-auto mb-2 md:mb-0">
+            <div className="flex items-center w-full md:w-auto mb-2 md:mb-0 pl-2">
               {/* Location Icon with Dynamic Color */}
-              <FiMapPin
+              {/* <FiMapPin
                 size={24}
                 className={`mr-2 ${
                   serviceAvailable ? "text-green-900" : "text-red-600"
                 }`}
-              />
+              /> */}
 
               {/* Google Places Autocomplete */}
               <Autocomplete
@@ -191,13 +192,13 @@ const Header = () => {
           )}
 
         
-<div className="w-full flex items-center justify-between space-x-2 md:space-x-0">
+<div className="w-full flex items-center justify-between pl-2 space-x-2 md:space-x-0">
   {/* Search Box */}
   <div className="flex-grow">
     <SearchBox />
   </div>
 {/* Bottom Section - Contact Us Banner (Visible only on larger screens) */}
-<div className="hidden md:flex items-center space-x-4 mt-2 md:mt-0">
+<div className="hidden md:flex items-center space-x-4 mt-2 md:mt-0 ">
   <ContactUsBanner />
 </div>
   {/* User Account Section */}
@@ -206,7 +207,7 @@ const Header = () => {
       <button
         onClick={toggleAccountForm}
         ref={userIconRef}
-        className="text-xl text-green-900 focus:outline-none"
+        className="text-xl text-blue-100  hover:text-white hover:scale-110 focus:outline-none"
       >
         <FaUserCircle size={40} />
       </button>
@@ -237,7 +238,7 @@ const Header = () => {
       {showLoginForm && (
         <div
           ref={loginFormRef}
-          className="absolute right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+          className="absolute right-0 w-80 bg-white border  hover:text-white hover:scale-110 border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
         >
           <LoginScreen onClose={() => setShowLoginForm(false)} />
         </div>

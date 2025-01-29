@@ -121,7 +121,9 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
   </div>
 </div>
 
-
+<div className='mt-3'>
+<ChildBanner/>
+</div>
 <div className="container mx-auto  ">
   <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0   ">
   
@@ -131,9 +133,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
 </div>
 
 
-<div className='mt-8'>
-<ChildBanner/>
-</div>
+
 
 
 

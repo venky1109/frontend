@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import GoldCoinAnimation from "./GoldCoinAni";
-import mhlogo from "../assets/RaithuDairyLogo444x336.jpeg";
+import mhlogo from "../assets/RaithuDairyLogo150x102.png";
 
 const MegaBanner = () => {
     const bannerRef = useRef(null);
@@ -29,7 +29,7 @@ const MegaBanner = () => {
     return (
         <div
   ref={bannerRef}
-  className={`relative bg-gradient-to-b from-green-400 via-green-500 to-teal-600 text-white rounded-2xl shadow-lg overflow-hidden w-full py-8 md:py-6 cursor-pointer transition-all duration-500 ${
+  className={`relative bg-gradient-to-b from-amber-300 via-amber-200 to-amber-300 text-white rounded-2xl shadow-lg overflow-hidden w-full py-1 md:py-6 cursor-pointer transition-all duration-500 ${
     isExpanded ? "h-auto" : "min-h-[200px]"
   }`}
 
@@ -40,20 +40,32 @@ const MegaBanner = () => {
       >
         {/* Falling Gold Coins */}
         {!isExpanded && <GoldCoinAnimation />}
+
+        {/* <GoldCoinAnimation /> */}
+        
       
         {/* Main Content */}
-        <div className="relative z-10 text-center">
-          <h1 className="relative text-4xl lg:text-5xl font-extrabold uppercase tracking-wide">
-            <span className="relative text-orange-900">
-              శ్రీ మహాలక్ష్మి రైతు డెయిరీ
-            </span>
-          </h1>
+        <div className="relative  text-center">
+ 
+        <img
+  src={mhlogo}
+  alt="Sri Maha Lakshmi Raithu Dairy"
+  className="mx-auto flex justify-center h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 object-contain py-0"
+/>
+
+        <h1 className="relative text-4xl lg:text-5xl font-extrabold uppercase tracking-wide font-anek-telugu font-semibold">
+  
+  <span className="relative text-green-800">
+    శ్రీ మహా లక్ష్మి రైతు డైరీ
+  </span>
+</h1>
           <br />
-          <h1 className="text-4xl lg:text-6xl uppercase tracking-wider relative font-extrabold bg-clip-text animate-flashZoom drop-shadow-[0_0_20px_rgba(255,255,0,0.8)]">
-            <span className="relative text-orange-100">
-              బంగారు నాణెం ఆఫర్
-            </span>
-          </h1>
+          <h1 className="text-2xl lg:text-5xl uppercase tracking-wider relative font-nunito-sans font-semibold bg-clip-text animate-flashZoom drop-shadow-[2px_2px_0px_rgba(0,0,0,0.7)]">
+  <span className="relative text-red-700">
+    Gold Coin Offer
+  </span>
+</h1>
+
       
           {/* <p className="text-lg mt-4 text-gray-100">
             Subscribe to our{" "}
@@ -68,23 +80,75 @@ const MegaBanner = () => {
           )} */}
         </div>
         {isExpanded && (
-    <div className="mt-6 text-center">
-      <h2 className="text-2xl font-bold text-yellow-300">Offer Details</h2>
-      <p className="mt-4 text-lg text-gray-100">
-        With our Daily Milk Package, you’ll receive fresh milk daily and have
-        a chance to win a <span className="font-bold text-yellow-300">gold coin</span> every month!
-      </p>
-      <button className="mt-6 bg-yellow-500 text-blue-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-600 hover:scale-105 shadow-lg transition-all duration-300">
-        Learn More
-      </button>
-    </div>
-  )}
-        {/* Logo Positioned Bottom Right */}
-        <img
-          src={mhlogo}
-          alt="Sri Maha Lakshmi Raithu Dairy"
-          className="absolute bottom-1 right-2 h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 object-contain"
-        />
+  <div className="mt-2 text-left px-4">
+  <h2 className="text-2xl text-center font-nunito-sans font-bold text-yellow-800">
+  ఆఫర్ వివరాలు
+</h2>
+
+<ul className="mt-1 list-disc list-inside text-lg text-gray-600 font-anekTelugu">
+  <li className="pl-1 text-gray-900">
+    ప్రతి నెల రూ. 3000 విలువైన కిరాణా మరియు పాలు సంవత్సరం పొడుగునా కొనుగోలు చేసే వారికి
+    <span className="font-bold text-gray-900"> 1 కుపన్</span> ఇవ్వబడును.
+  </li>
+
+  <li className="pl-1 text-gray-900">
+    ఆ కుపన్ మొదట <span className="font-bold text-gray-900">50 మందికి</span> మాత్రమే ఇవ్వబడును.
+  </li>
+
+  <li className="pl-1 text-gray-900">
+    ఆ 50 మందిలో <span className="font-bold text-gray-900">4 కుపన్లు</span> లక్కీడ్రా ద్వారా ఎంపిక చేయబడును.
+  </li>
+</ul>
+
+{/* New Section for Prizes */}
+<h2 className="text-2xl text-center font-nunito-sans font-bold text-yellow-800 mt-2">
+  బహుమతులు
+</h2>
+
+<ul className="mt-1 list-disc list-inside text-lg text-gray-600 font-anekTelugu">
+  <li className="pl-1 text-gray-900">
+    <span className="font-bold text-gray-900">మొదటి బహుమతి :</span> 1g GOLD
+  </li>
+
+  <li className="pl-1 text-gray-900">
+    <span className="font-bold text-gray-900">రెండవ బహుమతి   :</span> 20g వెండి
+  </li>
+
+  <li className="pl-1 text-gray-900">
+    <span className="font-bold text-gray-900">మూడవ బహుమతి :</span> 10g వెండి
+  </li>
+
+  <li className="pl-1 text-gray-900">
+    <span className="font-bold text-gray-900">నాల్గవ బహుమతి   :</span>  ఏదైన ప్రత్యేక బహుమతి
+  </li>
+
+  <li className="pl-1 text-gray-900">
+    <span className="font-bold text-gray-900">ప్రతి 50 మందికి:</span> ఏదొక చిన్న బహుమతి ఇవ్వబడును.
+  </li>
+</ul>
+
+
+
+
+
+    {/* <p className="mt-6 text-lg text-gray-600 font-anekTelugu">
+      శ్రీ మహాలక్ష్మీ రైతు డెయిరీ షాప్ దగ్గర పాలు కొనుగోలు చేసే వారు,
+      ముందుగా నెల పాలు డబ్బులు అడ్వాన్స్ జమ చేసిన వారికి <span className="font-bold text-gray-900">2 రోజులు ఉచితంగా</span> పాలు ఇవ్వబడును.
+    </p> */}
+  
+    <button className="mt-2 mb-2 mx-auto flex justify-center bg-yellow-800 text-gray-100 font-nunito-sans font-bold py-1 px-6 rounded-full hover:bg-gray-900 hover:scale-105 shadow-lg transition-all duration-300">
+      SUBSCRIBE
+    </button>
+  
+
+  </div>
+)}
+
+      {/* Logo Positioned Bottom Right */}
+{/* Logo Positioned at the Top Center */}
+
+
+
       </div>
       
       

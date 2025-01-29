@@ -3,7 +3,7 @@ import { Link ,useNavigate } from 'react-router-dom';
 import {  FaWhatsapp } from 'react-icons/fa';
 import { TbDeviceLandlinePhone } from "react-icons/tb";
 import logo from "../assets/ManaKiranaLogoWithName.gif";
-import mhlogo from "../assets/RaithuDairyLogo444x336.jpeg";
+import mhlogo from "../assets/RaithuDairyLogo150x102.png";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import homeConfig from '../HomeConfig.json'; // Import the homeConfig file
@@ -82,16 +82,16 @@ const Footer = ({ scrollToCategory }) => {
   return (
     <>
       {/* Mobile Footer */}
-      <footer   className={`fixed bottom-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ${
+      <footer   className={`fixed bottom-0 left-0 w-full rounded-sm bg-white border-b-4 border-yellow-600 shadow-md shadow-md z-50 transition-transform duration-300 ${
         isFooterVisible ? "translate-y-0" : "translate-y-full"
       } block md:hidden`}>
-  <div className="container mx-auto flex justify-between items-center px-2 py-0 sm:px-1 sm:py-0">
+  <div className="container mx-auto flex justify-between items-center px-2 py-1 sm:px-1 sm:py-1">
     {/* Home Icon */}
-    <Link to="/" className="flex flex-col items-center">
+    <Link to="/" className="flex flex-col items-center shadow-md border border-b-5 border-yellow-600 hover:border-white rounded-sm  transition-all duration-300 ">
   <img 
     src={logo}
     alt="Home" 
-    className="h-9 w-9 sm:h-9 sm:w-9 object-contain ml-2"
+    className="h-9 w-9 sm:h-9 sm:w-9 object-contain "
   />
   <span className="text-xs text-green-900">Home</span>
 </Link>

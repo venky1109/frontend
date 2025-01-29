@@ -13,7 +13,7 @@ const ContactUsBanner = () => {
   return (
     <div className="flex items-center space-x-4 rounded-md p-1">
       {/* First line: Order from */}
-      <div className="text-gray-500 font-bold text-sm sm:text-md">
+      <div className="text-gray-200 font-bold text-sm sm:text-md">
         Order from:
       </div>
       
