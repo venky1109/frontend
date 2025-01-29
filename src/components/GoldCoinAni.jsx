@@ -14,7 +14,7 @@ const GoldCoinAnimation = () => {
         >{/* Gold Coin 3D Effect */}
         <div className="relative w-1 h-1 rounded-full animate-fall-bounce-3d">
           {/* Front Face */}
-          <div className="absolute  inset-0 bg-gradient-to-t from-yellow-500 via-yellow-300 to-yellow-200 rounded-full shadow-lg border border-yellow-700 flex justify-center items-center">
+          <div className="absolute  inset-0 bg-yellow-500 border-2 border-yellow-600 rounded-full shadow-lg rounded-full shadow-lg border border-yellow-700 flex justify-center items-center">
             🪙 {/* Gold Coin Emoji as Icon */}
           </div>
 
