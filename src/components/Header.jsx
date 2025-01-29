@@ -238,7 +238,7 @@ const Header = () => {
       {showLoginForm && (
         <div
           ref={loginFormRef}
-          className="absolute right-0 w-80 bg-white border  hover:text-white hover:scale-110 border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+          className="absolute mt-16 right-0 w-80 bg-white border  hover:scale-110 border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
         >
           <LoginScreen onClose={() => setShowLoginForm(false)} />
         </div>
