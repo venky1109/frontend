@@ -12,10 +12,10 @@ const GoldCoinAnimation = () => {
             animationDelay: `${Math.random() * 2}s`, // Random start delay
           }}
         >{/* Gold Coin 3D Effect */}
-        <div className="relative w-1 h-1 rounded-full animate-fall-bounce-3d">
+        <div className="relative w-2 h-2 rounded-full animate-fall-bounce-3d">
           {/* Front Face */}
-          <div className="absolute  inset-0 bg-yellow-500 border-2 border-yellow-600 rounded-full shadow-lg rounded-full shadow-lg border border-yellow-700 flex justify-center items-center">
-            🪙 {/* Gold Coin Emoji as Icon */}
+          <div className="absolute  inset-0 bg-yellow-400 border-1 border-yellow-500 rounded-full shadow-lg rounded-full shadow-lg border border-yellow-700 flex justify-center items-center">
+            {/* 🪙 */}
           </div>
 
           {/* Edge (Simulates Thickness) */}
