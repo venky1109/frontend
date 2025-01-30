@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import GoldCoinAnimation from "./GoldCoinAni";
+// import GoldCoinAnimation from "./GoldCoinAni";
 import mhlogo from "../assets/RaithuDairyLogo150x102.png";
 
 const MegaBanner = () => {
@@ -29,7 +29,7 @@ const MegaBanner = () => {
     return (
         <div
   ref={bannerRef}
-  className={`relative bg-gradient-to-b from-amber-300 via-amber-200 to-amber-300 text-white rounded-2xl shadow-lg overflow-hidden w-full py-1 md:py-6 cursor-pointer transition-all duration-500 ${
+  className={`relative bg-gradient-to-b from-amber-200 via-amber-100 to-amber-200 text-white rounded-2xl shadow-lg overflow-hidden w-full py-1 md:py-6 cursor-pointer transition-all duration-500 ${
     isExpanded ? "h-auto" : "min-h-[200px]"
   }`}
 
@@ -39,7 +39,7 @@ const MegaBanner = () => {
         onClick={toggleBanner}
       >
         {/* Falling Gold Coins */}
-        {!isExpanded && <GoldCoinAnimation />}
+        {/* {!isExpanded && <GoldCoinAnimation />} */}
 
         {/* <GoldCoinAnimation /> */}
         
@@ -56,12 +56,12 @@ const MegaBanner = () => {
         <h1 className="relative text-4xl lg:text-5xl font-extrabold uppercase tracking-wide font-anek-telugu font-semibold">
   
   <span className="relative text-green-800">
-    శ్రీ మహా లక్ష్మి రైతు డైరీ
+    శ్రీ మహా లక్ష్మీ రైతు డైరీ
   </span>
 </h1>
           <br />
-          <h1 className="text-2xl lg:text-5xl uppercase tracking-wider relative font-nunito-sans font-semibold bg-clip-text animate-flashZoom drop-shadow-[2px_2px_0px_rgba(0,0,0,0.7)]">
-  <span className="relative text-red-700">
+          <h1 className="text-2xl lg:text-5xl  uppercase tracking-wider relative font-nunito-sans font-semibold bg-clip-text animate-flashZoom drop-shadow-[2px_2px_0px_rgba(0,0,0,0.7)]">
+  <span className="relative text-red-600">
     Gold Coin Offer
   </span>
 </h1>

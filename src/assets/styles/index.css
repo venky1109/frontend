@@ -53,6 +53,9 @@ main {
   text-overflow: ellipsis; /* Add ellipsis for long text */
   white-space: nowrap; /* Prevent wrapping */
 }
+.clip-ribbon {
+  clip-path: polygon(100% 0%, 100% 100%, 50% 80%, 0 100%, 0 0);
+}
 
 
 

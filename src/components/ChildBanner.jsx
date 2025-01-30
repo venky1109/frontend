@@ -2,7 +2,7 @@ import React from "react";
 
 const ChildBanner = () => {
   return (
-    <div className="relative bg-gradient-to-b from-cyan-600 via-cyan-500 to-cyan-600 text-white rounded-2xl shadow-lg overflow-hidden w-11/12 md:w-8/12 lg:w-6/12 mx-auto p-6">
+    <div className="relative bg-gradient-to-b from-cyan-500 via-cyan-400 to-cyan-500 text-white rounded-2xl shadow-lg overflow-hidden w-11/12 md:w-8/12 lg:w-6/12 mx-auto p-6">
       {/* Floating Silver Coin */}
       {/* <div className="absolute -top-0 -left-0 w-24 h-24 bg-gradient-to-t from-gray-400 to-gray-300 rounded-full shadow-xl flex justify-center items-center animate-bounce">
         <img
@@ -33,12 +33,9 @@ const ChildBanner = () => {
           </span>{" "} */}
           "₹2000 లేదా అంతకంటే ఎక్కువ కొనుగోలు చేసి, వైర్‌డ్ ఇయర్‌ఫోన్లు ఉచితంగా పొందండి!"
         </p>
-        <p className="text-md rounded-md bg-gray-200 font-semibold text-yellow-600 animate-flashZoom">త్వరపడండి... ఆఫర్ స్టాక్ ఉన్నంతవరకే!</p>
+        <p className="text-md rounded-md bg-gray-200 font-semibold py-1 text-yellow-800 animate-flashZoom">త్వరపడండి... ఆఫర్ స్టాక్ ఉన్నంతవరకే!</p>
         
-        {/* Call-to-Action Button */}
-        <button className="mt-3 bg-gray-100 text-gray-800 font-bold py-1 px-8 rounded-full hover:bg-gray-200 hover:scale-105 shadow-lg transition-all duration-300">
-          Shop Now
-        </button>
+      
       </div>
 
       

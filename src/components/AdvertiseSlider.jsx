@@ -47,16 +47,16 @@ const AdvertiseSlider = () => {
         },
       
     {
-      title: "Bumper Gift",
+      title: "Eggs & Dairy",
       description: getRandomDescription([
-        "Sparkle up your home with our cleaning essentials!",
-        "Tough on stains, gentle on surfaces – cleaning made easy!",
-        "Keep your space spotless with our reliable cleaning products!",
+        "Pure, fresh, and nutritious – enjoy the best dairy products every day!",
+        "Creamy, rich, and wholesome – taste the goodness of pure dairy!",
+        "Fresh eggs, rich in nutrients – fuel your day the natural way!",
       ]),
       image:
-        "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/AdvertiseBanner%2FGIFT.png?alt=media&token=fe2983d1-055d-4171-9846-d43d0eaaf2cf",
+        "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FEGGS%20%26DAIRY.png?alt=media&token=30b3b784-fa8b-4848-bc20-1e7b51e378ae",
       bgColor:
-        "bg-gradient-to-b from-blue-500 via-blue-400 to-blue-500", // Energy Burst
+        "bg-gradient-to-b from-gray-500 via-gray-400 to-gray-500", // Energy Burst
     },
   ];
   
@@ -93,8 +93,8 @@ const AdvertiseSlider = () => {
           <div className="w-3/4 px-4 py-2 flex flex-col justify-center">
             <h2 className="text-gray-100 font-bold text-2xl">{ad.title}</h2>
             <p className="text-gray-100 text-sm font-semibold">{ad.description}</p>
-            <button className="w-1/2 mt-2 text-xs bg-gray-100 text-blue-900 font-bold py-1 px-1 rounded-full hover:bg-yellow-600 hover:scale-105 shadow-lg transition-all duration-300">
-              ORDER NOW
+            <button className="w-1/2 mt-2 text-[10px] bg-gray-100 text-blue-900 font-bold py-1 px-1 rounded-full hover:bg-yellow-600 hover:scale-105 shadow-lg transition-all duration-300">
+              SHOP NOW
             </button>
           </div>
   

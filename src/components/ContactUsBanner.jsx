@@ -13,23 +13,23 @@ const ContactUsBanner = () => {
   return (
     <div className="flex items-center space-x-4 rounded-md p-1">
       {/* First line: Order from */}
-      <div className="text-gray-200 font-bold text-sm sm:text-md">
+      <div className="text-gray-700 font-bold text-sm sm:text-md">
         Order from:
       </div>
       
-      <div className='bg-gray-200 p-2 rounded-md'>
+      <div className='bg-white p-2 rounded-md'>
         {/* Second line: WhatsApp */}
         <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
           <FaWhatsapp className="text-green-700" size={24} />
-          <span className="text-gray-500 font-semibold text-sm sm:text-md">{whatsappNumber}</span>
+          <span className="text-gray-700 font-semibold text-sm sm:text-md">{whatsappNumber}</span>
         </a>
       </div>
 
-      <div className='bg-gray-200 p-2 rounded-md'>
+      <div className='bg-white p-2 rounded-md'>
         {/* Third line: Phone */}
         <div className="flex items-center space-x-2">
           <TbDeviceLandlinePhone className="text-green-700" size={24} />
-          <span className="text-gray-500 font-semibold text-sm sm:text-md">{phoneNumber}</span>
+          <span className="text-gray-700 font-semibold text-sm sm:text-md">{phoneNumber}</span>
         </div>
       </div>
     </div>

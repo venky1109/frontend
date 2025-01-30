@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback  } from 'react';
+import {  useState, useCallback  } from 'react';
 import { Link ,useNavigate } from 'react-router-dom';
 import {  FaWhatsapp } from 'react-icons/fa';
 import { TbDeviceLandlinePhone } from "react-icons/tb";
@@ -18,8 +18,7 @@ const Footer = ({ scrollToCategory }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { whatsappNumber, phoneNumber } = homeConfig; // Extract numbers from the homeConfig file
   const currentYear = new Date().getFullYear();
-  const [isFooterVisible, setIsFooterVisible] = useState(true);
-  const [lastScrollPosition, setLastScrollPosition] = useState(0);
+  // const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
   // State to manage the visibility of the login and account forms
   // const [showLoginForm, setShowLoginForm] = useState(false);
@@ -57,37 +56,38 @@ const Footer = ({ scrollToCategory }) => {
   //     document.removeEventListener('mousedown', handleClickOutside);
   //   };
   // }, [showLoginForm, showAccountForm]);
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPosition = window.scrollY;
+  // hidden to make footer fixed ---30Jan2023
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollPosition = window.scrollY;
 
-      if (currentScrollPosition > lastScrollPosition) {
-        // User is scrolling up, hide the footer
-        setIsFooterVisible(false);
-      } else {
-        // User is scrolling down, show the footer
-        setIsFooterVisible(true);
-      }
+  //     if (currentScrollPosition > lastScrollPosition) {
+  //       // User is scrolling up, hide the footer
+  //       setIsFooterVisible(false);
+  //     } else {
+  //       // User is scrolling down, show the footer
+  //       setIsFooterVisible(true);
+  //     }
 
-      setLastScrollPosition(currentScrollPosition);
-    };
+  //     setLastScrollPosition(currentScrollPosition);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [lastScrollPosition]);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [lastScrollPosition]);
 
   return (
     <>
       {/* Mobile Footer */}
-      <footer   className={`fixed bottom-0 left-0 w-full rounded-sm bg-white border-b-4 border-yellow-600 shadow-md shadow-md z-50 transition-transform duration-300 ${
-        isFooterVisible ? "translate-y-0" : "translate-y-full"
-      } block md:hidden`}>
+      <footer
+  className="fixed bottom-0 left-0 w-full rounded-sm bg-gradient-to-b from-green-50 via-green-100 to-green-200 shadow-md z-30 block md:hidden"
+>
   <div className="container mx-auto flex justify-between items-center px-2 py-1 sm:px-1 sm:py-1">
     {/* Home Icon */}
-    <Link to="/" className="flex flex-col items-center shadow-md border border-b-5 border-yellow-600 hover:border-white rounded-sm  transition-all duration-300 ">
+    <Link to="/" className="flex flex-col items-center shadow-md border border-b-5 border-green-600 hover:border-white rounded-sm  transition-all duration-300 ">
   <img 
     src={logo}
     alt="Home" 

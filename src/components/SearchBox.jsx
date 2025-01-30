@@ -58,7 +58,7 @@ const SearchBox = () => {
   return (
     <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
       {/* Search Input */}
-      <div className="flex items-center border border-gray-300 rounded-lg bg-white p-1 sm:p-2">
+      <div className="flex items-center border border-gray-100 rounded-lg bg-white p-1 sm:p-2">
     <input
       type="text"
       className="flex-grow outline-none text-gray-700 text-sm sm:text-base p-1 sm:p-2"

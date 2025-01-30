@@ -234,11 +234,18 @@ const Product = ({ product, keyword }) => {
                     style={{ visibility: 'hidden' }}
                   />
                 ))}
+                {/* Discount Ribbon */}
                 {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-                  <div className="absolute top-2 left-2 bg-green-700 text-white px-1 py-0.5 rounded-lg text-xs">
-                    <p>{getDiscount(selectedQuantity, detail.financials)}% off</p>
-                  </div>
-                )}
+  <div
+    className="absolute top-0 left-1 bg-teal-600 text-white text-[10px] px-1 py-1 font-semibold flex justify-center items-center shadow-lg w-[25px] h-[35px] transform -rotate-95 origin-top-left clip-ribbon"
+  
+  >
+    {getDiscount(selectedQuantity, detail.financials)}% OFF
+  </div>
+)}
+
+
+
               </div>
             </Link>
 
@@ -246,6 +253,7 @@ const Product = ({ product, keyword }) => {
             <p className="text-sm font-serif text-maroon-600" style={{ whiteSpace: 'pre-line' }}>
   {product.name.replace('(', '\n(')}
 </p>
+
 
 
               <div className="flex flex-col mt-1 space-y-1">
