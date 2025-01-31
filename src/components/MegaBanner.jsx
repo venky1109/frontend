@@ -64,7 +64,11 @@ const MegaBanner = () => {
   <span className="relative text-red-600">
     Gold Coin Offer
   </span>
+  
 </h1>
+<span className="relative text-green-800 text-xs">
+  మొదటి 50 మందికి ప్రత్యేకమైన ఆఫర్!
+  </span>
 
       
           {/* <p className="text-lg mt-4 text-gray-100">

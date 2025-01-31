@@ -20,19 +20,11 @@ const ChildBanner = () => {
         </h1>   
 
         {/* Subtext */}
-        <p className="text-lg mt-4 text-gray-100">
-          {/* <span className="font-semibold text-gray-100">
-            "అమూల్యమైన బహుమతి:"
-          </span>{" "} */}
-          ₹5000 కి పైగా కొనుగోలు చేస్తే వెండి నాణెం ఉచితం!
-        </p>
+        <ul className="text-lg mt-4 text-gray-100 list-disc text-left pl-8">
+  <li>₹5000 కి పైగా కొనుగోలు చేస్తే వెండి నాణెం ఉచితం!</li>
+  <li>₹2000 లేదా అంతకంటే ఎక్కువ కొనుగోలు చేసి, వైర్‌డ్ ఇయర్‌ఫోన్లు ఉచితంగా పొందండి!</li>
+</ul>
 
-        <p className="text-lg mt-4 text-gray-100">
-        {/* <span className="font-semibold text-gray-100">
-            "అమూల్యమైన బహుమతి:"
-          </span>{" "} */}
-          "₹2000 లేదా అంతకంటే ఎక్కువ కొనుగోలు చేసి, వైర్‌డ్ ఇయర్‌ఫోన్లు ఉచితంగా పొందండి!"
-        </p>
         <p className="text-md rounded-md bg-gray-200 font-semibold py-1 text-yellow-800 animate-flashZoom">త్వరపడండి... ఆఫర్ స్టాక్ ఉన్నంతవరకే!</p>
         
       

@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState ,useCallback} from "react";
+import { useNavigate } from 'react-router-dom';
+
 
 const AdvertiseSlider = () => {
   const scrollContainerRef = useRef(null);
@@ -6,11 +8,16 @@ const AdvertiseSlider = () => {
   const getRandomDescription = (descriptions) => {
     return descriptions[Math.floor(Math.random() * descriptions.length)];
   };
-
+    const navigate = useNavigate();
+ const handleCategoryCardClick = useCallback((categoryName) => {
+    navigate(`/category/${categoryName}`);
+  }, [navigate]);
+  
   const ads = [
    
         {
           title: "Dry Fruits",
+          categoryName:"DRYFRUITS",
           description: getRandomDescription([
             "Wholesome dry fruits for a healthy boost every day!",
             "Nourish your body with nature’s power-packed dry fruits!",
@@ -23,6 +30,7 @@ const AdvertiseSlider = () => {
         },
         {
           title: "Pulses",
+          categoryName:"RICE & PULSES",
           description: getRandomDescription([
             "Pure and protein-packed pulses for every meal!",
             "Add the goodness of premium pulses to your diet!",
@@ -35,6 +43,7 @@ const AdvertiseSlider = () => {
         },
         {
           title: "Cleaning Essentials",
+          categoryName:"CLEANING ESSENTIALS",
           description: getRandomDescription([
             "Sparkle up your home with our cleaning essentials!",
             "Tough on stains, gentle on surfaces – cleaning made easy!",
@@ -48,6 +57,7 @@ const AdvertiseSlider = () => {
       
     {
       title: "Eggs & Dairy",
+      categoryName:"Eggs & Dairy",
       description: getRandomDescription([
         "Pure, fresh, and nutritious – enjoy the best dairy products every day!",
         "Creamy, rich, and wholesome – taste the goodness of pure dairy!",
@@ -93,9 +103,14 @@ const AdvertiseSlider = () => {
           <div className="w-3/4 px-4 py-2 flex flex-col justify-center">
             <h2 className="text-gray-100 font-bold text-2xl">{ad.title}</h2>
             <p className="text-gray-100 text-sm font-semibold">{ad.description}</p>
-            <button className="w-1/2 mt-2 text-[10px] bg-gray-100 text-blue-900 font-bold py-1 px-1 rounded-full hover:bg-yellow-600 hover:scale-105 shadow-lg transition-all duration-300">
-              SHOP NOW
-            </button>
+            <button 
+  className="w-1/2 mt-2 text-[10px] bg-gray-100 text-blue-900 font-bold py-1 px-1 rounded-full 
+  hover:bg-yellow-600 hover:scale-105 shadow-lg transition-all duration-300"
+  onClick={() => handleCategoryCardClick(ad.categoryName)}
+>
+  SHOP NOW
+</button>
+
           </div>
   
           {/* Right: Image */}
