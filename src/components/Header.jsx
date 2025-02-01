@@ -1,6 +1,6 @@
 import {  useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { Link } from "react-router-dom";
+import { Link ,useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SearchBox from "./SearchBox";
 import LoginScreen from "./LoginScreen";
@@ -18,6 +18,7 @@ const Header = () => {
   const userIconRef = useRef(null);
   const loginFormRef = useRef(null);
   const accountFormRef = useRef(null);
+  const location = useLocation();
 
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showAccountForm, setShowAccountForm] = useState(false);
@@ -49,7 +50,7 @@ const Header = () => {
             </Link>
           </div>
 
-          <SelectLocation />
+          {location.pathname === '/' && <SelectLocation />}
 
           {/* Search Box & User Account Section */}
           <div className="w-full flex items-center justify-between pl-2 space-x-2 md:space-x-0">

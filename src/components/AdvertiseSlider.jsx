@@ -97,6 +97,7 @@ const AdvertiseSlider = () => {
       {ads.map((ad, index) => (
         <div
           key={index}
+          onClick={() => handleCategoryCardClick(ad.categoryName)}
           className={`relative min-w-[100%] sm:min-w-[45%] lg:min-w-0 ${ad.bgColor} rounded-2xl shadow-lg overflow-hidden snap-center group h-auto lg:h-48 flex`}
         >
           {/* Left: Description */}

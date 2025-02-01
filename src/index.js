@@ -39,7 +39,7 @@ import { Provider } from 'react-redux';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import firebase from 'firebase/compat/app'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-
+import { LoadScript } from "@react-google-maps/api";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -50,11 +50,16 @@ const firebaseConfig = {
   // appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 firebase.initializeApp(firebaseConfig);
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+const GOOGLE_MAPS_LIBRARIES = ["places"];
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
+      
       <Route index={true} path='/' element={<HomeScreen />} />
+      
       <Route path='/search/:keyword' element={<HomeScreen />} />
       <Route path='/page/:pageNumber' element={<HomeScreen />} />
       <Route
@@ -99,7 +104,9 @@ root.render(
     <HelmetProvider>
       <Provider store={store}>
         <PayPalScriptProvider deferLoading={true}>
+        <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={GOOGLE_MAPS_LIBRARIES}>
           <RouterProvider router={router} />
+          </LoadScript>
         </PayPalScriptProvider>
       </Provider>
     </HelmetProvider>
