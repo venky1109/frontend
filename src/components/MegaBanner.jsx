@@ -131,7 +131,9 @@ const MegaBanner = () => {
   </li>
 </ul>
 
-
+<h3 className="text-2xl text-center font-nunito-sans font-bold text-green-800 mt-2">
+"📞మరిన్ని వివరాల కోసం సంప్రదించండి:8121774325"
+</h3>
 
 
 
@@ -140,9 +142,9 @@ const MegaBanner = () => {
       ముందుగా నెల పాలు డబ్బులు అడ్వాన్స్ జమ చేసిన వారికి <span className="font-bold text-gray-900">2 రోజులు ఉచితంగా</span> పాలు ఇవ్వబడును.
     </p> */}
   
-    <button className="mt-2 mb-2 mx-auto flex justify-center bg-yellow-800 text-gray-100 font-nunito-sans font-bold py-1 px-6 rounded-full hover:bg-gray-900 hover:scale-105 shadow-lg transition-all duration-300">
+    {/* <button className="mt-2 mb-2 mx-auto flex justify-center bg-yellow-800 text-gray-100 font-nunito-sans font-bold py-1 px-6 rounded-full hover:bg-gray-900 hover:scale-105 shadow-lg transition-all duration-300">
       SUBSCRIBE
-    </button>
+    </button> */}
   
 
   </div>

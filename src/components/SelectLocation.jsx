@@ -158,7 +158,7 @@ const fetchPincodeFromLatLng = async (latitude, longitude) => {
     <>
       {showLocation && (
         <div className="w-full max-w-sm mx-auto p-4">
-          <h2 className="text-center text-white text-lg font-semibold mb-4">Where Would You Like Your Order Delivered?</h2>
+          <h2 className="text-center text-black text-lg font-semibold mb-4">Where Would You Like Your Order Delivered?</h2>
           <div className="relative mt-1">
           <Autocomplete
   onLoad={(ref) => setAutocompleteRef(ref)}
@@ -170,7 +170,7 @@ const fetchPincodeFromLatLng = async (latitude, longitude) => {
 >
               <input
                 type="text"
-                className="w-full border rounded-lg p-1 bg-gray-100 text-gray-700"
+                className="w-60 border rounded-lg p-1 bg-white border-green-500 text-gray-700 "
                 placeholder="Search a new address"
                 value={fullAddress}
                 onChange={(e) => setFullAddress(e.target.value)}
@@ -195,7 +195,7 @@ const fetchPincodeFromLatLng = async (latitude, longitude) => {
             
             
   <button 
-    className="flex items-center text-yellow-700 bg-white font-semibold cursor-pointer px-4 py-1 rounded-md border border-red-500 hover:bg-green-100 transition-all"
+    className="flex items-center text-gray-700 bg-white font-semibold cursor-pointer px-4 py-1 rounded-md border border-gray-200 hover:bg-blue-100 transition-all"
     onClick={enableDeviceLocation}
     aria-label="Detect current location"
   >

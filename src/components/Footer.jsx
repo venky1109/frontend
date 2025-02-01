@@ -83,7 +83,7 @@ const Footer = ({ scrollToCategory }) => {
     <>
       {/* Mobile Footer */}
       <footer
-  className="fixed bottom-0 left-0 w-full rounded-sm bg-gradient-to-b from-green-50 via-green-100 to-green-200 shadow-md z-30 block md:hidden"
+  className="fixed bottom-0 left-0 w-full rounded-sm bg-gradient-to-b from-white via-white to-white shadow-md z-30 block md:hidden"
 >
   <div className="container mx-auto flex justify-between items-center px-2 py-1 sm:px-1 sm:py-1">
     {/* Home Icon */}

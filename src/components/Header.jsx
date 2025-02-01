@@ -41,7 +41,7 @@ const Header = () => {
 
 
   return (
-      <header className="bg-yellow-600 rounded-b-md shadow-md fixed top-0 left-0 right-0 z-50">
+      <header className="bg-gradient-to-b from-green-200 via-green-100 to-white rounded-b-md  fixed top-0 left-0 right-0 z-50">
         <nav className="container mx-auto flex flex-col md:flex-row items-center justify-between p-2 lg:p-2" ref={navbarRef}>
           {/* Logo */}
           <div className="hidden md:flex flex-shrink-0">
@@ -92,7 +92,7 @@ const Header = () => {
       <button
         onClick={toggleLoginForm}
         ref={userIconRef}
-        className="text-xl text-white "
+        className="text-xl text-gray-600 "
       >
         <CgProfile size={40} />
       </button>

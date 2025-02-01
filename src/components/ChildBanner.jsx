@@ -20,7 +20,7 @@ const ChildBanner = () => {
         </h1>   
 
         {/* Subtext */}
-        <ul className="text-lg mt-4 text-gray-100 list-disc text-left pl-8">
+        <ul className="text-lg mt-4 text-gray-100 list-disctext-left pl-8">
   <li>₹5000 కి పైగా కొనుగోలు చేస్తే వెండి నాణెం ఉచితం!</li>
   <li>₹2000 లేదా అంతకంటే ఎక్కువ కొనుగోలు చేసి, వైర్‌డ్ ఇయర్‌ఫోన్లు ఉచితంగా పొందండి!</li>
 </ul>
