@@ -5,6 +5,11 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
+        truckMove: {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '50%': { opacity: '1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
+        },
         letterReveal: {
           '0%': { opacity: 0, transform: 'translateY(100%)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
@@ -52,6 +57,9 @@ module.exports = {
         shine: "shine 2s linear infinite",
         "fall-bounce": "fallBounce 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite",
         flashZoom: "flashZoom 5s ease-in-out infinite",
+        'truck-move': 'truckMove 6s linear infinite',
+        // 'move-2': 'move2 6s linear infinite',
+
       },
     },
   },

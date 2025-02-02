@@ -12,6 +12,8 @@ import Product from '../components/Product';
 import AdvertiseSlider from "../components/AdvertiseSlider";
 import MegaBanner  from '../components/MegaBanner';
 import ChildBanner from '../components/ChildBanner';
+import FreeHomeDelivery from '../components/SubChild';
+import OrderOptions from '../components/OrderOptionsBanner';
 
 
 // Lazy load components to reduce initial bundle size
@@ -112,17 +114,22 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
       </div> */}
    
 
-   <div className="container mx-auto  mt-28 ">
-  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0   ">
-  
-
+<div className="container mx-auto  mt-28 ">
+  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0 mb-3  ">
   <MegaBanner/>
-
   </div>
 </div>
 
+
 <div className='mt-3'>
 <ChildBanner/>
+</div>
+
+<div className='mt-3 mb-3'>
+<FreeHomeDelivery/>
+</div>
+<div className='mt-3 '>
+<OrderOptions/>
 </div>
 <div className="container mx-auto  ">
   <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0   ">
