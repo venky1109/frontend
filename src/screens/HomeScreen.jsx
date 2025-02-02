@@ -28,6 +28,7 @@ const HomeScreen = () => {
   const scrollSpeed = 0; // Adjust scroll speed
   const navigate = useNavigate();
   const scrollIntervalRef = useRef(null);
+  // const { headerHeight } = useOutletContext(); 
 
   // Fetch all categories
   const { data: categoriesData, isLoading: isCategoriesLoading, error: categoriesError } = useGetAllCategoriesQuery();
@@ -102,6 +103,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
     (section) => section.type === 'category'
   );
   const categoryTitle = categorySection ? categorySection.title : 'Categories';
+  // console.log(headerHeight)
 
   return (
     <>

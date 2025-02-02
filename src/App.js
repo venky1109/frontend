@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import { useWebSocket } from './hooks/useWebSocket';
 import logo from './assets/ManaKiranaLogoWithName.gif';
 
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
@@ -16,7 +17,7 @@ const App = () => {
   const dispatch = useDispatch();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
-
+  
   useEffect(() => {
     const expirationTime = localStorage.getItem('expirationTime');
     if (expirationTime) {
@@ -39,6 +40,8 @@ const App = () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, [dispatch]);
+  
+
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -64,9 +67,9 @@ const App = () => {
   return (
     <div className="select-none min-h-screen flex flex-col  ">
       <ToastContainer />
-      <Header />
-
-      <main className="flex-grow py-4">
+     <Header />
+     
+     <main className="flex-grow py-4">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
           <Outlet />
         </div>
