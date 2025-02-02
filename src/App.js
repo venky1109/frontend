@@ -8,6 +8,7 @@ import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
 import { useWebSocket } from './hooks/useWebSocket';
 import logo from './assets/ManaKiranaLogoWithName.gif';
+import Loader from './components/Loader';
 
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   useWebSocket(); 
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   
@@ -35,6 +37,9 @@ const App = () => {
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000); 
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -63,6 +68,13 @@ const App = () => {
   const handleDismissBanner = () => {
     setShowInstallBanner(false); // Hide the banner
   };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="select-none min-h-screen flex flex-col  ">
