@@ -26,17 +26,17 @@ const AdvertiseSlider = () => {
             "Healthy Dates, Pistachios & more!",
           ])}
           <br />
-          <span className="font-bold text-2xl">
-            <span className="text-gray-800">UP TO</span>{" "}
-            <span className="text-gray-100 text-5xl">60%</span>{" "}
-            <span className="text-gray-800">OFF</span>
+          <span className="font-bold text-xl">
+            <span className="text-gray-200">UP TO</span>{" "}
+            <span className="text-white text-5xl">60%</span>{" "}
+            <span className="text-gray-200">OFF</span>
           </span>
         </span> 
       ),
   image:
     "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/AdvertiseBanner%2FDRYFRUITS.png?alt=media&token=16b22c59-28ad-4689-b24f-26fa38cb6a76",
   bgColor:
-    "bg-gradient-to-b from-green-800 via-green-700 to-green-800", // Gradient Sunset Vibes
+    "bg-gradient-to-b from-gray-700 via-gray-500 to-gray-700", // Gradient Sunset Vibes
 },
 
   {
@@ -50,7 +50,7 @@ const AdvertiseSlider = () => {
             "Organic Lentils & more!",
           ])}
           <br />
-          <span className="font-bold text-2xl">
+          <span className="font-bold text-xl">
             <span className="text-gray-800">UP TO</span>{" "}
             <span className="text-gray-100 text-5xl">50%</span>{" "}
             <span className="text-gray-800">OFF</span>
@@ -76,7 +76,7 @@ const AdvertiseSlider = () => {
         <br />
         {/* Uncomment below if you want to show the discount */}
         
-        <span className="font-bold text-2xl">
+        <span className="font-bold text-xl">
           <span className="text-black">UP TO</span>{" "}
           <span className="text-gray-100 text-5xl">40%</span>{" "}
           <span className="text-black">OFF</span>
@@ -87,7 +87,7 @@ const AdvertiseSlider = () => {
     image:
       "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/AdvertiseBanner%2FCLEANINGESSESENTIALS.png?alt=media&token=cd970a97-c1b1-47a6-be82-5bf1c7c5443b",
     bgColor:
-      "bg-gradient-to-b from-teal-600 via-teal-500 to-teal-600", // Minty Fresh
+      "bg-gradient-to-b from-teal-500 via-teal-400 to-teal-500", // Minty Fresh
   },
 
   {
@@ -101,7 +101,7 @@ const AdvertiseSlider = () => {
           "Pure Ghee, Curd & more!",
         ])}
         <br />
-        <span className="font-bold text-2xl">
+        <span className="font-bold text-xl">
           <span className="text-gray-800">UP TO</span>{" "}
           <span className="text-gray-100 text-5xl">20%</span>{" "}
           <span className="text-gray-800">OFF</span>
@@ -111,7 +111,7 @@ const AdvertiseSlider = () => {
 image:
   "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FEGGS%20%26DAIRY.png?alt=media&token=30b3b784-fa8b-4848-bc20-1e7b51e378ae",
 bgColor:
-  "bg-gradient-to-b from-blue-500 via-blue-400 to-blue-500", // Energy Burst
+  "bg-gradient-to-b from-cyan-500 via-cyan-400 to-cyan-500", // Energy Burst
 },
 ];
   

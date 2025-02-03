@@ -95,14 +95,14 @@ const App = () => {
         <div
         className={`fixed ${
           window.innerWidth < 640 ? "top-[6rem]" : "bottom-4"
-        } left-2 right-2 border border-b-5 border-orange-600 bg-yellow-100 shadow-lg rounded-md p-2 flex items-center sm:justify-between`}
+        } left-2 right-2 border border-b-5 border-gray-300 bg-white shadow-lg rounded-md p-2 flex items-center sm:justify-between`}
       >
         {/* Logo & Text */}
         <div className="flex items-center space-x-3">
           <img
             src={logo}
             alt="ManaKirana logo"
-            className="w-14 h-auto sm:w-16 lg:w-20 border border-yellow-600 rounded-md"
+            className="w-14 h-auto sm:w-16 lg:w-20 border border-green-600 rounded-md"
           />
           <p className="text-gray-800 text-sm sm:text-md">
             Install <span className="font-bold text-green-600">APP</span> for better experience!
