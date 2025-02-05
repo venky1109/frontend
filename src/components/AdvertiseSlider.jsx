@@ -91,8 +91,8 @@ const AdvertiseSlider = () => {
   },
 
   {
-    title: "Eggs & Dairy",
-    categoryName: "EGGS & DAIRY",
+    title: "EGGS & DAIRY",
+    categoryName: "Eggs & Dairy",
     description: (
       <span>
         {getRandomDescription([
