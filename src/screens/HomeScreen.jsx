@@ -113,7 +113,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
           height={adv.dimensions.height}
           width={adv.dimensions.width}
         />
-      </div> */}
+      </div> */} 
    
 
 <div className="container mx-auto  mt-28 ">
@@ -178,7 +178,7 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
           </React.Suspense>
 
           <h5 className="text-xl font-serif text-green-800 mb-4 mt-8 mb-0 semi-bold">
-          MK BUDGET FRIENDLY PACKS
+          MK BUDGET PACKAGES
           </h5>
 
           <React.Suspense fallback={<Loader />}>
