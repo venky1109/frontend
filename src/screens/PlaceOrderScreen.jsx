@@ -56,10 +56,15 @@ const PlaceOrderScreen = () => {
         <div className="md:col-span-2">
           <div className="bg-white p-4 rounded-lg shadow-md mb-4">
             <h2 className="text-2xl font-semibold mb-4">Shipping</h2>
-            <p>
+            {/* <p>
               <strong>Address:</strong> {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
               {cart.shippingAddress.postalCode}, {cart.shippingAddress.country}
-            </p>
+            </p> */}
+            <div>
+  <strong>Address:</strong> <span>{cart.shippingAddress.address}, {cart.shippingAddress.city} </span>
+  <span>{cart.shippingAddress.postalCode}, {cart.shippingAddress.country}</span>
+</div>
+
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow-md mb-4">
