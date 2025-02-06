@@ -7,7 +7,9 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 
 const ProductScreen = () => {
-  const { id: productId } = useParams();
+  const { slug } = useParams();  // ✅ Extract slug from URL
+  // console.log("Extracted Slug:", slug);  // ✅ Debugging log
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,7 +21,10 @@ const ProductScreen = () => {
   const scrollContainersRef = useRef([]);
   const { brand, quantity, qty } = location.state || {};
 
-  const { data: product, isLoading, error } = useGetProductDetailsQuery(productId);
+  // const { data: product, isLoading, error } = useGetProductDetailsQuery(productId);
+  const { data: product, isLoading, error } = useGetProductDetailsQuery(slug);
+  // console.log("Product Object:", product); 
+
 
   const [selectedBrand, setSelectedBrand] = useState(brand || '');
   const [selectedQuantity, setSelectedQuantity] = useState(quantity || '1');
@@ -149,7 +154,7 @@ const ProductScreen = () => {
                   {selectedBrand} {product.name}
                 </h4>
                 <Link
-                  to={`/product/${product._id}`}
+                  to={`/product/${product.slug}`}
                   state={{ brand: selectedBrand, quantity: selectedQuantity }}
                 >
                   <div className="relative overflow-hidden">
@@ -293,7 +298,7 @@ const ProductScreen = () => {
                         onClick={() => handleSimilarItemClick(detail.brand, quantity)}
                       >
                         <Link
-                          to={`/product/${product._id}`}
+                          to={`/product/${product.slug}`}
                           state={{ brand: detail.brand, quantity: quantity }}
                         >
                           <img

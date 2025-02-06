@@ -189,11 +189,11 @@ const SearchScreenCard = ({ product }) => {
     <>
       {product.details.map((detail, detailIndex) => (
         <div
-          key={`${product._id}-${detail.brand}`}
+          key={`${product.slug}-${detail.brand}`}
           className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
         >
           <Link
-            to={`/product/${product._id}`}
+            to={`/product/${product.slug}`}
             state={{
               brand: detail.brand,
               quantity: selectedQuantities[detailIndex],

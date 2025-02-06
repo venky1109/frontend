@@ -14,7 +14,9 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage'
 
 const ProductEditScreen = () => {
-  const { id: productId, detailId } = useParams();
+  // const { id: productId, detailId } = useParams();
+  const { slug, detailId } = useParams();
+
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -25,12 +27,18 @@ const ProductEditScreen = () => {
   const [image, setImage] = useState('');
   const [manualQuantity,setManualQuantity] = useState(0);
 
+  // const {
+  //   data: product,
+  //   isLoading,
+  //   refetch,
+  //   error,
+  // } = useGetProductDetailsQuery(productId);
   const {
     data: product,
     isLoading,
     refetch,
     error,
-  } = useGetProductDetailsQuery(productId);
+  } = useGetProductDetailsQuery(slug); // Now using slug instead of productId
 
   useEffect(() => {
     if (product) {
@@ -67,12 +75,11 @@ const ProductEditScreen = () => {
   }, [product, detailId, quantity]);
 
   const submitHandler = async (e) => {
-    
     e.preventDefault();
     try {
       await updateProductDetail({
-        productId,
-      detailId,
+        slug, 
+        detailId,
         name,
         category,
         brand,
@@ -88,10 +95,8 @@ const ProductEditScreen = () => {
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
-
-    // console.log('Product category'+category)
   };
-
+  
   // const uploadFileHandler = async (e) => {
   //   const formData = new FormData();
   //   formData.append('image', e.target.files[0]);

@@ -44,7 +44,7 @@ const Cart = () => {
     <><ListGroup variant='flush'>
           <p style={{ color: 'forestgreen', textDecoration: "none", fontSize: '2rem', fontWeight: "600" }}> Cart Items</p>
           {cartItems.map((item) => (
-              <ListGroup.Item key={item.productId}>
+              <ListGroup.Item key={item.slug}>
                   <Row>
                       <Col md={3}>
                           <Image src={item.image} alt={item.name} fluid rounded />
@@ -52,7 +52,7 @@ const Cart = () => {
                       <Col md={9}>
                           <Row>
                               <Col md={8} style={{ textAlign: 'left', fontSize: '1.5rem' }}>
-                                  <Link to={`/product/${item.productId}`} style={{ color: 'forestgreen', textDecoration: "none", fontWeight: "600" }}>{item.name}</Link>
+                                  <Link to={`/product/${item.slug}`} style={{ color: 'forestgreen', textDecoration: "none", fontWeight: "600" }}>{item.name}</Link>
                               </Col>
                               <Col md={4} style={{ textAlign: 'right', fontSize: '1rem' }}>
                                   {getFormattedQuantity(item.quantity)}

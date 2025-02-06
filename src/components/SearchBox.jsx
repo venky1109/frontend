@@ -74,7 +74,7 @@ const SearchBox = () => {
     if (suggestion.type === 'brand') {
       navigate(`/search?query=${suggestion.name}`);
     } else {
-      navigate(`/product/${suggestion._id}`);
+      navigate(`/product/${suggestion.slug}`);
     }
 
     setKeyword('');

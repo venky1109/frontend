@@ -186,7 +186,7 @@ const ProductListScreen = () => {
         <td>{detail.financials[detail.financials.length - 1].countInStock}</td>
       
         <td>
-          <LinkContainer to={`/admin/product/${product._id}/edit/${detail._id}`}>
+          <LinkContainer to={`/admin/product/${product.slug}/edit/${detail._id}`}>
             <Button variant='light' className='btn-sm mx-2'>
               <FaEdit />
             </Button>

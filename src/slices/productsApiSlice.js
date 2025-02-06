@@ -24,15 +24,23 @@ export const productsApiSlice = apiSlice.injectEndpoints({
     }),
   
 
-    // Query to get product details by ID
-    getProductDetails: builder.query({
-      query: (productId) => ({
-        url: `${PRODUCTS_URL}/${productId}`,
-        method: 'GET', // Explicitly specify method for axios
-      }),
-      keepUnusedDataFor: 5,
-      providesTags: (result, error, productId) => [{ type: 'Product', id: productId }],
-    }),
+    // // Query to get product details by ID
+    // getProductDetails: builder.query({
+    //   query: (productId) => ({
+    //     url: `${PRODUCTS_URL}/${productId}`,
+    //     method: 'GET', // Explicitly specify method for axios
+    //   }),
+    //   keepUnusedDataFor: 5,
+    //   providesTags: (result, error, productId) => [{ type: 'Product', id: productId }],
+    // }),
+// Query to get product details by Slug
+getProductDetails: builder.query({
+  query: (slug) => ({
+    url: `${PRODUCTS_URL}/${slug}`,  // ✅ Now fetching by slug
+    method: 'GET',
+  }),
+}),
+
 
     // Mutation to create a new product detail
     createProductDetail: builder.mutation({

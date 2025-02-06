@@ -218,10 +218,11 @@ const Product = ({ product, keyword }) => {
             key={detailIndex}
             className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
           >
-            <Link
-              to={`/product/${product._id}`}
-              state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
-            >
+          <Link
+  to={`/product/${product.slug}`} // ✅ Use slug for SEO-friendly URLs
+  state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
+>
+
               <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
                 {detail.images?.map((image, imageIndex) => (
                   <img

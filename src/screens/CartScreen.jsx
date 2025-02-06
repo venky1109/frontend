@@ -59,7 +59,7 @@ const subtotal = cartItems.reduce((acc, item) => acc + item.dprice * item.qty, 0
               <li key={`${item.productId}-${item.financialId}`} className="flex items-center border-b pb-4">
                 <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
                 <div className="flex-1">
-                  <Link to={`/product/${item.productId}`} className="text-green-700 font-semibold hover:text-green-900">
+                  <Link to={`/product/${item.slug}`} className="text-green-700 font-semibold hover:text-green-900">
                     {item.name}
                   </Link>
                   <p className="text-sm">
