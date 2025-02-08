@@ -28,8 +28,9 @@ const HomeScreen = () => {
   const scrollSpeed = 0; // Adjust scroll speed
   const navigate = useNavigate();
   const scrollIntervalRef = useRef(null);
+  const [displayCount, setDisplayCount] = useState(6); // Load 6 initially
   // const { headerHeight } = useOutletContext(); 
-
+  const observerRef = useRef(null);
   // Fetch all categories
   const { data: categoriesData, isLoading: isCategoriesLoading, error: categoriesError } = useGetAllCategoriesQuery();
   
@@ -60,6 +61,29 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
     // console.log("Retrieved products for category:", categoryName, productsData.products);
   }
   }, [categoriesData, productsData]);
+  // Callback function to load more products when user scrolls down
+  const loadMoreProducts = useCallback(() => {
+    if (products.length > displayCount) {
+      setDisplayCount((prevCount) => prevCount + 6); // Load 6 more each time
+    }
+  }, [products, displayCount]);
+
+  // Intersection Observer to detect when user reaches the bottom
+  useEffect(() => {
+    if (!observerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreProducts();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [loadMoreProducts]);
 
   // Define the auto-scroll function outside of useEffect
   const startAutoScroll = useCallback(() => {
@@ -183,11 +207,12 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
 
           <React.Suspense fallback={<Loader />}>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-gray-200 rounded-md p-1">
-              {products.map((product) => (
+              {products.slice(0, displayCount).map((product) => (
                 <Product key={product._id} product={product} />
               ))}
             </div>
           </React.Suspense>
+          <div ref={observerRef} className="h-10 w-full"></div>
         </div>
       )}
     </>
