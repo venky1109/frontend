@@ -6,7 +6,7 @@ import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 import RegisterScreen from './RegisterScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
-
+import ClickOutsideWrapper from "./ClickOutsideWrapper";
 const LoginScreen = ({ onClose }) => {
   const [screen, setScreen] = useState('login'); // 'login', 'register', 'forgotPassword'
   const [phoneNo, setPhoneNo] = useState('');
@@ -64,6 +64,7 @@ const LoginScreen = ({ onClose }) => {
 
   return (
     <div className="max-w-md mt-20 mx-auto p-4 bg-white shadow-md rounded-lg">
+      <ClickOutsideWrapper onOutsideClick={onClose}>
       {screen === 'login' && (
         <>
           <h1 className="mb-4 text-center text-green-700 text-lg md:text-xl bg-gray-100 p-2 rounded-lg shadow-sm">
@@ -165,6 +166,7 @@ const LoginScreen = ({ onClose }) => {
       {screen === 'forgotPassword' && (
         <ForgotPasswordScreen onClose={onClose} onSwitchToLogin={() => toggleScreen('login')} />
       )}
+      </ClickOutsideWrapper>
     </div>
   );
 };
