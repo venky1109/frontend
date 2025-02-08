@@ -86,6 +86,7 @@ const CategoryScreenCard = ({ product }) => {
         addToCart({
           name: product.name,
           productId: product._id,
+          slug: product.slug,
           category: product.category,
           brand: detail.brand,
           quantity: selectedQuantity,
@@ -146,6 +147,7 @@ const CategoryScreenCard = ({ product }) => {
       addToCart({
         name: product.name,
         productId: product._id,
+        slug: product.slug,
         category: product.category,
         brand: detail.brand,
         quantity: selectedQuantity,

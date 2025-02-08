@@ -162,6 +162,7 @@ const Product = ({ product, keyword }) => {
     dispatch(addToCart({
       name: product.name,
       productId: product._id,
+      slug: product.slug,
       category: product.category,
       brand: selectedBrand,
       quantity: selectedQuantity,

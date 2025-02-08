@@ -99,6 +99,7 @@ const ProductScreen = () => {
       addToCart({
         name: product.name,
         productId: product._id,
+        slug: product.slug,
         category: product.category,
         brand: selectedBrand,
         quantity: selectedQuantity,
