@@ -11,7 +11,7 @@ export const handleOnlinePayment = createAsyncThunk(
           `${BASE_URL}/api/payments/initiateJuspayPayment`, // Correct the endpoint if needed
           paymentData
         );
-        // console.log('Payment response from backend:', data);
+        console.log('Payment response from backend:', data);
         return data; // Return success response
       } catch (error) {
         console.error('Error in payment request:', error.response?.data || error.message);
