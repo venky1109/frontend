@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../slices/authSlice';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { resetCart } from '../slices/cartSlice';
-import ClickOutsideWrapper from './ClickOutsideWrapper';
+// import ClickOutsideWrapper from './ClickOutsideWrapper';
 
 const Account = ({ onClose }) => {  // Accept onClose as a prop
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const Account = ({ onClose }) => {  // Accept onClose as a prop
 
   return (
     <div className="flex flex-col h-full">
-       <ClickOutsideWrapper onOutsideClick={onClose}>
+       {/* <ClickOutsideWrapper onOutsideClick={onClose}> */}
       <nav>
         <ul className="flex space-x-2 border-b">
           <li>
@@ -77,7 +77,7 @@ const Account = ({ onClose }) => {  // Accept onClose as a prop
         )}
         {activeTab === 'orders' && <MyOrders />}
       </div>
-      </ClickOutsideWrapper>
+      {/* </ClickOutsideWrapper> */}
     </div>
   );
 };

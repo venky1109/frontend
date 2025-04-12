@@ -8,6 +8,7 @@ import Account from "./Account";
 import ContactUsBanner from "./ContactUsBanner";
 import logo from "../assets/ManaKiranaLogoWithName.gif";
 import SelectLocation from "./SelectLocation";  // Import the component
+import ClickOutsideWrapper from './ClickOutsideWrapper';
 
 
 let toggleAccountFormExternally;
@@ -63,6 +64,7 @@ const Header = () => {
 
             {/* User Profile / Login */}
             {/* User Account Section */}
+  <div>
   {userInfo ? (
     <div className="relative flex flex-col items-center">
       <button
@@ -79,12 +81,15 @@ const Header = () => {
         </div>
       </div> */}
       {showAccountForm && (
+        <ClickOutsideWrapper onOutsideClick={() => setShowAccountForm(false)}  excludeRef={userIconRef}>
+          
         <div
           ref={accountFormRef}
-          className="absolute mt-16 right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+          className="absolute mt-2 right-0 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
         >
-          <Account onClose={() => setShowAccountForm(false)} />
+          <Account  />
         </div>
+        </ClickOutsideWrapper>
       )}
     </div>
   ) : (
@@ -97,15 +102,17 @@ const Header = () => {
         <CgProfile size={40} />
       </button>
       {showLoginForm && (
+        <ClickOutsideWrapper onOutsideClick={() => setShowLoginForm(false)} excludeRef={userIconRef} >
         <div
           ref={loginFormRef}
-          className="absolute mt-16 right-0 w-80 bg-white border  hover:scale-110 border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
+          className="absolute mt-2 right-0 w-80 bg-white border  hover:scale-110 border-gray-300 rounded-lg shadow-lg z-10 p-4 transition-opacity duration-300 transform"
         >
-          <LoginScreen onClose={() => setShowLoginForm(false)} />
+          <LoginScreen />
         </div>
+        </ClickOutsideWrapper>
       )}
     </div>
-  )}
+  )}</div>
 </div>
 
 
