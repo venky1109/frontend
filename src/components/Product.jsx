@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../slices/cartSlice';
 import { Link } from 'react-router-dom';
 import { FaCartPlus } from "react-icons/fa6";
-import FloatingCartIcon from './FloatingCartIcon'; 
+import FloatingCartIcon from './FloatingCartIcon';
 
 const Product = ({ product, keyword }) => {
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -48,33 +48,33 @@ const Product = ({ product, keyword }) => {
       return discount > bestBrand.discount ? { brand: detail.brand, discount } : bestBrand;
     }, { brand: '', discount: 0 }).brand;
   }, [product.details, calculateMaxDiscount]);
-  
+
   useEffect(() => {
     // Check if a keyword was provided and filter brand based on that, else use the memoized brand with the highest discount
     let brand = keyword
       ? product.details.find((detail) => detail.brand.toLowerCase().includes(keyword.toLowerCase()))?.brand
       : getBrandWithHighestDiscount;  // Use the memoized value directly, not as a function
-    
+
     // If no brand is found, pick the first available brand
     if (!brand) {
       brand = product.details[0]?.brand || ''; // Set the first brand as default
     }
-  
+
     // Get the quantity for the selected brand
     let quantity = maxDiscountQuantity(brand);
-  
+
     // If no valid quantity is found or quantity is zero, select the first available quantity
     if (!quantity || quantity === 0) {
       const firstDetail = product.details.find((detail) => detail.brand === brand);
       quantity = firstDetail ? firstDetail.financials[0]?.quantity : ''; // Set the first available quantity as default
     }
-  
+
     // Set the selected brand and quantity
     setSelectedBrand(brand);
     setSelectedQuantity(quantity.toString());
   }, [keyword, product.details, getBrandWithHighestDiscount, maxDiscountQuantity]);
-  
-  
+
+
 
   const scrollToSelectedButton = (detailIndex) => {
     const button = selectedButtonsRef.current[detailIndex];
@@ -185,13 +185,13 @@ const Product = ({ product, keyword }) => {
       addToCartHandler();
     }
   }, [showQuantityControls, addToCartHandler]);
-  
 
-  
+
+
 
   const handleMouseInteraction = (e, index, action, scrollType = 'brand') => {
-    const scrollContainer = scrollType === 'brand' 
-      ? scrollContainersRef.current[index] 
+    const scrollContainer = scrollType === 'brand'
+      ? scrollContainersRef.current[index]
       : quantityScrollContainersRef.current[index]; // Handle different scroll types
 
     if (!scrollContainer) return;
@@ -219,11 +219,10 @@ const Product = ({ product, keyword }) => {
             key={detailIndex}
             className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
           >
-          <Link
-  to={`/product/${product.slug}`} // ✅ Use slug for SEO-friendly URLs
-  state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
->
-
+            <Link
+              to={`/product/${product.slug}`}
+              state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
+            >
               <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
                 {detail.images?.map((image, imageIndex) => (
                   <img
@@ -238,23 +237,44 @@ const Product = ({ product, keyword }) => {
                 ))}
                 {/* Discount Ribbon */}
                 {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-  <div
-    className="absolute top-0 left-1 bg-teal-600 text-white text-[10px] px-1 py-1 font-semibold flex justify-center items-center shadow-lg w-[25px] h-[35px] transform -rotate-95 origin-top-left clip-ribbon"
-  
-  >
-    {getDiscount(selectedQuantity, detail.financials)}% OFF
-  </div>
-)}
-
-
-
+                  <div className="absolute top-0 left-1 bg-teal-800 text-white text-[10px] px-1 py-1 font-semibold flex justify-center items-center shadow-lg w-[25px] h-[35px] transform -rotate-95 origin-top-left clip-ribbon">
+                    {getDiscount(selectedQuantity, detail.financials)}% OFF
+                  </div>
+                )}
               </div>
             </Link>
 
             <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-            <p className="text-sm font-serif text-maroon-600" style={{ whiteSpace: 'pre-line' }}>
-  {product.name.replace('(', '\n(')}
-</p>
+              {/* Updated Product Name with Selected Quantity */}
+              <p className="text-sm font-serif text-maroon-600" style={{ whiteSpace: 'pre-line' }}>
+                {product.name} - <span className="font- text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
+              </p>
+
+              {/* Scrollable Price Selection (Same Behavior as Brand Scroll) */}
+              <div
+                ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
+                className="flex items-center justify-start overflow-x-auto space-x-1 py-1 scrollbar-hide"
+                style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}
+                onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'quantity')}
+                onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
+                onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
+                onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'quantity')}
+              >
+                {detail.financials.map((financial, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleQuantityChange(financial.quantity.toString())}
+                    className={`px-2 py-0.5 rounded-md text-xs font-small min-w-[50px] border border-gray-200 hover:border-gray-500 ${selectedQuantity === financial.quantity.toString()
+                      ? "bg-gray-100 text-black"
+                      : "bg-gray-00 text-gray-900"
+                      }`}
+                    aria-label={`Select price ₹${Math.round(financial.dprice)}`}
+                  >
+                    ₹{Math.round(financial.dprice)}
+                  </button>
+                ))}
+              </div>
+
 
 
 
@@ -277,8 +297,8 @@ const Product = ({ product, keyword }) => {
                         }}
                         onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
                         className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
-                            ? 'bg-gray-100 text-black border-gray-500'
-                            : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
+                          ? 'bg-gray-100 text-black border-gray-500'
+                          : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
                         aria-label={`Select brand ${brandDetail.brand}`}
                       >
                         {brandDetail.brand}
@@ -288,7 +308,7 @@ const Product = ({ product, keyword }) => {
                 </div>
 
                 {/* Quantity Scroll */}
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <div
                     ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
                     className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide w-full"
@@ -309,32 +329,35 @@ const Product = ({ product, keyword }) => {
                       </button>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Grouped Price, Cart, Quantity Controls, and Multiple Qty Price */}
                 <div className="flex items-center justify-between mt-2 space-x-2">
                   {/* Price and Multiple Qty Price Group */}
-                  <div className="flex flex-col ml-3">
-                    <div className="text-sm text-gray-900">
+                  <div className="flex flex-col ml-2">
+                    <div className="text-sm text-gray-900 font-semibold">
                       {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
                         <>
-                          <span className="line-through text-gray-400">
+                          <span className="line-through text-gray-400 text-xs">
                             &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
-                          </span><br />
-                          <span className="bg-gray-100 font-semibold text-black-700">
+                          </span>
+                          <br />
+                          <span className="bg-gray-200 text-black px-0.5 py-0.5 rounded-md text-sm font-semibold">
                             &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
                           </span>
                         </>
                       ) : (
-                        <span>&#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
+                        <span className="text-black font-semibold text-sm">
+                          &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
+                        </span>
                       )}
                     </div>
 
                     {/* Price for Multiple Packs */}
                     {selectedQuantity && selectedQty > 1 && (
-                      <div className="text-sm font-medium text-gray-800">
-                        {selectedQty}xpacks{' '}
-                        <span className="text-green-900">
+                      <div className="text-xs font-medium text-gray-700 mt-1">
+                        {selectedQty} x Packs{' '}
+                        <span className="text-green-700 font-semibold">
                           &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
                         </span>
                       </div>
@@ -344,17 +367,17 @@ const Product = ({ product, keyword }) => {
                   {/* Cart and Quantity Controls */}
                   <div className="flex items-center space-x-2">
                     {showQuantityControls ? (
-                      <div className="flex m-3 bg-green-700 items-center space-x-1 rounded-lg transition-transform transform hover:scale-105 active:scale-95 text-sm">
+                      <div className="flex bg-green-700 items-center space-x-1 rounded-lg px-2 py-1 transition-transform transform hover:scale-105 active:scale-95 text-sm">
                         <button
-                          className="text-white px-2 py-0.5"
+                          className="text-white px-2 py-1 font-semibold"
                           onClick={() => handleQtyChange(selectedQty - 1)}
                           aria-label="Decrease Quantity"
                         >
                           -
                         </button>
-                        <span className="text-sm text-white font-semibold">{selectedQty}</span>
+                        <span className="text-white font-semibold">{selectedQty}</span>
                         <button
-                          className="text-white px-2 py-0.5"
+                          className="text-white px-2 py-1 font-semibold"
                           onClick={() => handleQtyChange(selectedQty + 1)}
                           aria-label="Increase Quantity"
                         >
@@ -367,7 +390,7 @@ const Product = ({ product, keyword }) => {
                         onClick={() => addToCartHandler(detailIndex)}
                         aria-label="Add Product to Cart"
                       >
-                        <FaCartPlus className="w-8 h-8 text-green-800" />
+                        <FaCartPlus className="w-7 h-7 text-green-800" />
                       </button>
                     )}
                   </div>
