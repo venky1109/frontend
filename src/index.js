@@ -96,6 +96,7 @@ const router = createBrowserRouter(
         <Route path='/admin/product/:id/edit/:detailId' element={<ProductEditScreen />} />
         <Route path='/admin/user/:id/edit' element={<UserEditScreen />} />
       </Route>
+      <Route path="*" element={<HomeScreen />} />
     </Route>
   )
 );
