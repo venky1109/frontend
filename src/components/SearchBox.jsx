@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
@@ -8,19 +8,19 @@ const SearchBox = () => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const dropdownRef = useRef(null); // Reference for detecting clicks outside
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const dropdownRef = useRef(null);
+  const itemRefs = useRef([]);
 
-  // Fetch products from the backend
   const { data: productsData, error } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
 
   useEffect(() => {
     if (productsData && productsData.products && keyword.trim().length >= 3) {
-      let filteredProducts = productsData.products.filter((product) =>
+      const filteredProducts = productsData.products.filter((product) =>
         product.name.toLowerCase().includes(keyword.toLowerCase())
       );
 
-      // Extract unique brand names from product details
-      let brandSuggestions = [];
+      const brandSuggestions = [];
       productsData.products.forEach((product) => {
         product.details.forEach((detail) => {
           if (
@@ -33,38 +33,43 @@ const SearchBox = () => {
         });
       });
 
-      // Format brand suggestions separately
       const formattedBrandSuggestions = brandSuggestions.map((brand) => ({
         name: brand,
-        type: 'brand', // To differentiate from product suggestions
+        type: 'brand',
       }));
 
-      // Combine product and brand suggestions
       setSuggestions([...filteredProducts, ...formattedBrandSuggestions]);
     } else {
       setSuggestions([]);
     }
-    
   }, [keyword, productsData]);
-    // Close suggestions when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setSuggestions([]); // Close dropdown
-        }
-      };
-  
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setFocusedIndex(-1);
+  }, [keyword, suggestions]);
+
+  useEffect(() => {
+    if (focusedIndex >= 0 && itemRefs.current[focusedIndex]) {
+      itemRefs.current[focusedIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [focusedIndex]);
 
   const handleSearch = () => {
     if (keyword.trim()) {
       navigate(`/search?query=${keyword}`, { state: { suggestions } });
-
-      // Clear search box and suggestions
       setKeyword('');
       setSuggestions([]);
     }
@@ -76,7 +81,6 @@ const SearchBox = () => {
     } else {
       navigate(`/product/${suggestion.slug}`);
     }
-
     setKeyword('');
     setSuggestions([]);
   };
@@ -91,6 +95,21 @@ const SearchBox = () => {
           placeholder="Search for products or brands..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              setFocusedIndex((prevIndex) =>
+                prevIndex < suggestions.length - 1 ? prevIndex + 1 : 0
+              );
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              setFocusedIndex((prevIndex) =>
+                prevIndex > 0 ? prevIndex - 1 : suggestions.length - 1
+              );
+            } else if (e.key === 'Enter' && focusedIndex >= 0) {
+              handleSuggestionClick(suggestions[focusedIndex]);
+            }
+          }}
           style={{ minHeight: '32px' }}
         />
         <button onClick={handleSearch} className="p-1 sm:p-2 text-gray-500">
@@ -98,7 +117,7 @@ const SearchBox = () => {
         </button>
       </div>
 
-      {/* Loader and Error Handling */}
+      {/* Error Message */}
       <div className="absolute top-12 left-0 right-0">
         {error && <Message variant="danger">{error?.data?.message || error.message}</Message>}
       </div>
@@ -106,16 +125,16 @@ const SearchBox = () => {
       {/* Suggestions Dropdown */}
       {suggestions.length > 0 && (
         <ul
-        ref={dropdownRef}
-  className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-10 
-  max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
->
+          ref={dropdownRef}
+          className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md z-10 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+        >
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
+              ref={(el) => (itemRefs.current[index] = el)}
               className={`p-2 cursor-pointer ${
-                suggestion.type === 'brand' ? 'text-yellow-600 font-semibold' : 'bg-gray-200'
-              }`}
+                focusedIndex === index ? 'bg-gray-200 border border-gray-400 rounded-lg' : ''
+              } ${suggestion.type === 'brand' ? 'text-yellow-600 font-semibold' : 'bg-white-200'}`}
               onClick={() => handleSuggestionClick(suggestion)}
               tabIndex={0}
               onKeyDown={(e) => {
@@ -124,17 +143,17 @@ const SearchBox = () => {
                 }
               }}
             >
-          {suggestion.type === 'brand' ? (
-    `Brand: ${suggestion.name}`
-  ) : (
-    <>
-      <span><b>Category:</b><i> {suggestion.category || 'Unknown'}</i></span>
-      <br />
-      <span><b>Brand:</b> <i>{suggestion.details?.map((detail) => detail.brand).filter(Boolean).join(', ') || 'Unknown'}</i></span>
-      <br />
-      <span><b>Product:</b> <i>{suggestion.name}</i></span>
-    </>
-  )}
+              {suggestion.type === 'brand' ? (
+                `Brand: ${suggestion.name}`
+              ) : (
+                <>
+                  <span><b>Category:</b> <i>{suggestion.category || 'Unknown'}</i></span>
+                  <br />
+                  <span><b>Brand:</b> <i>{suggestion.details?.map((d) => d.brand).filter(Boolean).join(', ') || 'Unknown'}</i></span>
+                  <br />
+                  <span><b>Product:</b> <i>{suggestion.name}</i></span>
+                </>
+              )}
             </li>
           ))}
         </ul>
