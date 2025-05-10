@@ -7,7 +7,7 @@ import { handleOrderPayment } from '../slices/paymentApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 // import { toggleAccountFormExternally } from './Header'; // Import toggle function
 import { toggleAccountFormExternally as toggleHeaderForm } from './Header'; // Import from Header
-import { toggleAccountFormExternally as toggleFooterForm } from './Footer'; // Import from Footer
+// import { toggleAccountFormExternally as toggleFooterForm } from './Footer'; // Import from Footer
 
 
 const MyOrders = () => {
@@ -16,11 +16,8 @@ const MyOrders = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
 
   const handleDetailsClick = () => {
-    if (window.innerWidth >= 768) { // Check if large screen
-      toggleHeaderForm && toggleHeaderForm(); // Call Header toggle function for large screens
-    } else {
-      toggleFooterForm && toggleFooterForm(); // Call Footer toggle function for small screens
-    }
+ 
+    toggleHeaderForm && toggleHeaderForm(); 
   };
 
   const initiatePaymentForOrder = async (order) => {
