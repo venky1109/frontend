@@ -42,7 +42,11 @@ const ShippingScreen = () => {
   // Navigate to payment if there is a valid saved address
   const handleContinueWithSavedAddress = () => {
     // console.log("navigating to payment")
-    dispatch(saveShippingAddress(deliveryAddress.deliveryAddress));
+    dispatch(saveShippingAddress({
+  ...deliveryAddress.deliveryAddress, // includes street, city, postalCode, etc.
+  location: deliveryAddress.location  // includes { type: 'Point', coordinates: [...] }
+}));
+
     navigate('/payment');
   };
 
