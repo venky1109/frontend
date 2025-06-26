@@ -31,7 +31,7 @@ export const handleOnlinePayment = createAsyncThunk(
           paymentData
         );
   
-        console.log('Order payment response from backend:', data);
+        // console.log('Order payment response from backend:', data);
   
         return data; // Return success response
       } catch (error) {

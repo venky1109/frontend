@@ -3,14 +3,21 @@
   "name": "ManaKirana Grocery Store",
   "icons": [
     {
-      "src": "/images/ManaKiranaLogo192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
     },
     {
-      "src": "/images/ManaKiranaLogoWithName512x512.png",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable any"
     },
     {
       "src": "/images/ManaKiranaLogo1024x1024.png",
