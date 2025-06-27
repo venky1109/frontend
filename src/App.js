@@ -1,24 +1,34 @@
-import { useEffect, useState } from 'react';
+import React, {  Suspense, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import FloatingCartIcon from './components/FloatingCartIcon';
+// import Header from './components/Header';
+// import Footer from './components/Footer';
+// import FloatingCartIcon from './components/FloatingCartIcon';
 import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
 import { useWebSocket } from './hooks/useWebSocket';
 import logo from './assets/ManaKiranaLogoWithName.gif';
-import Loader from './components/Loader';
-
-
+// import Loader from './components/Loader';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Lazy load components
+const Header = React.lazy(() => import('./components/Header'));
+const Footer = React.lazy(() => import('./components/Footer'));
+const FloatingCartIcon = React.lazy(() => import('./components/FloatingCartIcon'));
+const Loader = React.lazy(() => import('./components/Loader'));
+
+
+
+
 const App = () => {
-  useWebSocket(); 
+  
+
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
+    // useWebSocket(); 
+  useWebSocket(!loading); 
   
   useEffect(() => {
     const expirationTime = localStorage.getItem('expirationTime');
@@ -31,7 +41,7 @@ const App = () => {
       }
     }
     const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Prevent the default browser prompt
+      // e.preventDefault(); // Prevent the default browser prompt
       setDeferredPrompt(e); // Save the event for later use
       setShowInstallBanner(true); // Show the custom banner
     };
@@ -39,7 +49,7 @@ const App = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     setTimeout(() => {
       setLoading(false);
-    }, 1000); 
+    }, 100); 
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -48,30 +58,39 @@ const App = () => {
   
 
 
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt(); // Show the native install prompt
-      const choiceResult = await deferredPrompt.userChoice;
-      console.log('User choice:', choiceResult.outcome);
+  // const handleInstallClick = async () => {
+  //   if (deferredPrompt) {
+  //     deferredPrompt.prompt(); // Show the native install prompt
+  //     const choiceResult = await deferredPrompt.userChoice;
+  //     console.log('User choice:', choiceResult.outcome);
 
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      } else {
-        console.log('User dismissed the install prompt');
-      }
+  //     if (choiceResult.outcome === 'accepted') {
+  //       console.log('User accepted the install prompt');
+  //     } else {
+  //       console.log('User dismissed the install prompt');
+  //     }
 
-      setDeferredPrompt(null); // Reset the deferred prompt
-      setShowInstallBanner(false); // Hide the banner
-    }
-  };
-
+  //     setDeferredPrompt(null); // Reset the deferred prompt
+  //     setShowInstallBanner(false); // Hide the banner
+  //   }
+  // };
+const handleInstallClick = async () => {
+  if (deferredPrompt) {
+    setShowInstallBanner(false);       // ✅ Hide your custom banner
+    await deferredPrompt.prompt();     // ✅ Required to show native prompt
+    setDeferredPrompt(null);           // ✅ Clean up
+  }
+};
   const handleDismissBanner = () => {
     setShowInstallBanner(false); // Hide the banner
   };
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader />
+        <Suspense fallback={<div>Loading...</div>}>    
+            <Loader />
+        </Suspense>
+
       </div>
     );
   }
@@ -79,16 +98,18 @@ const App = () => {
   return (
     <div className="select-none min-h-screen flex flex-col  ">
       <ToastContainer />
+        <Suspense fallback={<div />}>
      <Header />
+     </Suspense>
      
      <main className="flex-grow py-4">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
           <Outlet />
         </div>
       </main>
-
+      <Suspense fallback={null}>
       <FloatingCartIcon />
-      
+      </Suspense>
       <Footer className="mt-auto" />
       {/* Custom Install Banner */}
       {showInstallBanner && (

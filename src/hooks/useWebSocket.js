@@ -4,22 +4,20 @@ import { useDispatch } from 'react-redux';
 import { updateCartProduct } from '../slices/cartSlice';
 import { BASE_URL } from '../constants';
 
-export const useWebSocket = () => {
+export const useWebSocket = (enabled = true) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!enabled) return; // ✅ Prevent connection if disabled
+
     const socket = io(BASE_URL);
 
-      // Emit the current cart to the server on connection
-      socket.on('connect', () => {
-        const localStorageCart = JSON.parse(localStorage.getItem('cart')) || { cartItems: [] };
-        // console.log('Client connected, sending cart:', localStorageCart.cartItems);
-        socket.emit('clientCart', localStorageCart.cartItems);  // Send current cart to server
-      });
+    socket.on('connect', () => {
+      const localStorageCart = JSON.parse(localStorage.getItem('cart')) || { cartItems: [] };
+      socket.emit('clientCart', localStorageCart.cartItems);
+    });
 
     socket.on('productUpdate', (updatedProduct) => {
-    //   console.log('Received productUpdate from server:', updatedProduct);
-
       const localStorageCart = JSON.parse(localStorage.getItem('cart')) || { cartItems: [] };
 
       const updatedCartItems = localStorageCart.cartItems.map((item) => {
@@ -49,13 +47,12 @@ export const useWebSocket = () => {
 
       const updatedCart = { ...localStorageCart, cartItems: updatedCartItems };
       localStorage.setItem('cart', JSON.stringify(updatedCart));
-
-      // Dispatch Redux action to update the cart in state
       dispatch(updateCartProduct(updatedProduct));
     });
 
     return () => {
       socket.off('productUpdate');
+      socket.disconnect(); // ✅ Disconnect on cleanup
     };
-  }, [dispatch]);
+  }, [dispatch, enabled]);
 };

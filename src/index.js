@@ -99,6 +99,12 @@ const router = createBrowserRouter(
       <Route path="*" element={<HomeScreen />} />
     </Route>
   )
+  // ,
+  //  {
+  //   future: {
+  //     v7_startTransition: true, // ✅ Enable transition batching
+  //   },
+  // }
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

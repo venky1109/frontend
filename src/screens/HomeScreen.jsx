@@ -1,98 +1,68 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, Suspense } from 'react';
 import { useGetAllCategoriesQuery } from '../slices/categoryApiSlice';
 import { useGetProductsByCategoryQuery } from '../slices/productsApiSlice';
-// import { useFetchPromotionsQuery } from '../slices/promotionsAPISlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-// import advertise from '../advertise';
 import homeConfig from '../HomeConfig.json';
 import { useNavigate } from 'react-router-dom';
-// import AdvertisingBanner from '../components/Advertise';
-import Product from '../components/Product';
-import AdvertiseSlider from "../components/AdvertiseSlider";
-import MegaBanner  from '../components/MegaBanner';
-import ChildBanner from '../components/ChildBanner';
-import FreeHomeDelivery from '../components/SubChild';
-import OrderOptions from '../components/OrderOptionsBanner';
+// import MegaBanner from '../components/MegaBanner';
+// import OrderOptions from '../components/OrderOptionsBanner';
 
 
-// Lazy load components to reduce initial bundle size
+// Lazily load components
 const CategoryCard = React.lazy(() => import('../components/CategoryCard'));
-// const PromotionCard = React.lazy(() => import('../components/PromotionCard'));
+const Product = React.lazy(() => import('../components/Product'));
+// const MiniProductCard=React.lazy(() => import('../components/MiniProductCard'))
+const AdvertiseSlider = React.lazy(() => import('../components/AdvertiseSlider'));
+const MegaBanner = React.lazy(() => import('../components/MegaBanner'));
+// const ChildBanner = React.lazy(() => import('../components/ChildBanner'));
+// const FreeHomeDelivery = React.lazy(() => import('../components/SubChild'));
+const OrderOptions = React.lazy(() => import('../components/OrderOptionsBanner'));
 
 const HomeScreen = () => {
-  // const adv = advertise.find((item) => item.type === 'BodyBanner');
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const scrollContainerRef = useRef(null);
-  const scrollSpeed = 0; // Adjust scroll speed
-  const navigate = useNavigate();
-  const scrollIntervalRef = useRef(null);
-  const [displayCount, setDisplayCount] = useState(6); // Load 6 initially
-  // const { headerHeight } = useOutletContext(); 
+  const [displayCount, setDisplayCount] = useState(6);
   const observerRef = useRef(null);
-  // Fetch all categories
+  const scrollContainerRef = useRef(null);
+  const scrollIntervalRef = useRef(null);
+  const navigate = useNavigate();
+  const scrollSpeed = 0;
+
   const { data: categoriesData, isLoading: isCategoriesLoading, error: categoriesError } = useGetAllCategoriesQuery();
-  
-  // Fetch all products
-  // const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
-// Define the category name you want to filter by
-const categoryName = 'BUDGET FRIENDLY PACKAGES';
-
-// Fetch products by category directly using useGetProductsByCategoryQuery
-const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsByCategoryQuery(categoryName);
-
-  // Fetch promotions using the generated hook
-  // const { data: promotions } = useFetchPromotionsQuery();
+  const categoryName = 'BUDGET FRIENDLY PACKAGES';
+  const { data: productsData, isLoading: isProductsLoading, error: productsError } = useGetProductsByCategoryQuery(categoryName);
 
   useEffect(() => {
-    if (categoriesData && categoriesData.categories) {
-      setCategories(categoriesData.categories);
-    }
-    // if (productsData && productsData.products) {
-    //   const dailyNeedsProducts = productsData.products.filter(product => product.category === 'BUDGET FRIENDLY PACKAGES');
-    //   setProducts(dailyNeedsProducts);
-    //   console.log("Filtered daily needs products:", dailyNeedsProducts);
-    //   // setProducts(productsData.products);
-    // }
-    // Set products directly from productsData for the specified category
-  if (productsData && productsData.products) {
-    setProducts(productsData.products);
-    // console.log("Retrieved products for category:", categoryName, productsData.products);
-  }
+    if (categoriesData?.categories) setCategories(categoriesData.categories);
+    if (productsData?.products) setProducts(productsData.products);
   }, [categoriesData, productsData]);
-  // Callback function to load more products when user scrolls down
+
   const loadMoreProducts = useCallback(() => {
     if (products.length > displayCount) {
-      setDisplayCount((prevCount) => prevCount + 6); // Load 6 more each time
+      setDisplayCount((prev) => prev + 6);
     }
   }, [products, displayCount]);
 
-  // Intersection Observer to detect when user reaches the bottom
   useEffect(() => {
     if (!observerRef.current) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMoreProducts();
-        }
+        if (entries[0].isIntersecting) loadMoreProducts();
       },
       { threshold: 1.0 }
     );
-
     observer.observe(observerRef.current);
     return () => observer.disconnect();
   }, [loadMoreProducts]);
 
-  // Define the auto-scroll function outside of useEffect
   const startAutoScroll = useCallback(() => {
-    const scrollContainer = scrollContainerRef.current;
+    const container = scrollContainerRef.current;
     scrollIntervalRef.current = setInterval(() => {
-      if (scrollContainer) {
-        scrollContainer.scrollLeft += scrollSpeed;
-        if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth) {
-          scrollContainer.scrollLeft = 0;
+      if (container) {
+        container.scrollLeft += scrollSpeed;
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
+          container.scrollLeft = 0;
         }
       }
     }, 20);
@@ -103,115 +73,70 @@ const { data: productsData, isLoading: isProductsLoading, error: productsError }
     return () => clearInterval(scrollIntervalRef.current);
   }, [startAutoScroll]);
 
-  const handleCategoryCardClick = useCallback((categoryName) => {
-    navigate(`/category/${categoryName}`);
+  const handleCategoryCardClick = useCallback((name) => {
+    navigate(`/category/${name}`);
   }, [navigate]);
 
-  // const handleCardClick = useCallback((promotion) => {
-  //   const categoryId = promotion.categoryId || 'default-category';
-  //   navigate(`/category/${categoryId}`);
-  // }, [navigate]);
-
-  const getCategoryImage = useCallback((categoryName) => {
-    const categoryCustomization = homeConfig.sections
-      .find((section) => section.type === 'category')
-      ?.customization.categories.find(
-        (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
-      );
-    return categoryCustomization
-      ? categoryCustomization.image
-      : 'https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2';
+  const getCategoryImage = useCallback((name) => {
+    return homeConfig.sections
+      .find((s) => s.type === 'category')
+      ?.customization.categories.find((cat) => cat.name.toLowerCase() === name.toLowerCase())?.image
+      ?? 'https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/Baking_needs_300.png?alt=media&token=c1707f2a-92ab-46c5-b219-936b559cb6f2';
   }, []);
 
-  const categorySection = homeConfig.sections.find(
-    (section) => section.type === 'category'
-  );
-  const categoryTitle = categorySection ? categorySection.title : 'Categories';
-  // console.log(headerHeight)
+  const categorySection = homeConfig.sections.find((section) => section.type === 'category');
+  const categoryTitle = categorySection?.title || 'Categories';
 
   return (
     <>
-      {/* <div className="mt-20">
-        <AdvertisingBanner
-          images={adv.images}
-          height={adv.dimensions.height}
-          width={adv.dimensions.width}
-        />
-      </div> */} 
-   
+      <div className="container mx-auto mt-28">
+        <Suspense fallback={<Loader />}><MegaBanner /></Suspense>
+      </div>
 
-<div className="container mx-auto  mt-28 ">
-  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0 mb-3  ">
-  <MegaBanner/>
-  </div>
-</div>
+      {/* <div className="mt-3"><Suspense fallback={<Loader />}><ChildBanner /></Suspense></div> */}
+      {/* <div className="mt-3 mb-3"><Suspense fallback={<Loader />}><FreeHomeDelivery /></Suspense></div> */}
+      <div className="mt-3"><Suspense fallback={<Loader />}><OrderOptions /></Suspense></div>
 
-
-<div className='mt-3'>
-<ChildBanner/>
-</div>
-
-<div className='mt-3 mb-3'>
-<FreeHomeDelivery/>
-</div>
-<div className='mt-3 '>
-<OrderOptions/>
-</div>
-<div className="container mx-auto  ">
-  <div className="flex items-stretch justify-center flex-col md:flex-row space-y-1 md:space-y-0   ">
-  
-
-<AdvertiseSlider />
-</div>
-</div>
-
-
-
-
-
-
-
+      <div className="container mx-auto">
+        <Suspense fallback={<Loader />}><AdvertiseSlider /></Suspense>
+      </div>
 
       {isCategoriesLoading || isProductsLoading ? (
         <Loader />
       ) : categoriesError || productsError ? (
         <Message variant="danger">
-          {categoriesError?.data?.message ||
-            productsError?.data?.message ||
-            categoriesError?.error ||
-            productsError?.error}
+          {categoriesError?.data?.message || productsError?.data?.message || categoriesError?.error || productsError?.error}
         </Message>
       ) : (
         <div className="mt-4 mb-24">
-          <h5 className="text-xl font-serif text-green-800 mt-8 semi-bold">
-            {categoryTitle.toUpperCase()}
-          </h5>
-
-          <React.Suspense fallback={<Loader />}>
-            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 rounded-md  gap-x-0 pt-3 pb-3 pl-2 pr-2">
-              {categories.map((category) => (
+          <h5 className="text-xl font-serif text-green-800 mt-8 semi-bold">{categoryTitle.toUpperCase()}</h5>
+          
+          <Suspense fallback={<Loader />}>
+            <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 gap-x-0 pt-3 pb-3 pl-2 pr-2">
+              {categories.map((cat) => (
                 <CategoryCard
-                  key={category}
-                  name={category}
-                  image={getCategoryImage(category)}
-                  onClick={() => handleCategoryCardClick(category)}
+                  key={cat}
+                  name={cat}
+                  image={getCategoryImage(cat)}
+                  onClick={() => handleCategoryCardClick(cat)}
                   className="p-0 sm:p-0 lg:p-1"
                 />
               ))}
             </div>
-          </React.Suspense>
+          </Suspense>
 
-          <h5 className="text-xl font-serif text-green-800 mb-4 mt-8 mb-0 semi-bold">
-          MK BUDGET PACKAGES
-          </h5>
+          <h5 className="text-xl font-serif text-green-800 mb-4 mt-8 semi-bold">MK BUDGET PACKAGES</h5>
 
-          <React.Suspense fallback={<Loader />}>
+          <Suspense fallback={<Loader />}>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-1 bg-gray-200 rounded-md p-1">
               {products.slice(0, displayCount).map((product) => (
                 <Product key={product._id} product={product} />
+                // <MiniProductCard key={product._id} product={product} />
+
               ))}
             </div>
-          </React.Suspense>
+          </Suspense>
+
           <div ref={observerRef} className="h-10 w-full"></div>
         </div>
       )}

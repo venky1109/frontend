@@ -15,14 +15,18 @@ const ChildBanner = () => {
       {/* Content */}
       <div className="text-center relative">
         {/* Headline */}
-        <h1 className="text-3xl lg:text-3xl font-extrabold tracking-wide bg-clip-text text-transparent text-white">
+        <h1 className="text-2xl lg:text-3xl font-extrabold tracking-wide  text-white leading-tight mb-4">
           Get Silver Coin for every ₹5000 Purchase
         </h1>   
 
         {/* Subtext */}
-        <ul className="text-lg text-bold mt-4 text-white list-disctext-left pl-8">
-  <li>₹5000 కి పైగా కొనుగోలు చేస్తే వెండి నాణెం ఉచితం!</li>
-  <li>₹2000 లేదా అంతకంటే ఎక్కువ కొనుగోలు చేసి, వైర్‌డ్ ఇయర్‌ఫోన్లు ఉచితంగా పొందండి!</li>
+      <ul className="text-lg  mt-4 text-white list-disc list-inside min-h-[4rem] mb-4 text-left">
+  <li className="leading-snug tracking-normal">
+    ₹5000 కి పైగా కొనుగోలు చేస్తే వెండి నాణెం ఉచితం!
+  </li>
+  <li className="leading-snug tracking-normal">
+    ₹2000 లేదా అంతకంటే ఎక్కువ కొనుగోలు చేసి, వైర్‌డ్ ఇయర్‌ఫోన్లు ఉచితంగా పొందండి!
+  </li>
 </ul>
 
         <p className="text-md rounded-md bg-[#F09319]  py-1 text-white ">త్వరపడండి... ఆఫర్ స్టాక్ ఉన్నంతవరకే!</p>

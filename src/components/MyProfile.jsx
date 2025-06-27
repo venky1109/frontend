@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, {Suspense, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useProfileMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import Loader from '../components/Loader';
 import axios from 'axios';
-import MapComponent from './MapComponent'; // Ensure the import path is correct
+// import MapComponent from './MapComponent'; // Ensure the import path is correct
+
+const MapComponent = React.lazy(() => import('./MapComponent'));
+
+
+
 
 const MyProfile = ({ onProfileUpdate }) => {
   const [name, setName] = useState('');
@@ -107,7 +112,7 @@ const MyProfile = ({ onProfileUpdate }) => {
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000,
+          timeout: 100,
           maximumAge: 0,
         }
       );
@@ -229,12 +234,21 @@ const MyProfile = ({ onProfileUpdate }) => {
             Use Current Location
           </button>
         </div>
-
+{/* 
         {latitude && longitude && (
           <div className="mt-4">
             <MapComponent latitude={latitude} longitude={longitude} />
           </div>
-        )}
+        )} */}
+
+        {latitude && longitude && (
+  <div className="mt-4">
+    <Suspense fallback={<div>Loading map...</div>}>
+      <MapComponent latitude={latitude} longitude={longitude} />
+    </Suspense>
+  </div>
+)}
+
 
         <button
           type="button"

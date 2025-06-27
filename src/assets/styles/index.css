@@ -92,7 +92,7 @@ table th {
 
 
 
-@import url('https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@100..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@100..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'); */
 :root {
   --default-font: 'Nunito Sans', sans-serif;
   --telugu-font: 'Anek Telugu', sans-serif;

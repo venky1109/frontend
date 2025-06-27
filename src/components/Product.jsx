@@ -212,194 +212,135 @@ const Product = ({ product, keyword }) => {
   };
 
   return (
-    <>
+     <>
       <div className="flex flex-wrap gap-4 justify-center">
-        {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
-          <div
-            key={detailIndex}
-            className="border border-gray-300 rounded-lg p-2 shadow-md transition-transform duration-200 ease-in-out flex flex-col bg-white w-full h-full max-w-xs"
-          >
-            <Link
-              to={`/product/${product.slug}`}
-              state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
-            >
-              <div className="relative overflow-hidden border border-gray-300 rounded-lg h-32">
-                {detail.images?.map((image, imageIndex) => (
-                  <img
-                    key={imageIndex}
-                    src={image.image}
-                    ref={el => productImageRefs.current[detailIndex] = el}
-                    className="w-full h-full object-cover transition-transform duration-250 ease-in-out transform hover:scale-110"
-                    alt={`${product.name}`}
-                    onLoad={(e) => e.target.style.visibility = 'visible'}
-                    style={{ visibility: 'hidden' }}
-                  />
-                ))}
-                {/* Discount Ribbon */}
-                {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 && (
-                  <div className="absolute top-0 left-1 bg-teal-800 text-white text-[10px] px-1 py-1 font-semibold flex justify-center items-center shadow-lg w-[25px] h-[35px] transform -rotate-95 origin-top-left clip-ribbon">
-                    {getDiscount(selectedQuantity, detail.financials)}% OFF
-                  </div>
-                )}
-              </div>
-            </Link>
-
-            <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-              {/* Updated Product Name with Selected Quantity */}
-              <p className="text-sm font-serif text-maroon-600" style={{ whiteSpace: 'pre-line' }}>
-                {product.name} - <span className="font- text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
-              </p>
-
-              {/* Scrollable Price Selection (Same Behavior as Brand Scroll) */}
-              <div
-                ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
-                className="flex items-center justify-start overflow-x-auto space-x-1 py-1 scrollbar-hide"
-                style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}
-                onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'quantity')}
-                onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
-                onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
-                onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'quantity')}
-              >
-                {detail.financials.map((financial, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleQuantityChange(financial.quantity.toString())}
-                    className={`px-2 py-0.5 rounded-md text-xs font-small min-w-[50px] border border-gray-200 hover:border-gray-500 ${selectedQuantity === financial.quantity.toString()
-                      ? "bg-gray-100 text-black"
-                      : "bg-gray-00 text-gray-900"
-                      }`}
-                    aria-label={`Select price ₹${Math.round(financial.dprice)}`}
-                  >
-                    ₹{Math.round(financial.dprice)}
-                  </button>
-                ))}
-              </div>
-
-
-
-
-              <div className="flex flex-col mt-1 space-y-1">
-                {/* Brand Scroll */}
-                <div className="flex items-center">
-                  <div
-                    ref={(el) => (scrollContainersRef.current[detailIndex] = el)}
-                    className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide"
-                    onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'brand')}
-                    onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
-                    onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
-                    onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'brand')}
-                  >
-                    {product.details.map((brandDetail) => (
-                      <button
-                        key={brandDetail.brand}
-                        ref={(el) => {
-                          if (brandDetail.brand === selectedBrand) selectedButtonsRef.current[detailIndex] = el;
-                        }}
-                        onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
-                        className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
-                          ? 'bg-gray-100 text-black border-gray-500'
-                          : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
-                        aria-label={`Select brand ${brandDetail.brand}`}
-                      >
-                        {brandDetail.brand}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quantity Scroll */}
-                {/* <div className="flex items-center">
-                  <div
-                    ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
-                    className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide w-full"
-                    onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'quantity')}
-                    onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
-                    onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
-                    onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'quantity')}
-                  >
-                    {detail.financials.map((financial, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleQuantityChange(financial.quantity.toString())}
-                        className={`px-2 py-0.5 rounded-lg border ${selectedQuantity === financial.quantity.toString()
-                            ? 'bg-gray-100 text-black border-gray-500'
-                            : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} text-xs`}
-                      >
-                        {financial.quantity}{financial.units}
-                      </button>
-                    ))}
-                  </div>
-                </div> */}
-
-                {/* Grouped Price, Cart, Quantity Controls, and Multiple Qty Price */}
-                <div className="flex items-center justify-between mt-2 space-x-2">
-                  {/* Price and Multiple Qty Price Group */}
-                  <div className="flex flex-col ml-2">
-                    <div className="text-sm text-gray-900 font-semibold">
-                      {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
-                        <>
-                          <span className="line-through text-gray-400 text-xs">
-                            &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
-                          </span>
-                          <br />
-                          <span className="bg-gray-200 text-black px-0.5 py-0.5 rounded-md text-sm font-semibold">
-                            &#x20b9;{getDprice(selectedQuantity, detail.financials).toFixed(2)}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-black font-semibold text-sm">
-                          &#x20b9;{getPrice(selectedQuantity, detail.financials).toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Price for Multiple Packs */}
-                    {selectedQuantity && selectedQty > 1 && (
-                      <div className="text-xs font-medium text-gray-700 mt-1">
-                        {selectedQty} x Packs{' '}
-                        <span className="text-green-700 font-semibold">
-                          &#x20b9;{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Cart and Quantity Controls */}
-                  <div className="flex items-center space-x-2">
-                    {showQuantityControls ? (
-                      <div className="flex bg-green-700 items-center space-x-1 rounded-lg px-2 py-1 transition-transform transform hover:scale-105 active:scale-95 text-sm">
-                        <button
-                          className="text-white px-2 py-1 font-semibold"
-                          onClick={() => handleQtyChange(selectedQty - 1)}
-                          aria-label="Decrease Quantity"
-                        >
-                          -
-                        </button>
-                        <span className="text-white font-semibold">{selectedQty}</span>
-                        <button
-                          className="text-white px-2 py-1 font-semibold"
-                          onClick={() => handleQtyChange(selectedQty + 1)}
-                          aria-label="Increase Quantity"
-                        >
-                          +
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="ml-auto flex items-center justify-center bg-gray-100 p-2 rounded-lg transition-transform transform hover:scale-105 active:scale-95"
-                        onClick={() => addToCartHandler(detailIndex)}
-                        aria-label="Add Product to Cart"
-                      >
-                        <FaCartPlus className="w-7 h-7 text-green-800" />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
+  {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
+    <div key={detailIndex} className="border border-gray-300 rounded-lg p-2 shadow-md bg-white w-full h-full max-w-xs">
+      <Link to={`/product/${product.slug}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
+        <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
+          {detail.images?.map((image, imgIndex) => (
+            <img
+              key={imgIndex}
+              src={image.image}
+              ref={(el) => (productImageRefs.current[detailIndex] = el)}
+              alt={product.name}
+              loading="lazy"
+              decoding="async"
+              width="320"
+              height="240"
+              className="w-full h-full object-cover"
+            />
+          ))}
+          {getDiscount(selectedQuantity, detail.financials) > 0 && (
+            <div className="absolute top-0 left-1 bg-teal-800 text-white text-[10px] px-1 py-1 font-semibold shadow-lg w-[25px] h-[35px] flex items-center justify-center clip-ribbon">
+              {getDiscount(selectedQuantity, detail.financials)}% OFF
             </div>
+          )}
+        </div>
+      </Link>
+
+      <div className="mt-2 text-center flex-1 flex flex-col justify-between">
+        <p className="text-sm font-serif text-maroon-600 text-center line-clamp-3 min-h-[5.5rem] border border-gray-300 rounded-md px-2 py-1 shadow-sm">
+          {product.name} - <span className="text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
+        </p>
+
+        {/* Quantity selector */}
+        <div
+          ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
+          className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide"
+          onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'quantity')}
+          onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
+          onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
+          onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'quantity')}
+        >
+          {detail.financials.map((f, idx) => (
+            <button key={idx} onClick={() => handleQuantityChange(f.quantity.toString())}
+              className={`px-2 py-0.5 rounded-md text-xs border ${selectedQuantity === f.quantity.toString()
+                ? "bg-gray-100 text-black border-gray-500"
+                : "bg-white text-gray-800 border-gray-300 hover:border-gray-500"}`}
+                aria-label={`Select price ₹${Math.round(f.dprice)}`}
+                >
+              ₹{Math.round(f.dprice)}
+            </button>
+          ))}
+        </div>
+
+
+        
+
+        {/* Brand selector */}
+        <div className="flex items-center">
+          <div
+            ref={(el) => (scrollContainersRef.current[detailIndex] = el)}
+            className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide"
+            onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'brand')}
+            onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
+            onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
+            onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'brand')}
+          >
+            {product.details.map((brandDetail) => (
+              <button
+                key={brandDetail.brand}
+                ref={(el) => {
+                  if (brandDetail.brand === selectedBrand) selectedButtonsRef.current[detailIndex] = el;
+                }}
+                onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
+                className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
+                  ? 'bg-gray-100 text-black border-gray-500'
+                  : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
+                  aria-label={`Select brand ${brandDetail.brand}`}
+              >
+                {brandDetail.brand}
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+              {/* x Packs Total Price – always reserve space */}
+        <div className="text-xs font-medium text-gray-700 mt-1 min-h-[0.1rem] text-center pr-2">
+          {selectedQty > 1 ? (
+            <>
+              {selectedQty} x Packs{' '}
+              <span className="text-green-700 font-semibold">
+                ₹{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
+              </span>
+            </>
+          ) : (
+            <span className="opacity-0 select-none">0 x Packs ₹0.00</span> 
+          )}
+        </div>
+        {/* Price + Add to Cart + Qty Controls */}
+        <div className="flex justify-between items-center mt-2 px-2 min-h-[0.5rem]">
+          <div className="text-sm text-gray-900 font-semibold">
+            {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
+              <>
+                <span className="line-through text-xs text-gray-400">₹{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span><br />
+                <span className="bg-gray-200 text-black px-1 py-0.5 rounded-md font-semibold text-sm">₹{getDprice(selectedQuantity, detail.financials).toFixed(2)}</span>
+              </>
+            ) : (
+              <span className="font-semibold text-sm">₹{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
+            )}
+          </div>
+
+          {showQuantityControls ? (
+            <div className="flex items-center space-x-2 bg-green-700 px-2 py-1 rounded-lg text-white">
+              <button onClick={() => handleQtyChange(selectedQty - 1)}>-</button>
+              <span>{selectedQty}</span>
+              <button onClick={() => handleQtyChange(selectedQty + 1)}>+</button>
+            </div>
+          ) : (
+            <button onClick={() => addToCartHandler(detailIndex)} className="bg-gray-100 p-2 rounded-lg">
+              <FaCartPlus className="text-green-800 w-6 h-6" />
+            </button>
+          )}
+        </div>
+
+      
+
       </div>
+    </div>
+  ))}
+</div>
+
       <FloatingCartIcon ref={floatingCartIconRef} />
     </>
   );

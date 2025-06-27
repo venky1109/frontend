@@ -61,6 +61,9 @@ module.exports = {
         // 'move-2': 'move2 6s linear infinite',
 
       },
+       fontFamily: {
+      anekTelugu: ['"Anek Telugu"', 'sans-serif'],
+    },
     },
   },
   plugins: [
