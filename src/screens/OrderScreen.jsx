@@ -117,20 +117,17 @@ const OrderScreen = () => {
 </div>
               <p>
   {/* {order.isPaid ? <strong className="text-md font-semibold">Invoice Number</strong> : <strong>Order Number</strong>}: {order._id} */}
+  <div className="space-y-1">
   {order.isPaid ? (
-  <div>
-    <p>
-      <strong className="text-md font-semibold">Invoice Number</strong>: {order._id}
-    </p>
-    <p>
-      <strong className="text-md font-semibold">Payment Reference</strong>: {order.orderId}
-    </p>
-  </div>
-) : (
-  <p>
-    <strong>Order Number</strong>: {order._id}
-  </p>
-)}
+    <>
+      <p><strong className="text-md font-semibold">Invoice Number</strong>: {order._id}</p>
+      <p><strong className="text-md font-semibold">Payment Reference</strong>: {order.orderId}</p>
+    </>
+  ) : (
+    <p><strong>Order Number</strong>: {order._id}</p>
+  )}
+</div>
+
 
 </p>
 <strong className="text-md font-semibold"><i>Customer Details:</i></strong>

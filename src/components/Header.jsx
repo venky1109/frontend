@@ -1,13 +1,13 @@
 import {  useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { Link ,useLocation } from "react-router-dom";
+import { Link  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SearchBox from "./SearchBox";
 import LoginScreen from "./LoginScreen";
 import Account from "./Account";
 import ContactUsBanner from "./ContactUsBanner";
 import logo from "../assets/ManaKiranaLogoWithName4.mp4";
-import SelectLocation from "./SelectLocation";  // Import the component
+// import SelectLocation from "./SelectLocation";  // Import the component
 import ClickOutsideWrapper from './ClickOutsideWrapper';
 
 
@@ -19,7 +19,7 @@ const Header = () => {
   const userIconRef = useRef(null);
   const loginFormRef = useRef(null);
   const accountFormRef = useRef(null);
-  const location = useLocation();
+  // const location = useLocation();
 
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showAccountForm, setShowAccountForm] = useState(false);

@@ -1,4 +1,4 @@
-import React, {Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useProfileMutation } from '../slices/usersApiSlice';
