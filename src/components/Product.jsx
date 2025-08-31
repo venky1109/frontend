@@ -258,7 +258,7 @@ const Product = ({ product, keyword }) => {
           decoding="async"
           width="320"
           height="240"
-           className="block h-64 w-auto max-w-full object-contain rounded mx-auto"
+           className="block h-full w-full max-w-full object-contain rounded mx-auto"
         />
       );
     })}
