@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom';
 import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
 import { useWebSocket } from './hooks/useWebSocket';
-import logo from './assets/ManaKiranaLogoWithName.gif';
+import logo from './assets/ManaKiranaLogoWithName4.mp4';
 // import Loader from './components/Loader';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -87,9 +87,9 @@ const handleInstallClick = async () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <Suspense fallback={<div>Loading...</div>}>    
+        {/* <Suspense fallback={<div>Loading...</div>}>     */}
             <Loader />
-        </Suspense>
+        {/* </Suspense> */}
 
       </div>
     );
@@ -120,11 +120,19 @@ const handleInstallClick = async () => {
       >
         {/* Logo & Text */}
         <div className="flex items-center space-x-3">
-          <img
+          {/* <img
             src={logo}
             alt="ManaKirana logo"
             className="w-14 h-auto sm:w-16 lg:w-20 border border-green-600 rounded-md"
-          />
+          /> */}
+          <video
+  src={logo}
+  autoPlay
+  loop
+  muted
+  playsInline
+  className="w-14 h-auto sm:w-16 lg:w-20 border border-green-600 rounded-md"
+/>
           <p className="text-gray-800 text-sm sm:text-md">
             Install <span className="font-bold text-green-600">APP</span> for better experience!
           </p>

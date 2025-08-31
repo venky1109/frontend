@@ -169,7 +169,7 @@ const ProductScreen = () => {
                             key={imageIndex}
                             src={image.image}
                             alt={`${product.name}`}
-                            className="w-full h-64 object-cover rounded"
+                              className="block h-64 w-auto max-w-full object-contain rounded mx-auto"
                           />
                         ))}
                     </div>

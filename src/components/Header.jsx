@@ -6,7 +6,7 @@ import SearchBox from "./SearchBox";
 import LoginScreen from "./LoginScreen";
 import Account from "./Account";
 import ContactUsBanner from "./ContactUsBanner";
-import logo from "../assets/ManaKiranaLogoWithName.gif";
+import logo from "../assets/ManaKiranaLogoWithName4.mp4";
 import SelectLocation from "./SelectLocation";  // Import the component
 import ClickOutsideWrapper from './ClickOutsideWrapper';
 
@@ -47,11 +47,19 @@ const Header = () => {
           {/* Logo */}
           <div className="hidden md:flex flex-shrink-0">
             <Link to="/">
-              <img src={logo} alt="ManaKirana logo" className="w-14 h-auto sm:w-16 lg:w-20" />
+             <video
+              src={logo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-14 h-auto sm:w-16 lg:w-20" 
+            />
+          {/* <img src={logo} alt="ManaKirana logo" className="w-14 h-auto sm:w-16 lg:w-20" /> */}
             </Link>
           </div>
 
-          {location.pathname === '/' && <SelectLocation />}
+          {/* {location.pathname === '/' && <SelectLocation />} */}
 
           {/* Search Box & User Account Section */}
           <div className="w-full flex items-center justify-between pl-2 space-x-2 md:space-x-0">
@@ -71,6 +79,7 @@ const Header = () => {
         onClick={toggleAccountForm}
         ref={userIconRef}
         className="text-xl text-green-700"
+        aria-label="User Profile"
       >
         <CgProfile size={40} />
       </button>
@@ -98,6 +107,7 @@ const Header = () => {
         onClick={toggleLoginForm}
         ref={userIconRef}
         className="text-xl text-gray-600 "
+        aria-label="Profile"
       >
         <CgProfile size={40} />
       </button>

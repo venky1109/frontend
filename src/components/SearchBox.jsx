@@ -12,7 +12,13 @@ const SearchBox = () => {
   const dropdownRef = useRef(null);
   const itemRefs = useRef([]);
 
-  const { data: productsData, error } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
+  // const { data: productsData, error } = useGetProductsQuery({ keyword: '', pageNumber: 1 });
+  const { data: productsData, error } = useGetProductsQuery(
+    { keyword, pageNumber: 1 },
+    {
+      skip: keyword.trim().length < 3,
+    }
+  );
 
   useEffect(() => {
     if (productsData && productsData.products && keyword.trim().length >= 3) {
@@ -112,7 +118,7 @@ const SearchBox = () => {
           }}
           style={{ minHeight: '32px' }}
         />
-        <button onClick={handleSearch} className="p-1 sm:p-2 text-gray-500">
+        <button onClick={handleSearch} className="p-1 sm:p-2 text-gray-500" aria-label="Search">
           <FaSearch />
         </button>
       </div>

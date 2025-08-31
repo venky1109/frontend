@@ -2,7 +2,7 @@ import {  useState, useCallback  } from 'react';
 import { Link ,useNavigate } from 'react-router-dom';
 import {  FaWhatsapp } from 'react-icons/fa';
 import { TbDeviceLandlinePhone } from "react-icons/tb";
-import logo from "../assets/ManaKiranaLogoWithName.gif";
+import logo from "../assets/ManaKiranaLogoWithName4.mp4";
 import mhlogo from "../assets/RaithuDairyLogo150x102.png";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
@@ -88,12 +88,20 @@ const Footer = ({ scrollToCategory }) => {
   <div className="container mx-auto flex justify-between items-center px-2 py-1 sm:px-1 sm:py-1">
     {/* Home Icon */}
     <Link to="/" className="flex flex-col items-center shadow-md border border-b-5 border-green-600 hover:border-white rounded-sm  transition-all duration-300 ">
-  <img 
+  {/* <img 
     src={logo}
-    alt="Home" 
+    alt="" 
+    className="h-9 w-9 sm:h-9 sm:w-9 object-contain "
+  /> */}
+   <video
+    src={logo}
+    autoPlay
+    loop
+    muted
+    playsInline
     className="h-9 w-9 sm:h-9 sm:w-9 object-contain "
   />
-  <span className="text-xs text-green-900">Home</span>
+    <span className="text-xs text-green-900">Home</span>
 </Link>
 
 

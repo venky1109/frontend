@@ -19,7 +19,7 @@ const axiosBaseQuery =
         method,
         data,
         params,
-        withCredentials: true, // Include credentials such as cookies
+        // withCredentials: true, // Include credentials such as cookies
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, // Include the token

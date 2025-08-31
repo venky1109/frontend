@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/ManaKiranaLogoWithName.png';
+import logo from '../assets/ManaKiranaLogowithNameCircle.png';
 
 const PrintableOrderDetails = ({ order }) => {
   return (

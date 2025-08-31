@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,lazy, Suspense } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForgotPasswordMutation } from '../slices/usersApiSlice'; // Ensure this API slice exists
@@ -8,9 +8,10 @@ import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { CgSpinner } from "react-icons/cg";
 import OtpInput from "otp-input-react";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
+// import PhoneInput from "react-phone-input-2";
+// import "react-phone-input-2/lib/style.css";
 import Loader from './Loader';
+const PhoneInput = lazy(() => import("react-phone-input-2"));
 
 const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
   const [otp, setOtp] = useState("");
@@ -116,6 +117,7 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
       <form onSubmit={submitHandler} className="space-y-4">
         <div>
           <label htmlFor="phone" className="block text-gray-700">Phone Number</label>
+            <Suspense fallback={<div>📞 Loading phone input...</div>}>
           <PhoneInput
             country={"in"}
             value={ph}
@@ -124,6 +126,7 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
             disableDropdown
             inputStyle={{ width: '100%', padding: '1rem', borderRadius: '0.375rem' }}
           />
+          </Suspense>
         </div>
         <button
           type="button"

@@ -36,7 +36,7 @@ import PaymentFailureScreen from './screens/PaymentFailureScreen';
 import SearchScreen from './screens/SearchScreen';
 import store from './store';
 import { Provider } from 'react-redux';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+// import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import firebase from 'firebase/compat/app'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 // import { LoadScript } from "@react-google-maps/api";
@@ -112,11 +112,11 @@ root.render(
   <React.StrictMode>
     <HelmetProvider>
       <Provider store={store}>
-        <PayPalScriptProvider deferLoading={true}>
+        {/* <PayPalScriptProvider deferLoading={true}> */}
         {/* <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={GOOGLE_MAPS_LIBRARIES}> */}
           <RouterProvider router={router} />
           {/* </LoadScript> */}
-        </PayPalScriptProvider>
+        {/* </PayPalScriptProvider> */}
       </Provider>
     </HelmetProvider>
   </React.StrictMode>

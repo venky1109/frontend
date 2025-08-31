@@ -10,31 +10,124 @@
       "productsPerCategory": 5,
       "customization": {
         
-          "categories": [
-            { "key": "BATH_BODY", "name": "BATH & BODY", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBATH%20%26%20BODY.jpg?alt=media&token=ad137b42-e71d-46f1-8769-d9ddbb6edc4c" },
-            { "key": "BISCUITS_CHOCOLATES", "name": "BISCUITS & CHOCOLATES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBISCUITS%20%26%20CHOCOLATES.jpg?alt=media&token=206c0c53-9c01-4810-af7c-7c08be0ac1f7" },
-            { "key": "CLEANING_ESSENTIALS", "name": "CLEANING ESSENTIALS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FCLEANING%20ESSENTIALS.jpg?alt=media&token=97ea0de4-7a29-46bc-bc59-9d27fb5824eb" },
-            { "key": "DAILY_NEEDS", "name": "DAILY NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FDAILY%20NEEDS.jpg?alt=media&token=a69e2a8e-3b10-44ef-8ba3-c7290c73d329" },
-            { "key": "DRYFRUITS", "name": "DRYFRUITS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FDRYFRUITS.jpg?alt=media&token=eb3f9599-a90e-44c3-9888-e830ea89e9d1" },
-            { "key": "FEMININE_HYGIENE", "name": "FEMININE HYGIENE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FFEMINE%20HYGIENE.jpg?alt=media&token=49b4117a-e63d-46dc-ba07-9081f32cc857" },
-            { "key": "FLOURS", "name": "FLOURS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FFLOURS.jpg?alt=media&token=8b124684-d078-4a9c-a796-1bb58e4eba3d" },
-            { "key": "FOOD_ADDITIVES", "name": "FOOD ADDITIVES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FFOOD%20ADDITIVES.jpg?alt=media&token=7e5164bc-2e8e-4a20-bc42-ae9bab4304a2" },
-            { "key": "GROOMING", "name": "GROOMING", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FGROOMING.jpg?alt=media&token=dd0eaf2c-27a2-48cb-b8ef-36591113037f" },
-            { "key": "HAIR CARE", "name": "HAIR CARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHAIR%20CARE.jpg?alt=media&token=820172c2-801a-465b-ae35-bfd4b72db775" },
-            { "key": "HEALTH_WELLNESS", "name": "HEALTH & WELLNESS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHEALTH%20%26%20WELLNESS.jpg?alt=media&token=aa6de382-02d0-45ac-80e4-d986ba50f333" },
-            { "key": "HOME_NEEDS", "name": "HOME NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FHOME%20NEEDS.jpg?alt=media&token=6ca25243-5fa0-4329-aaf1-d6879c19a51e" },
-            { "key": "NUTRITIONAL_MILK_MIXERS", "name": "NUTRITIONAL MILK MIXERS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FNUTRITIONAL%20MILK%20MIXERS.jpg?alt=media&token=947aba41-a1bc-4b2c-a7bf-295b0ff32523" },
-            { "key": "OILS", "name": "OILS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FOILS.jpg?alt=media&token=6fa00f85-61d0-49b5-801b-81a7c4c74185" },
-            { "key": "ORAL CARE", "name": "ORAL CARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FORAL%20CARE.jpg?alt=media&token=7a805621-207f-43aa-86d5-3a9d9e6e992d" },
-            { "key": "POOJA_NEEDS", "name": "POOJA NEEDS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FPOOJA%20NEEDS.jpg?alt=media&token=f4d1ae30-65ac-4d3f-a888-1bad75992f41" },
-            { "key": "RICE_PULSES", "name": "RICE & PULSES", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FRICE%20%26%20PULSES.jpg?alt=media&token=32da25f8-f297-4b6b-b26f-c15c8e01a77b" },
-            { "key": "SKIN CARE", "name": "SKIN CARE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FSKIN%20CARE.jpg?alt=media&token=5e62eac3-5efa-429e-a1f6-0661c1953b01" },
-            { "key": "SNACKS_BREAKFAST", "name": "SNACKS & BREAKFAST", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FSNACKS%20%26%20BREAKFAST.jpg?alt=media&token=96eb1e50-44dc-4e62-9838-632bc00b6095" },
-            { "key": "SPICES_MASALAS", "name": "SPICES & MASALAS", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FSPICES%20%26%20MASALAS.jpg?alt=media&token=76040bb8-a993-4007-8d66-92f9e2b70d6a" },
-            { "key": "TEA_COFFEE", "name": "TEA & COFFEE", "image": "https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FTEA%20%26%20COFFEE.jpg?alt=media&token=e069e155-29a6-4aaf-a801-15954f0867a4" },
-            { "key": "BUDGET_FRIENDLY_PACKAGES", "name":"BUDGET FRIENDLY PACKAGES", "image":"https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FBUDGET%20FRIENDLY%20PACKAGES.jpg?alt=media&token=914b4c01-33a3-4a75-98ab-6cedf94c6253"},
-            { "key": "EGGS_&_DAIRY", "name":"EGGS & DAIRY","image":"https://firebasestorage.googleapis.com/v0/b/manakirana-988b3.appspot.com/o/category%2FEggs%20%26%20Dairy.jpg?alt=media&token=749b1008-6f98-4633-91d6-b55fed2b4517"}        
-          ]
+          "categories":[
+    {
+      "key": "BATH_BODY",
+      "name": "BATH & BODY",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FBATH_20_26_20BODY.webp_alt=media&token=6ced6210-35aa-4102-a0a3-959488cdac17?updatedAt=1751606300471"
+    },
+    {
+      "key": "BISCUITS_CHOCOLATES",
+      "name": "BISCUITS & CHOCOLATES",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FBISCUITS_20_26_20CHOCOLATES.webp_alt=media&token=512e615f-dc1a-4d8c-a664-d4e3ca2dad67?updatedAt=1751606324693"
+    },
+    {
+      "key": "CLEANING_ESSENTIALS",
+      "name": "CLEANING ESSENTIALS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FCLEANING_20ESSENTIALS.webp_alt=media&token=60b31c2c-74d4-4816-acfa-1d6d1d478fc8?updatedAt=1751606346524"
+    },
+    {
+      "key": "DAILY_NEEDS",
+      "name": "DAILY NEEDS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FDAILY_20NEEDS.webp_alt=media&token=4766dd9e-7d6a-4e2f-b244-435ede02207c?updatedAt=1751606754618"
+    },
+    {
+      "key": "DRYFRUITS",
+      "name": "DRYFRUITS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FDRYFRUITS.webp_alt=media&token=e9a4447d-3d6a-4fdc-8dc5-7c88fe6ed6b0?updatedAt=1751606418998"
+    },
+    {
+      "key": "FEMININE_HYGIENE",
+      "name": "FEMININE HYGIENE",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FFEMINE_20HYGIENE.webp_alt=media&token=8f95f77f-6fc3-4281-99e6-810c2d4fbcb9?updatedAt=1751606444879"
+    },
+    {
+      "key": "FLOURS",
+      "name": "FLOURS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FFLOURS.webp_alt=media&token=1386f71e-c5ce-49a0-9250-0e0699591dad?updatedAt=1751606480786"
+    },
+    {
+      "key": "FOOD_ADDITIVES",
+      "name": "FOOD ADDITIVES",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FFOOD_20ADDITIVES.webp_alt=media&token=2ffcbf8c-5868-415e-bb20-5377e12f419b?updatedAt=1751606481774"
+    },
+    {
+      "key": "GROOMING",
+      "name": "GROOMING",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FGROOMING.webp_alt=media&token=e9f7ea20-81b5-40ac-9498-23cb33973da9?updatedAt=1751606672909"
+    },
+    {
+      "key": "HAIR CARE",
+      "name": "HAIR CARE",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FHAIR_20CARE.webp_alt=media&token=3fd55a23-f0ba-4ef8-b888-a9ee59b6619f?updatedAt=1751606670317"
+    },
+    {
+      "key": "HEALTH_WELLNESS",
+      "name": "HEALTH & WELLNESS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FHEALTH_20_26_20WELLNESS.webp_alt=media&token=aa832301-f6af-466b-bb17-ffb613239cfa?updatedAt=1751606672403"
+    },
+    {
+      "key": "HOME_NEEDS",
+      "name": "HOME NEEDS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FHOME_20NEEDS.webp_alt=media&token=832ab8aa-66b7-4003-9419-89e7705a2b45?updatedAt=1751606668468"
+    },
+    {
+      "key": "NUTRITIONAL_MILK_MIXERS",
+      "name": "NUTRITIONAL MILK MIXERS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FNUTRITIONAL_20MILK_20MIXERS.webp_alt=media&token=aeeb6e02-686e-4034-aca5-c9640b793a3a?updatedAt=1751606671405"
+    },
+    {
+      "key": "OILS",
+      "name": "OILS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FOILS.webp_alt=media&token=0c675302-0314-4405-8858-56ac4de8f966?updatedAt=1751606669395"
+    },
+    {
+      "key": "ORAL CARE",
+      "name": "ORAL CARE",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FORAL_20CARE.webp_alt=media&token=f4c510cb-66ec-4714-b1dc-3f6c392781b4?updatedAt=1751606675597"
+    },
+    {
+      "key": "POOJA_NEEDS",
+      "name": "POOJA NEEDS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FPOOJA_20NEEDS.webp_alt=media&token=47c6fba4-fc36-4970-a4cf-dd959006b2d3?updatedAt=1751606673722"
+    },
+    {
+      "key": "RICE_PULSES",
+      "name": "RICE & PULSES",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FRICE_20_26_20PULSES.webp_alt=media&token=ede9bdad-e659-49b7-b60b-dcaa8e0dfea3?updatedAt=1751606676814"
+    },
+    {
+      "key": "SKIN CARE",
+      "name": "SKIN CARE",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FSKIN_20CARE.webp_alt=media&token=9fb4e82f-d598-4b8e-946f-ca406aba2bc2?updatedAt=1751606674722"
+    },
+    {
+      "key": "SNACKS_BREAKFAST",
+      "name": "SNACKS & BREAKFAST",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FSNACKS_20_26_20BREAKFAST.webp_alt=media&token=f48f0603-0bf1-4853-ad05-48282d51cbac?updatedAt=1751606677752"
+    },
+    {
+      "key": "SPICES_MASALAS",
+      "name": "SPICES & MASALAS",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FSPICES_20_26_20MASALAS.webp_alt=media&token=550ecc0f-e189-4a7a-bfe2-53443c9a779c?updatedAt=1751606679527"
+    },
+    {
+      "key": "TEA_COFFEE",
+      "name": "TEA & COFFEE",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FTEA_20_26_20COFFEE.webp_alt=media&token=ce60577d-7c68-461b-9dae-f4eb7bd38bf7?updatedAt=1751606678594"
+    },
+    {
+      "key": "BUDGET_FRIENDLY_PACKAGES",
+      "name": "BUDGET FRIENDLY PACKAGES",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FBUDGET_20FRIENDLY_20PACKAGES.webp_alt=media&token=2339c3b8-b4b6-4214-a0fc-8c363fd51995?updatedAt=1751606680480"
+    },
+    {
+      "key": "EGGS_&_DAIRY",
+      "name": "Eggs & Dairy",
+      "image": "https://ik.imagekit.io/kaexaalzb/category_2FEggs_20_26_20Dairy.webp_alt=media&token=73b27597-3897-4858-8526-d81501428ca2?updatedAt=1751606681131"
+    }
+  ]
+
         }
         
       

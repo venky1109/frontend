@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import axios from 'axios';
 // import MapComponent from './MapComponent'; // Ensure the import path is correct
 
-const MapComponent = React.lazy(() => import('./MapComponent'));
+// const MapComponent = React.lazy(() => import('./MapComponent'));
 
 
 
@@ -241,13 +241,13 @@ const MyProfile = ({ onProfileUpdate }) => {
           </div>
         )} */}
 
-        {latitude && longitude && (
+        {/* {latitude && longitude && (
   <div className="mt-4">
     <Suspense fallback={<div>Loading map...</div>}>
       <MapComponent latitude={latitude} longitude={longitude} />
     </Suspense>
   </div>
-)}
+)} */}
 
 
         <button

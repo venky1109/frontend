@@ -209,7 +209,7 @@ const CategoryScreenCard = ({ product }) => {
                   key={imageIndex}
                   src={image.image}
                   ref={(el) => (productImageRefs.current[detailIndex] = el)}
-                  className="w-full h-full object-cover transition-transform duration-250 ease-in-out transform hover:scale-110"
+                  className="px-20 w-auto h-full transition-transform duration-250 ease-in-out transform hover:scale-110"
                   alt={`${product.name}`}
                 />
               ))}

@@ -216,7 +216,7 @@ const Product = ({ product, keyword }) => {
       <div className="flex flex-wrap gap-4 justify-center">
   {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
     <div key={detailIndex} className="border border-gray-300 rounded-lg p-2 shadow-md bg-white w-full h-full max-w-xs">
-      <Link to={`/product/${product.slug}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
+      {/* <Link to={`/product/${product.slug}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
         <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
           {detail.images?.map((image, imgIndex) => (
             <img
@@ -224,7 +224,7 @@ const Product = ({ product, keyword }) => {
               src={image.image}
               ref={(el) => (productImageRefs.current[detailIndex] = el)}
               alt={product.name}
-              loading="lazy"
+              // loading="lazy"
               decoding="async"
               width="320"
               height="240"
@@ -237,7 +237,39 @@ const Product = ({ product, keyword }) => {
             </div>
           )}
         </div>
-      </Link>
+      </Link> */}
+<Link
+  to={`/product/${product.slug}`}
+  state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
+>
+  <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
+    {detail.images?.map((image, imgIndex) => {
+      // Prioritize only the first image of the first product card
+      const isFirstVisibleImage = detailIndex === 0 && imgIndex === 0;
+
+      return (
+        <img
+          key={imgIndex}
+          src={image.image}
+          ref={(el) => (productImageRefs.current[detailIndex] = el)}
+          alt={product.name}
+          loading={isFirstVisibleImage ? 'eager' : 'lazy'}
+          fetchpriority={isFirstVisibleImage ? 'high' : 'auto'}
+          decoding="async"
+          width="320"
+          height="240"
+           className="block h-64 w-auto max-w-full object-contain rounded mx-auto"
+        />
+      );
+    })}
+
+    {getDiscount(selectedQuantity, detail.financials) > 0 && (
+      <div className="absolute top-0 left-1 bg-teal-800 text-white text-[10px] px-1 py-1 font-semibold shadow-lg w-[25px] h-[35px] flex items-center justify-center clip-ribbon">
+        {getDiscount(selectedQuantity, detail.financials)}% OFF
+      </div>
+    )}
+  </div>
+</Link>
 
       <div className="mt-2 text-center flex-1 flex flex-col justify-between">
         <p className="text-sm font-serif text-maroon-600 text-center line-clamp-3 min-h-[5.5rem] border border-gray-300 rounded-md px-2 py-1 shadow-sm">
