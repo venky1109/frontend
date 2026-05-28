@@ -12,8 +12,20 @@ const Product = React.lazy(() => import('../components/Product'));
 const OrderOptions = React.lazy(() => import('../components/OrderOptionsBanner'));
 
 const SITE_URL = 'https://manakirana.com';
+const DELIVERY_AREAS = [
+  'Amalapuram',
+  'Mummidivaram',
+  'Yanam',
+  'Ambajipeta',
+  'Ainavilli',
+  'Uppalaguptam',
+  'Allavaram',
+  'Katrenikona',
+  'I. Polavaram',
+  'Kothapeta',
+];
 const HOME_DESCRIPTION =
-  'Order groceries online from Mana Kirana. Shop rice, pulses, snacks, oils, spices, dairy, dry fruits, cleaning essentials, pooja needs, personal care and daily home needs.';
+  'Order groceries online from Mana Kirana with delivery around Amalapuram, Mummidivaram, Yanam and nearby Konaseema areas. Shop rice, pulses, snacks, oils, spices, dairy, dry fruits, cleaning essentials, pooja needs, personal care and daily home needs.';
 
 const CategoryProductSection = ({ category }) => {
   const navigate = useNavigate();
@@ -315,6 +327,11 @@ const HomeScreen = () => {
       'Mana Kirana',
       'grocery home delivery',
       'kirana store online',
+      'grocery delivery Amalapuram',
+      'grocery delivery Mummidivaram',
+      'grocery delivery Yanam',
+      'online groceries Konaseema',
+      ...DELIVERY_AREAS,
       ...categoryNames,
     ].join(', '),
     [categoryNames]
@@ -328,7 +345,10 @@ const HomeScreen = () => {
       image: `${SITE_URL}/images/logoSquare512_v1.webp`,
       description: HOME_DESCRIPTION,
       telephone: homeConfig.phoneNumber?.[0],
-      areaServed: 'India',
+      areaServed: DELIVERY_AREAS.map((area) => ({
+        '@type': 'City',
+        name: area,
+      })),
       sameAs: [SITE_URL],
     },
     {
@@ -467,6 +487,18 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <div className="space-y-6">
+          <section className="rounded-xl border border-green-100 bg-white p-3 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-green-700">Local grocery delivery</p>
+            <h1 className="mt-1 text-2xl font-bold leading-tight text-gray-900">
+              Grocery delivery around Amalapuram, Mummidivaram and Yanam
+            </h1>
+            <p className="mt-2 text-sm leading-6 text-gray-600">
+              Mana Kirana delivers groceries and daily essentials across Amalapuram, Mummidivaram,
+              Yanam, Ambajipeta, Ainavilli, Uppalaguptam, Allavaram, Katrenikona, I. Polavaram,
+              Kothapeta and nearby Konaseema areas.
+            </p>
+          </section>
+
           <section id="categories" className="scroll-mt-20 rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
             <div className="mb-3">
               <div>
