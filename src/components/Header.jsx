@@ -94,7 +94,7 @@ const Header = () => {
           
         <div
           ref={accountFormRef}
-          className="absolute mt-2 right-0 w-[calc(100vw-1rem)] max-w-sm bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-3 transition-opacity duration-300 transform"
+          className="fixed left-3 right-3 top-20 max-h-[calc(100vh-6rem)] overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-3 transition-opacity duration-300 transform md:absolute md:left-auto md:right-0 md:top-auto md:mt-2 md:w-[calc(100vw-1rem)] md:max-w-sm"
         >
           <Account  />
         </div>
@@ -115,7 +115,7 @@ const Header = () => {
         <ClickOutsideWrapper onOutsideClick={() => setShowLoginForm(false)} excludeRef={userIconRef} >
         <div
           ref={loginFormRef}
-          className="absolute mt-2 right-0 w-[calc(100vw-1rem)] max-w-sm bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-3 transition-opacity duration-300 transform"
+          className="fixed left-3 right-3 top-20 max-h-[calc(100vh-6rem)] overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-3 transition-opacity duration-300 transform md:absolute md:left-auto md:right-0 md:top-auto md:mt-2 md:w-[calc(100vw-1rem)] md:max-w-sm"
         >
           <LoginScreen />
         </div>
