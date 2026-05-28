@@ -2,67 +2,38 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
+  const steps = [
+    { label: 'Sign In', to: '/login', active: step1 },
+    { label: 'Shipping', to: '/shipping', active: step2 },
+    { label: 'Payment', to: '/payment', active: step3 },
+    { label: 'Place Order', to: '/placeorder', active: step4 },
+  ];
+
   return (
-    <div className="flex flex-wrap justify-center mb-8 mt-20">
-      <div className="mx-1 md:mx-2">
-        {step1 ? (
-          <Link
-            to="/login"
-            className="text-green-800 bg-green-100 hover:bg-green-500 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base"
+    <div className="mb-6 mt-12 flex items-center justify-center gap-1.5 overflow-x-auto pb-1 sm:mt-16 sm:gap-2">
+      {steps.map((step, index) => {
+        const content = (
+          <span
+            className={`whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold shadow-sm transition sm:px-3 sm:py-1.5 sm:text-xs ${
+              step.active
+                ? 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200'
+                : 'bg-rose-50 text-slate-500 ring-1 ring-rose-100'
+            }`}
           >
-            Sign In
-          </Link>
-        ) : (
-          <span className="text-gray-500 bg-red-100 px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base">
-            Sign In
+            {index + 1}. {step.label}
           </span>
-        )}
-      </div>
+        );
 
-      <div className="mx-1 md:mx-2">
-        {step2 ? (
-          <Link
-            to="/shipping"
-            className="text-green-800 bg-green-100 hover:bg-green-500 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base"
-          >
-            Shipping
+        return step.active ? (
+          <Link key={step.label} to={step.to} className="shrink-0">
+            {content}
           </Link>
         ) : (
-          <span className="text-gray-500 bg-red-100 px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base">
-            Shipping
+          <span key={step.label} className="shrink-0">
+            {content}
           </span>
-        )}
-      </div>
-
-      <div className="mx-1 md:mx-2">
-        {step3 ? (
-          <Link
-            to="/payment"
-            className="text-green-800 bg-green-100 hover:bg-green-500 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base"
-          >
-            Payment
-          </Link>
-        ) : (
-          <span className="text-gray-500 bg-red-100 px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base">
-            Payment
-          </span>
-        )}
-      </div>
-
-      <div className="mx-1 md:mx-2">
-        {step4 ? (
-          <Link
-            to="/placeorder"
-            className="text-green-800 bg-green-100 hover:bg-green-500 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base"
-          >
-            Place Order
-          </Link>
-        ) : (
-          <span className="text-gray-500 bg-red-100 px-2 py-1 md:px-3 md:py-2 rounded text-sm md:text-base">
-            Place Order
-          </span>
-        )}
-      </div>
+        );
+      })}
     </div>
   );
 };

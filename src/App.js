@@ -1,6 +1,6 @@
 import React, {  Suspense, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 // import Header from './components/Header';
 // import Footer from './components/Footer';
 // import FloatingCartIcon from './components/FloatingCartIcon';
@@ -24,6 +24,7 @@ const App = () => {
   
 
   const dispatch = useDispatch();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
@@ -84,6 +85,11 @@ const handleInstallClick = async () => {
   const handleDismissBanner = () => {
     setShowInstallBanner(false); // Hide the banner
   };
+  const hideFloatingCart =
+    location.pathname === '/cart' ||
+    location.pathname === '/placeorder' ||
+    location.pathname.startsWith('/order/');
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -108,7 +114,7 @@ const handleInstallClick = async () => {
         </div>
       </main>
       <Suspense fallback={null}>
-      <FloatingCartIcon />
+      {!hideFloatingCart && <FloatingCartIcon />}
       </Suspense>
       <Footer className="mt-auto" />
       {/* Custom Install Banner */}

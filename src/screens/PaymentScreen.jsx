@@ -7,6 +7,8 @@ import { savePaymentMethod } from '../slices/cartSlice';
 import { handleOnlinePayment } from '../slices/paymentApiSlice';
 import { useCreateOrderMutation } from '../slices/ordersApiSlice';
 import { toast } from 'react-toastify';
+import { FaCheckCircle, FaMoneyBillWave, FaUniversity } from 'react-icons/fa';
+import PaymentConfirmModal from '../components/PaymentConfirmModal';
 
 const PaymentScreen = () => {
   const navigate = useNavigate();
@@ -49,29 +51,32 @@ const PaymentScreen = () => {
   }, [paymentResponse]);
 
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [pendingPaymentMethod, setPendingPaymentMethod] = useState('');
 
-  const handlePaymentSelection = (method) => {
+  const continueWithPayment = (method) => {
     setPaymentMethod(method);
     dispatch(savePaymentMethod(method));
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
 
     if (!userInfo?.phoneNo) {
-      alert('Phone number is missing in your profile.');
+      toast.error('Phone number is missing in your profile.');
       return;
     }
 
-    if (paymentMethod === 'Cash/UPI') {
+    setPendingPaymentMethod(method);
+  };
+
+  const cancelPaymentConfirmation = () => {
+    setPendingPaymentMethod('');
+  };
+
+  const confirmPaymentSelection = () => {
+    if (pendingPaymentMethod === 'Cash/UPI') {
       navigate('/placeorder');
-    } else if (paymentMethod === 'Online') {
-      createAndInitiatePayment(); // Call the async function here
+    } else if (pendingPaymentMethod === 'Online') {
+      createAndInitiatePayment();
     } else {
       toast.error('Please select a payment method.');
     }
-    
-    
   };
   const createAndInitiatePayment = async () => {
     try {
@@ -101,54 +106,67 @@ const PaymentScreen = () => {
   };
 
   return (
+    <div className="pb-24">
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
-      <h1 className="text-2xl font-semibold mb-6">Select Payment Method</h1>
-      <form onSubmit={submitHandler}>
-        <div className="flex flex-col gap-4">
-          {/* Cash/UPI Button */}
+      <div className="mb-5">
+        <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Payment</p>
+        <h1 className="text-2xl font-extrabold text-slate-950">Select Payment Method</h1>
+        <p className="mt-1 text-sm text-slate-500">Tap your preferred option and confirm to continue.</p>
+      </div>
+      <div className="rounded-2xl border border-emerald-100 bg-white p-3 shadow-[0_14px_35px_rgba(15,23,42,0.08)]">
+        <div className="flex flex-col gap-3">
           <button
             type="button"
-            onClick={() => handlePaymentSelection('Cash/UPI')}
-            className={`w-full bg-green-600 text-white py-2 px-4 rounded-md shadow-sm ${
-              paymentMethod === 'Cash/UPI' ? 'ring-2 ring-offset-2 ring-green-500' : ''
-            } hover:bg-green-700 focus:outline-none`}
+            onClick={() => continueWithPayment('Cash/UPI')}
+            disabled={loading}
+            className={`flex w-full items-center justify-between rounded-xl px-4 py-4 text-left shadow-sm transition ${
+              paymentMethod === 'Cash/UPI'
+                ? 'bg-emerald-700 text-white ring-2 ring-emerald-200'
+                : 'bg-emerald-50 text-emerald-900 hover:bg-emerald-100'
+            }`}
           >
-            Cash/UPI Payment On Delivery
+            <span className="flex items-center gap-3">
+              <FaMoneyBillWave />
+              <span className="font-bold">Cash/UPI Payment On Delivery</span>
+            </span>
+            {paymentMethod === 'Cash/UPI' && <FaCheckCircle />}
           </button>
 
-          {/* Online Payment Button */}
           {enableOnlinePayment && ( <button
             type="button"
-            onClick={() => handlePaymentSelection('Online')}
-            className={`w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm ${
-              paymentMethod === 'Online' ? 'ring-2 ring-offset-2 ring-indigo-500' : ''
-            } hover:bg-indigo-700 focus:outline-none`}
+            onClick={() => continueWithPayment('Online')}
+            disabled={loading}
+            className={`flex w-full items-center justify-between rounded-xl px-4 py-4 text-left shadow-sm transition ${
+              paymentMethod === 'Online'
+                ? 'bg-indigo-700 text-white ring-2 ring-indigo-200'
+                : 'bg-indigo-50 text-indigo-900 hover:bg-indigo-100'
+            }`}
           >
-            Online Payment
+            <span className="flex items-center gap-3">
+              <FaUniversity />
+              <span className="font-bold">Online Payment</span>
+            </span>
+            {paymentMethod === 'Online' && <FaCheckCircle />}
           </button>)}
         </div>
 
-        {/* Loading Indicator */}
-        {loading && <p className="text-blue-500 mt-4">Processing payment...</p>}
+        {loading && <p className="mt-4 rounded-xl bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700">Processing payment...</p>}
 
-        {/* Error Message */}
         {error && (
-          <p className="text-red-500 mt-4">
+          <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-red-600">
             {typeof error === 'string' ? error : error.message || 'An error occurred'}
           </p>
         )}
-
-        {/* Continue Button */}
-        <button
-          type="submit"
-          className="w-full bg-gray-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-4"
-          disabled={!paymentMethod || loading}
-        >
-          Continue
-        </button>
-      </form>
+      </div>
+      <PaymentConfirmModal
+        method={pendingPaymentMethod}
+        loading={loading}
+        onCancel={cancelPaymentConfirmation}
+        onConfirm={confirmPaymentSelection}
+      />
     </FormContainer>
+    </div>
   );
 };
 

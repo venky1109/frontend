@@ -1,5 +1,6 @@
-import React, { useRef , useEffect,useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaArrowLeft, FaHome, FaPrint, FaShoppingBag } from 'react-icons/fa';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { useGetOrderDetailsQuery } from '../slices/ordersApiSlice';
@@ -9,83 +10,54 @@ const OrderScreen = () => {
   const navigate = useNavigate();
   const { data: order, isLoading: queryLoading, error, refetch } = useGetOrderDetailsQuery(orderId);
   const printableContentRef = useRef(null);
-  const [loading, setLoading] = useState(true); // Track loading manually
-   // Conditionally set formattedOrderDate to avoid accessing order.createdAt before order is defined
-   useEffect(() => {
-    setLoading(true); // Set to true whenever orderId changes
-    refetch().then(() => setLoading(false)); // Refetch and update loading state
-  }, [orderId, refetch]);
-   const formattedOrderDate = order ? new Date(order.createdAt).toLocaleDateString('en-GB', { 
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).replace(/ /g, '-') : '';
+  const [loading, setLoading] = useState(true);
 
-  const handleContinueShopping = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    setLoading(true);
+    refetch().finally(() => setLoading(false));
+  }, [orderId, refetch]);
+
+  const formattedOrderDate = order
+    ? new Date(order.createdAt).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }).replace(/ /g, '-')
+    : '';
 
   const handlePrint = () => {
+    if (!printableContentRef.current) return;
+
     const printContents = printableContentRef.current.innerHTML;
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
       <html>
         <head>
-          <title></title>
+          <title>Invoice</title>
           <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
+            body { font-family: Arial, sans-serif; margin: 20px; color: #0f172a; }
             table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #f2f2f2; font-weight: bold; }
-            .text-right { text-align: right; }
-            .print-header { text-align: right; margin-bottom: 20px; }
-            .print-header img { max-width: 50px; }
+            .screen-only { display: none !important; }
+            .print-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+            .print-header h2 { flex: 1; text-align: center; margin: 0; }
+            .print-header img { max-width: 90px; }
+            .header-line { border: 0; border-top: 2px solid #ddd; margin: 10px 0; }
             .print-footer { text-align: center; margin-top: 20px; font-size: 0.9em; }
             .thank-you { font-weight: bold; font-size: 1.1em; }
-            @media screen {
-              .print-only { display: none !important; }
-            }
-            @media print {
-              .print-only { display: block !important; }
-              .screen-only { display: none !important; }
-            }
-              .print-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .print-header h2 {
-    flex: 1;
-    text-align: center;
-     align-self: flex-end;
-    margin: 0;
-  }
-  .print-header img {
-    max-width: 150px;
-    align-self: flex-end;
-  }
-    .header-line {
-    border: 0;
-    border-top: 2px solid #ddd; /* Adjust thickness and color */
-    margin: 10px 0;
-  }
           </style>
         </head>
         <body>
           <div class="print-header">
-  <h2>Invoice</h2>
-  <img src="/images/ManaKiranaLogo1024x1024.png" alt="Company Logo" /> <!-- Replace with actual logo path -->
-  
-</div>
-<hr class="header-line">
-
-  
+            <h2>Invoice</h2>
+            <img src="/images/icon-192.png" alt="Company Logo" />
+          </div>
+          <hr class="header-line">
           ${printContents}
-  
           <div class="print-footer">
-            <p class="thank-you">Thank you for your Shopping!</p>
-            <p>If you have any questions, feel free to contact us at customercare@manakirana.online</p>
+            <p class="thank-you">Thank you for shopping with Mana Kirana!</p>
+            <p>For help, contact customercare@manakirana.online</p>
           </div>
         </body>
       </html>
@@ -93,243 +65,168 @@ const OrderScreen = () => {
     printWindow.document.close();
     printWindow.print();
   };
-  if (loading || queryLoading) return <Loader />; // Use either loading state or queryLoading
 
+  if (loading || queryLoading) return <Loader />;
   if (error) return <Message variant="danger">{error?.data?.message || error.message}</Message>;
 
+  const statusSteps = [
+    { label: 'Placed', complete: true },
+    { label: 'Paid', complete: order.isPaid },
+    { label: 'Packed', complete: order.isPacked },
+    { label: 'Dispatched', complete: order.isDispatched },
+    { label: 'Delivered', complete: order.isDelivered },
+  ];
+
   return (
-    <>
-      
+    <div className="mt-16 mb-24 bg-gradient-to-b from-emerald-50/70 via-white to-white px-3 py-5 sm:mt-20 md:px-6">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-emerald-800 shadow-sm hover:bg-emerald-50"
+          >
+            <FaArrowLeft className="h-3.5 w-3.5" />
+            Back
+          </button>
+          <button
+            onClick={handlePrint}
+            className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-emerald-800"
+          >
+            <FaPrint className="h-3.5 w-3.5" />
+            Print
+          </button>
+        </div>
 
-      {/* Printable Section */}
-      <div ref={printableContentRef}>
-      {/* <h1 className="text-2xl font-semibold mt-20">
-       
-      </h1> */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8  mt-24 mb-20">
-          <div className="md:col-span-2">
-            {/* Customer and supplier details */}
-            <div className="bg-white p-4 rounded shadow mb-4">
-              <strong className="text-lg font-semibold"><u>Bill To/Ship To:</u></strong>
-              <div>
-              <strong className="text-md font-semibold"><i>Invoice Details:</i></strong>
-              <p><strong className="text-md font-semibold">Invoice Date:</strong> {formattedOrderDate}</p>
-</div>
-              <p>
-  {/* {order.isPaid ? <strong className="text-md font-semibold">Invoice Number</strong> : <strong>Order Number</strong>}: {order._id} */}
-  <div className="space-y-1">
-  {order.isPaid ? (
-    <>
-      <p><strong className="text-md font-semibold">Invoice Number</strong>: {order._id}</p>
-      <p><strong className="text-md font-semibold">Payment Reference</strong>: {order.orderId}</p>
-    </>
-  ) : (
-    <p><strong>Order Number</strong>: {order._id}</p>
-  )}
-</div>
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Order details</p>
+            <h1 className="text-2xl font-extrabold text-slate-950">Invoice #{order._id?.slice(-8)}</h1>
+          </div>
+          <span className={`rounded-full px-3 py-1 text-xs font-bold ${order.isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+            {order.isPaid ? 'Paid' : 'Pay on delivery'}
+          </span>
+        </div>
 
+        <div ref={printableContentRef} className="grid gap-4 md:grid-cols-[minmax(0,1fr)_22rem] md:items-start">
+          <div className="space-y-4">
+            <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
+              <div className="mb-3 flex items-center justify-between border-b border-slate-100 pb-3">
+                <h2 className="text-lg font-extrabold text-slate-950">Bill To / Ship To</h2>
+                <span className="text-xs font-bold text-slate-500">{formattedOrderDate}</span>
+              </div>
 
-</p>
-<strong className="text-md font-semibold"><i>Customer Details:</i></strong>
-              <p><strong className="text-md font-semibold">Name: </strong>{order.user.name}</p>
-              <p><strong className="text-md font-semibold">Phone Number: </strong><a href={`tel:${order.user.phoneNo}`}>{order.user.phoneNo}</a></p>
-              <p><strong className="text-md font-semibold">Address: </strong>{order.shippingAddress.street}, {order.shippingAddress.city} {order.shippingAddress.postalCode}</p>
-            </div>
+              <div className="grid gap-3 text-sm md:grid-cols-2">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Invoice</p>
+                  <p className="mt-1 break-all font-semibold text-slate-800">{order.isPaid ? order._id : `Order ${order._id}`}</p>
+                  {order.isPaid && order.orderId && (
+                    <p className="mt-1 break-all text-xs font-semibold text-slate-500">Payment Ref: {order.orderId}</p>
+                  )}
+                </div>
 
-            {/* Supplier Details */}
-            <div className="bg-white p-4 rounded shadow mb-4">
-              <strong className="text-lg font-semibold"><u>Supplier Details:</u></strong>
-              <p className='text-md font-semibold'>MANA KIRANA</p>
-              <p>5-85, Uppalaguptham, Near Laxmi Cheruvu, </p><p>Amalapuram, Samanasa, Dr BR Ambedkar Konaseema,</p><p> Andhra Pradesh, 533213</p>
-              <p><strong>GSTIN/UIN:</strong> 37AHPPV7362L1ZA</p>
-              <p><strong><i>fassai License Number:</i></strong>10124999000130</p>
-              <p><strong>For feedback/Complaints</strong></p>
-              <p><strong>Email:</strong> <a href="mailto:customercare@manakirana.online" className="text-blue-600">customercare@manakirana.online</a></p>
-              <p><strong>Call:</strong> <a href="tel:08856297898" className="text-blue-600">08856-297898</a></p>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Customer</p>
+                  <p className="mt-1 font-extrabold text-slate-900">{order.user.name}</p>
+                  <a href={`tel:${order.user.phoneNo}`} className="font-semibold text-emerald-700">{order.user.phoneNo}</a>
+                  <p className="mt-1 text-slate-600">
+                    {order.shippingAddress.street}, {order.shippingAddress.city} {order.shippingAddress.postalCode}
+                  </p>
+                </div>
+              </div>
+            </section>
 
-              {/* Payment Status */}
-              {order.isPaid ? (
-                <Message variant="success"><strong>Payment Status:</strong> Paid</Message>
-              ) : (
-                <Message variant="info">
-                  <b>Please Pay Amount of <span className="text-brown-600">&#x20b9;{order.totalPrice}</span> at Delivery time</b>
-                </Message>
-              )}
-            </div>
+            <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
+              <h2 className="text-lg font-extrabold text-slate-950">Supplier Details</h2>
+              <div className="mt-3 space-y-1 text-sm text-slate-700">
+                <p className="font-extrabold text-emerald-800">MANA KIRANA</p>
+                <p>5-85, Uppalaguptham, Near Laxmi Cheruvu, Amalapuram, Samanasa, Dr BR Ambedkar Konaseema, Andhra Pradesh, 533213</p>
+                <p><strong>GSTIN/UIN:</strong> 37AHPPV7362L1ZA</p>
+                <p><strong>FSSAI License:</strong> 10124999000130</p>
+                <p><strong>Email:</strong> <a href="mailto:customercare@manakirana.online" className="text-blue-600">customercare@manakirana.online</a></p>
+                <p><strong>Call:</strong> <a href="tel:08856297898" className="text-blue-600">08856-297898</a></p>
+              </div>
+            </section>
 
-            {/* Order Items Section */}
-            <div className="bg-white p-4 rounded shadow mb-4">
-              <h2 className="text-xl font-semibold">Order Items</h2>
+            <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-lg font-extrabold text-slate-950">Order Items</h2>
+                <FaShoppingBag className="text-emerald-700" />
+              </div>
+
               {order.orderItems.length === 0 ? (
                 <Message>Order is empty</Message>
               ) : (
-                <div className="overflow-x-auto">
-  <table className="min-w-full border border-gray-200">
-    <thead>
-    <tr>
-        <th className="text-left px-4 py-2 min-w-[150px] text-sm sm:text-base">Name</th>
-        <th className="px-4 py-2 min-w-[120px] text-sm sm:text-base">Brand</th>
-        <th className="px-4 py-2 min-w-[80px] text-sm sm:text-base">Weight</th>
-        <th className="px-4 py-2 min-w-[80px] text-sm sm:text-base">Qty</th>
-        <th className="px-4 py-2 min-w-[80px] text-sm sm:text-base">Price</th>
-        <th className="px-4 py-2 min-w-[120px] text-sm sm:text-base">Qty x Price</th>
-        <th className="px-4 py-2 min-w-[100px] text-sm sm:text-base">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {order.orderItems.map((item, index) => (
-        <tr key={index} className="text-sm sm:text-base">
-          <td className="text-left px-2 py-2">{item.name}</td>
-          <td className="px-2 py-2">{item.brand}</td>
-          <td className="px-2 py-2">{item.quantity} {item.units}</td>
-          <td className="px-2 py-2">{item.qty}</td>
-          <td className="px-2 py-2">&#x20b9;{item.price}</td>
-          <td className="px-2 py-2">{item.qty} x &#x20b9;{item.price}</td>
-          <td className="px-2 py-2">&#x20b9;{item.price * item.qty}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-
+                <div className="space-y-2">
+                  {order.orderItems.map((item, index) => (
+                    <div key={index} className="grid grid-cols-[minmax(0,1fr)_5.5rem] gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
+                      <div className="min-w-0">
+                        <p className="line-clamp-2 text-sm font-extrabold leading-snug text-slate-950">{item.name}</p>
+                        <div className="mt-1 flex flex-wrap gap-1 text-[11px] font-semibold text-slate-600">
+                          <span className="rounded-full bg-white px-2 py-0.5">{item.brand}</span>
+                          <span className="rounded-full bg-white px-2 py-0.5">{item.quantity} {item.units}</span>
+                          <span className="rounded-full bg-white px-2 py-0.5">Qty {item.qty}</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-extrabold text-slate-950">&#x20b9;{item.price * item.qty}</p>
+                        <p className="text-[11px] font-semibold text-slate-500">{item.qty} x &#x20b9;{item.price}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
-            </div>
-
-            {/* Order Progress Track with Green Progress Line */}
-            
+            </section>
           </div>
 
-          {/* Order Summary */}
-          <div>
-            <div className="bg-white p-4 rounded shadow mb-4">
-              <h2 className="text-xl font-semibold">Order Summary</h2>
-              <table className="min-w-full border border-gray-200 mb-4">
-              <tbody>
-                <tr>
-                  <td className="text-left">Total Products Price</td>
-                  <td>&#x20b9;{order.itemsPrice}</td>
-                </tr>
-                <tr>
-                  <td className="text-left">Shipping</td>
-                  <td>&#x20b9;{order.shippingPrice}</td>
-                </tr>
-                <tr>
-                  <td className="text-left"><strong>Grand Total</strong></td>
-                  <td><strong>&#x20b9;{order.totalPrice}</strong></td>
-                </tr>
-              </tbody>
-            </table>
-            </div>
-
-            {/* Share and Print Buttons */}
-            <div className="print-only screen-only">
-            {/* <div className="flex gap-4 mt-4"> */}
-              {/* <button onClick={handleNativeShare} className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500">
-                Share
-              </button> */}
-             
-            {/* </div> */}
-
-            {/* Continue Shopping Button */}
-            <button onClick={handleContinueShopping} className="bg-green-800 text-white py-2 px-4 rounded mt-4 w-full hover:bg-green-600">
-              Continue Shopping
-            </button>
-            <div className="flex justify-center mt-5">
-  <button
-    onClick={handlePrint}
-    className="bg-green-900 text-white py-2 px-4 rounded hover:bg-green-500"
-  >
-    Print Invoice
-  </button>
-</div>
-
-
-            <div className="bg-white mt-4 p-4 rounded shadow mb-4">
-              <h2 className="text-xl font-semibold">Order Track</h2>
-              <div className="text-gray-500">
-                {order.isDelivered ? (
-                  <Message variant="success">Order Delivered</Message>
-                ) : order.isDispatched ? (
-                  <Message variant="info">Order Dispatched and Delivery In Progress</Message>
-                ) : order.isPacked ? (
-                  <Message variant="info">Order Packed and Ready for Dispatch</Message>
-                ) : (
-                  <Message variant="info"><b>Order Successfully Placed and Packing In Progress</b></Message>
-                )}
+          <aside className="space-y-4 md:sticky md:top-24">
+            <section className="rounded-2xl border border-emerald-100 bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.08)]">
+              <h2 className="mb-3 text-lg font-extrabold text-slate-950">Order Summary</h2>
+              <div className="space-y-2 text-sm font-semibold text-slate-600">
+                <div className="flex justify-between">
+                  <span>Total Products Price</span>
+                  <span>&#x20b9;{order.itemsPrice}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>&#x20b9;{order.shippingPrice}</span>
+                </div>
+                <div className="mt-3 flex justify-between border-t border-slate-100 pt-3 text-lg font-extrabold text-slate-950">
+                  <span>Grand Total</span>
+                  <span>&#x20b9;{order.totalPrice}</span>
+                </div>
               </div>
+            </section>
 
-              {/* Vertical Progress Bar with Milestones */}
-              <div className="relative w-1/2 mx-auto mt-4">
-  {/* Background Red Line */}
-  <div className="absolute top-0 left-1 w-2 bg-red-500 h-full rounded"></div>
+            <section className="rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
+              <h2 className="mb-3 text-lg font-extrabold text-slate-950">Order Track</h2>
+              <div className="space-y-3">
+                {statusSteps.map((step) => (
+                  <div key={step.label} className="flex items-center gap-3">
+                    <span className={`h-3 w-3 rounded-full ${step.complete ? 'bg-emerald-700' : 'bg-slate-300'}`} />
+                    <span className={`text-sm font-bold ${step.complete ? 'text-emerald-800' : 'text-slate-500'}`}>{step.label}</span>
+                  </div>
+                ))}
+              </div>
+              {!order.isPaid && (
+                <div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-bold text-amber-800">
+                  Please pay &#x20b9;{order.totalPrice} at delivery time.
+                </div>
+              )}
+            </section>
 
-  {/* Green Progress Line */}
-  <div
-    className="absolute top-0 left-1 w-2 bg-green-500 rounded transition-all duration-500"
-    style={{
-      height: order.isDelivered
-        ? '100%' // 100% if delivered
-        : order.isDispatched
-        ? '85%' // 85% if dispatched
-        : order.isPacked
-        ? '65%' // 65% if packed
-        : order.isPaid
-        ? '50%' // 50% if paid but not packed
-        : '25%', // 25% if only placed
-    }}
-  ></div>
-
-  {/* Milestones */}
-  <div className="relative flex flex-col items-start space-y-8 mt-4">
-    {/* Order Paid (Moved Up if Packed is False) */}
-  
-
-    <div className="flex items-center space-x-4">
-      <div className={`w-4 h-4 rounded-full ${order ? 'bg-green-800' : 'bg-red-800'}`}></div>
-      <span className="text-sm font-semibold text-gray-500">Order Placed</span>
-    </div>
-    {order.isPaid && !order.isPacked && (
-      <div className="flex items-center space-x-4">
-        <div className="w-4 h-4 rounded-full bg-green-800"></div>
-        <span className="text-sm font-semibold text-gray-500">Order Paid</span>
-      </div>
-    )}
-
-    {/* Order Packed */}
-    <div className="flex items-center space-x-4">
-      <div className={`w-4 h-4 rounded-full ${order.isPacked ? 'bg-green-800' : 'bg-red-800'}`}></div>
-      <span className="text-sm font-semibold text-gray-500">Order Packed</span>
-    </div>
-
-    {/* Order Dispatched */}
-    <div className="flex items-center space-x-4">
-      <div className={`w-4 h-4 rounded-full ${order.isDispatched ? 'bg-green-800' : 'bg-red-800'}`}></div>
-      <span className="text-sm font-semibold text-gray-500">Order Dispatched</span>
-    </div>
-
-    {/* Order Paid (Standard Position if Packed is True) */}
-    {!(!order.isPacked && order.isPaid) && (
-      <div className="flex items-center space-x-4">
-        <div className={`w-4 h-4 rounded-full ${order.isPaid ? 'bg-green-800' : 'bg-red-800'}`}></div>
-        <span className="text-sm font-semibold text-gray-500">Order Paid</span>
-      </div>
-    )}
-
-    {/* Order Delivered */}
-    <div className="flex items-center space-x-4">
-      <div className={`w-4 h-4 rounded-full ${order.isDelivered ? 'bg-green-800' : 'bg-red-800'}`}></div>
-      <span className="text-sm font-semibold text-gray-500">Order Delivered</span>
-    </div>
-  </div>
-</div>
-
+            <div className="screen-only grid gap-2">
+              <button
+                onClick={() => navigate('/')}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800"
+              >
+                <FaHome className="h-4 w-4" />
+                Continue Shopping
+              </button>
             </div>
-          </div>
-          </div>
+          </aside>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

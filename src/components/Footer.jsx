@@ -2,7 +2,6 @@ import {  useState, useCallback  } from 'react';
 import { Link ,useLocation, useNavigate } from 'react-router-dom';
 import {  FaWhatsapp } from 'react-icons/fa';
 import { TbDeviceLandlinePhone } from "react-icons/tb";
-import logo from "../assets/ManaKiranaLogoWithName4.mp4";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import homeConfig from '../HomeConfig.json'; // Import the homeConfig file
@@ -35,9 +34,18 @@ const Footer = ({ scrollToCategory }) => {
     navigate(`/category/${categoryName}`);
   }, [navigate]);
 
-  const navItemClass = "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-0.5 text-[9px] font-semibold leading-tight text-slate-600 transition";
-  const activeNavItemClass = "bg-white/80 text-emerald-800 shadow-sm ring-1 ring-emerald-100";
-  const iconWrapClass = "flex h-6 w-6 items-center justify-center rounded-full";
+  const handleCategoriesClick = useCallback(() => {
+    if (location.pathname === '/') {
+      document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.history.replaceState(null, '', '/#categories');
+    } else {
+      navigate('/#categories');
+    }
+  }, [location.pathname, navigate]);
+
+  const navItemClass = "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-0.5 text-[9px] font-bold leading-tight tracking-wide text-slate-600 transition";
+  const activeNavItemClass = "bg-white text-emerald-800 shadow-[0_2px_8px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-emerald-100";
+  const iconWrapClass = "flex h-6 w-6 items-center justify-center rounded-full shadow-[0_1px_4px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.85)]";
 
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
@@ -87,20 +95,16 @@ const Footer = ({ scrollToCategory }) => {
   return (
     <>
       {/* Mobile Footer */}
-      <footer className="fixed bottom-0 left-0 z-30 block w-full border-t border-emerald-200 bg-gradient-to-r from-lime-100 via-white to-emerald-100 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur md:hidden">
-        <nav className="relative mx-auto flex max-w-md items-center gap-1 px-2 py-0.5">
-          <Link to="/" className={`${navItemClass} ${location.pathname === '/' ? activeNavItemClass : ''}`}>
-            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
-              <video
-                src={logo}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="h-5 w-5 object-contain"
+      <footer className="fixed bottom-0 left-0 z-30 block w-full border-t border-emerald-100 bg-gradient-to-t from-white via-emerald-50 to-lime-50 shadow-[0_-4px_14px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.85)] md:hidden">
+        <nav className="relative mx-auto flex max-w-md items-center gap-1 px-2 py-0.5 font-sans">
+          <Link to="/" className={`${navItemClass} ${location.pathname === '/' ? activeNavItemClass : ''}`} aria-label="Home">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_1px_4px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-emerald-100">
+              <img
+                src="/images/icon-192.png"
+                alt="ManaKirana"
+                className="h-7 w-7 rounded-full object-contain"
               />
             </span>
-            <span className="truncate">Home</span>
           </Link>
 
           <button
@@ -108,7 +112,7 @@ const Footer = ({ scrollToCategory }) => {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             className={`${navItemClass} ${isMenuOpen ? activeNavItemClass : ''}`}
           >
-            <span className={`${iconWrapClass} bg-emerald-50`}>
+            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
               <RiCustomerService2Fill className="h-4 w-4 text-emerald-800" />
             </span>
             <span className="truncate">Order</span>
@@ -140,10 +144,10 @@ const Footer = ({ scrollToCategory }) => {
 
           <button
             type="button"
-            onClick={() => navigate('/#categories')}
+            onClick={handleCategoriesClick}
             className={`${navItemClass} ${location.hash === '#categories' ? activeNavItemClass : ''}`}
           >
-            <span className={`${iconWrapClass} bg-emerald-50`}>
+            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
               <TbCategory2 className="h-4 w-4 text-emerald-800" />
             </span>
             <span className="truncate">Categories</span>
@@ -154,7 +158,7 @@ const Footer = ({ scrollToCategory }) => {
             onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")}
             className={`${navItemClass} ${location.pathname.includes('/category/BUDGET') ? activeNavItemClass : ''}`}
           >
-            <span className={`${iconWrapClass} bg-emerald-50`}>
+            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
               <span className="relative h-6 w-6">
                 <MdOutlineSavings className="absolute inset-0 h-6 w-6 text-emerald-800" />
                 <HiOutlineCurrencyRupee className="absolute inset-0 m-auto h-3 w-3 text-emerald-800" />

@@ -14,6 +14,7 @@ const CategoryProductSection = ({ category }) => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const railRef = useRef(null);
+  const dragStateRef = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
   const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const { data, isLoading, error } = useGetProductsByCategoryQuery(category.name);
@@ -60,6 +61,70 @@ const CategoryProductSection = ({ category }) => {
     return () => clearInterval(interval);
   }, [isSectionVisible, isUserInteracting, products.length]);
 
+  const handleRailPointerDown = useCallback((event) => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    dragStateRef.current = {
+      isDown: true,
+      startX: event.clientX,
+      scrollLeft: rail.scrollLeft,
+      didDrag: false,
+    };
+    setIsUserInteracting(true);
+    rail.style.scrollBehavior = 'auto';
+    rail.classList.add('cursor-grabbing');
+    rail.setPointerCapture?.(event.pointerId);
+  }, []);
+
+  const stopRailDrag = useCallback((event) => {
+    const rail = railRef.current;
+    dragStateRef.current.isDown = false;
+    rail?.classList.remove('cursor-grabbing');
+    if (rail) {
+      rail.style.scrollBehavior = '';
+      if (event?.pointerId && rail.hasPointerCapture?.(event.pointerId)) {
+        rail.releasePointerCapture(event.pointerId);
+      }
+    }
+    setIsUserInteracting(false);
+  }, []);
+
+  const handleRailPointerMove = useCallback((event) => {
+    const rail = railRef.current;
+    const dragState = dragStateRef.current;
+    if (!rail || !dragState.isDown) return;
+
+    event.preventDefault();
+    const walk = (event.clientX - dragState.startX) * 1.25;
+
+    if (Math.abs(walk) > 4) {
+      dragState.didDrag = true;
+    }
+
+    rail.scrollLeft = dragState.scrollLeft - walk;
+  }, []);
+
+  const handleRailClickCapture = useCallback((event) => {
+    if (dragStateRef.current.didDrag) {
+      event.preventDefault();
+      event.stopPropagation();
+      dragStateRef.current.didDrag = false;
+    }
+  }, []);
+
+  const handleRailWheel = useCallback((event) => {
+    const rail = railRef.current;
+    if (!rail || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+
+    setIsUserInteracting(true);
+    rail.scrollBy({
+      left: event.deltaY,
+      behavior: 'smooth',
+    });
+    window.setTimeout(() => setIsUserInteracting(false), 600);
+  }, []);
+
   if (isLoading) {
     return (
       <section ref={sectionRef} className="rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
@@ -96,17 +161,24 @@ const CategoryProductSection = ({ category }) => {
       <Suspense fallback={<Loader />}>
         <div
           ref={railRef}
-          className="flex snap-x snap-mandatory gap-1 overflow-x-auto rounded-lg bg-gray-100 p-1 pb-2 scrollbar-hide"
+          className="flex cursor-grab snap-x snap-mandatory gap-1 overflow-x-auto scroll-smooth rounded-lg bg-gray-100 p-1 pb-2 scrollbar-hide select-none"
+          style={{ touchAction: 'pan-y' }}
           onMouseEnter={() => setIsUserInteracting(true)}
-          onMouseLeave={() => setIsUserInteracting(false)}
+          onMouseLeave={stopRailDrag}
+          onPointerDown={handleRailPointerDown}
+          onPointerUp={stopRailDrag}
+          onPointerCancel={stopRailDrag}
+          onPointerMove={handleRailPointerMove}
+          onClickCapture={handleRailClickCapture}
+          onWheel={handleRailWheel}
           onTouchStart={() => setIsUserInteracting(true)}
           onTouchEnd={() => setIsUserInteracting(false)}
           onFocus={() => setIsUserInteracting(true)}
           onBlur={() => setIsUserInteracting(false)}
         >
           {railProducts.map((product, index) => (
-            <div key={`${product._id}-${index}`} className="flex w-[32%] min-w-[32%] snap-start sm:w-[32%] sm:min-w-[32%] md:w-[23%] md:min-w-[23%] lg:w-[19%] lg:min-w-[19%]">
-              <Product product={product} />
+            <div key={`${product._id}-${index}`} className="flex min-w-0 shrink-0 grow-0 basis-[calc((100%_-_0.5rem)/3)] snap-start md:basis-[calc((100%_-_0.75rem)/4)] lg:basis-[calc((100%_-_1rem)/5)]">
+              <Product product={product} compactRibbon />
             </div>
           ))}
         </div>
