@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Form, Button, Row, Col } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTimes } from 'react-icons/fa';
 
@@ -16,12 +15,10 @@ const ProfileScreen = () => {
   const [phoneNo, setPhoneNo] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
 
   const { userInfo } = useSelector((state) => state.auth);
-
   const { data: orders, isLoading, error } = useGetMyOrdersQuery();
-
-  // console.log(orders);
   const [updateProfile, { isLoading: loadingUpdateProfile }] =
     useProfileMutation();
 
@@ -31,6 +28,7 @@ const ProfileScreen = () => {
   }, [userInfo.phoneNo, userInfo.name]);
 
   const dispatch = useDispatch();
+
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -38,9 +36,6 @@ const ProfileScreen = () => {
     } else {
       try {
         const res = await updateProfile({
-          // NOTE: here we don't need the _id in the request payload as this is
-          // not used in our controller.
-          // _id: userInfo._id,
           name,
           phoneNo,
           password,
@@ -52,132 +47,155 @@ const ProfileScreen = () => {
       }
     }
   };
-  const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
 
   const handlePhoneNumberChange = (event) => {
     const inputPhoneNumber = event.target.value;
     setPhoneNo(inputPhoneNumber);
-
-    // Regular expression for a basic phone number validation
-    const phoneRegex = /^[0-9]{10}$/;
-
-    setIsValidPhoneNumber(phoneRegex.test(inputPhoneNumber));
+    setIsValidPhoneNumber(/^[0-9]{10}$/.test(inputPhoneNumber));
   };
 
   return (
-    <Row>
-      <Col md={3}>
-        <h2>User Profile</h2>
+    <div className="grid gap-6 lg:grid-cols-[minmax(280px,360px)_1fr]">
+      <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900">User Profile</h2>
 
-        <Form onSubmit={submitHandler}>
-          <Form.Group className='my-2' controlId='name'>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter name'
+        <form onSubmit={submitHandler} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="mb-1 block text-sm font-medium text-gray-700">
+              Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
+            />
+          </div>
 
-          <Form.Group className='my-2' controlId='tel'>
-            <Form.Label>Enter Phone Number</Form.Label>
-            <Form.Control
-              type='tel'
-              placeholder='Enter Phone Number'
+          <div>
+            <label htmlFor="tel" className="mb-1 block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
+            <input
+              id="tel"
+              type="tel"
+              placeholder="Enter Phone Number"
               value={phoneNo}
               onChange={handlePhoneNumberChange}
-              isInvalid={!isValidPhoneNumber}
-            ></Form.Control>
-               <Form.Text className="text-muted">
-          Please enter a 10-digit phone number.
-        </Form.Text>
-        <Form.Control.Feedback type="invalid">
-          Please enter a valid 10-digit phone number.
-        </Form.Control.Feedback>
-          </Form.Group>
+              className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                isValidPhoneNumber
+                  ? 'border-gray-300 focus:border-green-600 focus:ring-green-100'
+                  : 'border-red-500 focus:border-red-500 focus:ring-red-100'
+              }`}
+            />
+            <p className={`mt-1 text-xs ${isValidPhoneNumber ? 'text-gray-500' : 'text-red-600'}`}>
+              Please enter a valid 10-digit phone number.
+            </p>
+          </div>
 
-          <Form.Group className='my-2' controlId='password'>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type='password'
-              placeholder='Enter password'
+          <div>
+            <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
+            />
+          </div>
 
-          <Form.Group className='my-2' controlId='confirmPassword'>
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type='password'
-              placeholder='Confirm password'
+          <div>
+            <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium text-gray-700">
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
+            />
+          </div>
 
-          <Button type='submit' variant='primary'>
+          <button
+            type="submit"
+            className="w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
             Update
-          </Button>
+          </button>
           {loadingUpdateProfile && <Loader />}
-        </Form>
-      </Col>
-      <Col md={9}>
-        <h2>My Orders</h2>
+        </form>
+      </section>
+
+      <section className="min-w-0 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900">My Orders</h2>
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <Message variant='danger'>
+          <Message variant="danger">
             {error?.data?.message || error.error}
           </Message>
         ) : (
-          <Table striped hover responsive className='table-sm'>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td> 
-                  <td>{order.totalPrice}</td>
-                  <td>
-                    {order.isPaid ? (
-                       order.paidAt.substring(0, 10)
-                      //order.paidAt
-                      ) : (
-                      <FaTimes style={{ color: 'red' }} />
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: 'red' }} />
-                    )}
-                  </td>
-                  <td>
-                    <LinkContainer to={`/order/${order._id}`}>
-                      <Button className='btn-sm' variant='light'>
-                        Details
-                      </Button>
-                    </LinkContainer>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 text-left text-sm">
+              <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                <tr>
+                  <th className="px-3 py-2 text-left">ID</th>
+                  <th className="px-3 py-2 text-left">Date</th>
+                  <th className="px-3 py-2 text-right">Total</th>
+                  <th className="px-3 py-2 text-center">Paid</th>
+                  <th className="px-3 py-2 text-center">Delivered</th>
+                  <th className="px-3 py-2"></th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody className="divide-y divide-gray-100 bg-white">
+                {orders.map((order) => (
+                  <tr key={order._id} className="hover:bg-gray-50">
+                    <td className="max-w-[180px] truncate px-3 py-3 font-medium text-gray-700">
+                      {order._id}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-gray-600">
+                      {order.createdAt.substring(0, 10)}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-right font-semibold text-gray-900">
+                      {order.totalPrice}
+                    </td>
+                    <td className="px-3 py-3 text-center text-gray-600">
+                      {order.isPaid ? (
+                        order.paidAt.substring(0, 10)
+                      ) : (
+                        <FaTimes className="mx-auto text-red-600" />
+                      )}
+                    </td>
+                    <td className="px-3 py-3 text-center text-gray-600">
+                      {order.isDelivered ? (
+                        order.deliveredAt.substring(0, 10)
+                      ) : (
+                        <FaTimes className="mx-auto text-red-600" />
+                      )}
+                    </td>
+                    <td className="px-3 py-3 text-right">
+                      <Link
+                        to={`/order/${order._id}`}
+                        className="inline-flex rounded-md border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100"
+                      >
+                        Details
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-      </Col>
-    </Row>
+      </section>
+    </div>
   );
 };
 

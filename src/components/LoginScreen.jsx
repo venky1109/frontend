@@ -63,7 +63,7 @@ const LoginScreen = ({ onClose }) => {
   };
 
   return (
-    <div className="max-w-md mt-20 mx-auto p-4 bg-white shadow-md rounded-lg">
+    <div className="w-full max-w-md mx-auto bg-white">
       <ClickOutsideWrapper onOutsideClick={onClose}>
       {screen === 'login' && (
         <>

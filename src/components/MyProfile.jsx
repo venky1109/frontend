@@ -159,9 +159,9 @@ const MyProfile = ({ onProfileUpdate }) => {
   };
 
   return (
-    <div className="p-4 mt-1 bg-white shadow-md rounded-lg max-w-lg mx-auto mt-8">
-      <h2 className="text-xl font-semibold mb-4">User Profile</h2>
-      <form onSubmit={submitHandler} className="space-y-4">
+    <div className="w-full min-w-0 bg-white">
+      <h2 className="mb-3 text-lg font-semibold text-gray-900">User Profile</h2>
+      <form onSubmit={submitHandler} className="space-y-3">
         <div className="space-y-1">
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Name
@@ -169,7 +169,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           <input
             type="text"
             id="name"
-            className="w-full p-2 border border-gray-400 rounded"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
             // placeholder="Enter name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -183,7 +183,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           <input
             type="tel"
             id="tel"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600"
             value={phoneNo}
             disabled
           />
@@ -196,7 +196,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           <input
             type="text"
             id="address"
-            className="w-full p-2 border border-gray-400 rounded"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
             placeholder="Enter your street address"
             value={deliveryAddress}
             onChange={(e) => setDeliveryAddress(e.target.value)}
@@ -208,7 +208,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           <input
             type="text"
             id="city"
-            className="w-full p-2 border border-gray-400 rounded"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
             placeholder="Enter your city"
             value={city}
             onChange={(e) => setCity(e.target.value)}
@@ -220,7 +220,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           <input
             type="text"
             id="postalCode"
-            className="w-full p-2 border border-gray-400 rounded"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
             placeholder="Enter your postal code"
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
@@ -229,7 +229,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           <button
             type="button"
             onClick={handleFetchLocationClick}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 mt-4"
+            className="mt-2 w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             Use Current Location
           </button>
@@ -253,7 +253,7 @@ const MyProfile = ({ onProfileUpdate }) => {
         <button
           type="button"
           onClick={handlePasswordResetClick}
-          className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          className="w-full rounded-md border border-green-700 bg-white px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           {showPasswordFields ? 'Hide Password Fields' : 'Reset Password'}
         </button>
@@ -267,7 +267,7 @@ const MyProfile = ({ onProfileUpdate }) => {
               <input
                 type="password"
                 id="password"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
                 placeholder="Enter new password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -281,7 +281,7 @@ const MyProfile = ({ onProfileUpdate }) => {
               <input
                 type="password"
                 id="confirmPassword"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -290,7 +290,7 @@ const MyProfile = ({ onProfileUpdate }) => {
           </>
         )}
 
-        <button type="submit" className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+        <button type="submit" className="w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500">
           Update
         </button>
         {loadingUpdateProfile && <Loader />}

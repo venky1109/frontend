@@ -1,19 +1,30 @@
-import { useState, useEffect,lazy, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useForgotPasswordMutation } from '../slices/usersApiSlice'; // Ensure this API slice exists
-import { setCredentials } from '../slices/authSlice'; // Correctly importing setCredentials
+import { useForgotPasswordMutation } from '../slices/usersApiSlice';
+import { setCredentials } from '../slices/authSlice';
 import { toast, Toaster } from "react-hot-toast";
 import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { CgSpinner } from "react-icons/cg";
 import OtpInput from "otp-input-react";
-// import PhoneInput from "react-phone-input-2";
-// import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import Loader from './Loader';
-const PhoneInput = lazy(() => import("react-phone-input-2"));
 
-const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
+const otpRootStyle = {
+  width: '100%',
+  justifyContent: 'space-between',
+  gap: '0.25rem',
+};
+
+const otpInputStyles = {
+  width: '2rem',
+  height: '2.25rem',
+  marginRight: 0,
+};
+
+const ForgotPasswordScreen = ({ onSwitchToLogin }) => {
   const [otp, setOtp] = useState("");
   const [ph, setPh] = useState("");
   const [sendOTPloading, setSendOTPloading] = useState(false);
@@ -27,15 +38,10 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
   const [isButtonDisabled, setButtonDisabled] = useState(true);
   const [isVButtonDisabled, setVButtonDisabled] = useState(false);
 
-  const [forgotPassword, { isLoading }] = useForgotPasswordMutation(); // Similar to register mutation
-
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
   useEffect(() => {
-    if (ph && ph.trim() !== '' && ph.length === 12) {
-      setButtonDisabled(false);
-    } else {
-      setButtonDisabled(true);
-    }
+    setButtonDisabled(!(ph && ph.trim() !== '' && ph.length === 12));
   }, [ph]);
 
   const onCaptchVerify = () => {
@@ -45,7 +51,7 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
         "recaptcha-container",
         {
           size: "invisible",
-          callback: (response) => {
+          callback: () => {
             onRequestOTP();
           },
           "expired-callback": () => {},
@@ -108,83 +114,94 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="w-full max-w-md mx-auto bg-white">
       <Toaster toastOptions={{ duration: 4000 }} />
       <div id="recaptcha-container"></div>
-      <h1 className="mb-4 text-center text-green-700 text-lg md:text-xl bg-gray-100 p-2 rounded-lg shadow-sm">
+      <h1 className="mb-4 rounded-md bg-gray-100 p-2 text-center text-lg font-semibold text-green-700 shadow-sm">
         Forgot Password
       </h1>
-      <form onSubmit={submitHandler} className="space-y-4">
+      <form onSubmit={submitHandler} className="space-y-3">
         <div>
-          <label htmlFor="phone" className="block text-gray-700">Phone Number</label>
-            <Suspense fallback={<div>📞 Loading phone input...</div>}>
+          <label htmlFor="forgot-phone" className="mb-1 block text-sm font-medium text-gray-700">
+            Phone Number
+          </label>
           <PhoneInput
-            country={"in"}
+            country="in"
             value={ph}
             onChange={(value) => setPh(value)}
-            className="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            containerClass="w-full"
+            buttonClass="!border-gray-300 !rounded-l-md"
+            inputClass="!h-10 !w-full !rounded-md !border-gray-300 !pl-12 !text-sm focus:!border-green-600 focus:!shadow-none"
+            inputProps={{ id: 'forgot-phone', inputMode: 'numeric' }}
             disableDropdown
-            inputStyle={{ width: '100%', padding: '1rem', borderRadius: '0.375rem' }}
+            countryCodeEditable={false}
           />
-          </Suspense>
         </div>
         <button
           type="button"
           onClick={onRequestOTP}
-          className={`w-full py-2 px-4 rounded-lg bg-green-700 text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${isButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
+          className={`w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${isButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
           disabled={isButtonDisabled}
         >
-          {sendOTPloading && <CgSpinner size={20} className="animate-spin inline-block mr-2" />}
+          {sendOTPloading && <CgSpinner size={20} className="mr-2 inline-block animate-spin" />}
           Send OTP via SMS
         </button>
         {showOTP && (
           <>
-            <OtpInput
-              value={otp}
-              onChange={setOtp}
-              OTPLength={6}
-              otpType="number"
-              autoFocus
-              className="opt-container"
-            />
+            <div className="opt-container mt-4 flex min-w-0 justify-center overflow-hidden">
+              <OtpInput
+                value={otp}
+                onChange={setOtp}
+                OTPLength={6}
+                otpType="number"
+                autoFocus
+                style={otpRootStyle}
+                inputStyles={otpInputStyles}
+                inputClassName="rounded-md border border-gray-300 text-center text-sm focus:border-green-600 focus:outline-none"
+              />
+            </div>
             <button
               type="button"
               onClick={verifyOTP}
-              className={`w-full py-2 px-4 rounded-lg bg-green-700 text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${isVButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
+              className={`w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 ${isVButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
               disabled={isVButtonDisabled}
             >
-              {sendVerifyOTPloading && <CgSpinner size={20} className="animate-spin inline-block mr-2" />}
+              {sendVerifyOTPloading && <CgSpinner size={20} className="mr-2 inline-block animate-spin" />}
               Verify OTP
             </button>
             {user && (
               <>
                 <div>
-                  <label htmlFor="password" className="block text-gray-700">New Password</label>
+                  <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
+                    New Password
+                  </label>
                   <input
                     type="password"
                     id="password"
                     placeholder="Enter your new password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-gray-700">Confirm New Password</label>
+                  <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium text-gray-700">
+                    Confirm New Password
+                  </label>
                   <input
                     type="password"
                     id="confirmPassword"
                     placeholder="Confirm your new password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
                     required
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 px-4 mt-4 rounded-lg bg-green-700 text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="mt-4 w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
                   disabled={isLoading}
                 >
                   Reset Password
@@ -194,12 +211,12 @@ const ForgotPasswordScreen = ({ onClose, onSwitchToLogin }) => {
           </>
         )}
       </form>
-      <div className="text-center mt-4">
+      <div className="mt-4 text-center">
         <span className="text-gray-600">Remember your password? </span>
         <button
           type="button"
           onClick={onSwitchToLogin}
-          className="text-green-700 hover:underline"
+          className="font-semibold text-green-700 hover:underline"
         >
           Login
         </button>

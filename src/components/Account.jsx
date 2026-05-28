@@ -29,17 +29,17 @@ const Account = ({ onClose }) => {  // Accept onClose as a prop
   const handleProfileUpdate = () => {
     // Logic to handle profile/address update
     // After updating, close the Account component and trigger a refresh in ShippingScreen
-    onClose();  // Call onClose to close the Account component and refresh the parent
+    onClose?.();  // Call onClose to close the Account component and refresh the parent
   };
 
   return (
     <div className="flex flex-col h-full">
        {/* <ClickOutsideWrapper onOutsideClick={onClose}> */}
       <nav>
-        <ul className="flex space-x-2 border-b">
-          <li>
+        <ul className="grid grid-cols-2 gap-2 border-b border-gray-200">
+          <li className="min-w-0">
             <button
-              className={`px-2 py-2 font-semibold text-lg ${
+              className={`w-full px-2 py-2 text-sm font-semibold ${
                 activeTab === 'profile'
                   ? 'border-b-2 border-green-500 text-green-700 bg-gray-100'
                   : 'text-gray-700 bg-white hover:bg-gray-200'
@@ -49,9 +49,9 @@ const Account = ({ onClose }) => {  // Accept onClose as a prop
               My Profile
             </button>
           </li>
-          <li>
+          <li className="min-w-0">
             <button
-              className={`px-2 py-2 font-semibold text-lg ${
+              className={`w-full px-2 py-2 text-sm font-semibold ${
                 activeTab === 'orders'
                   ? 'border-b-2 border-green-500 text-green-700 bg-gray-100'
                   : 'text-gray-700 bg-white hover:bg-gray-200'
