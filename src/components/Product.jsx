@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { FaCartPlus } from "react-icons/fa6";
 import FloatingCartIcon from './FloatingCartIcon';
 
-const Product = ({ product, keyword }) => {
+const Product = ({ product, keyword, alwaysShowOptions = false }) => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const [selectedQty, setSelectedQty] = useState(1);
@@ -213,9 +213,16 @@ const Product = ({ product, keyword }) => {
 
   return (
      <>
-      <div className="flex flex-wrap gap-4 justify-center">
-  {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
-    <div key={detailIndex} className="border border-gray-300 rounded-lg p-1.5 shadow-md bg-white w-full h-full max-w-xs">
+      <div className="flex h-full flex-wrap gap-4 justify-center">
+  {product.details.map((detail, detailIndex) => {
+    if (selectedBrand && detail.brand !== selectedBrand) return null;
+
+    const hasMultipleBrands = product.details.length > 1;
+    const hasSingleBrand = !hasMultipleBrands;
+    const hasSingleQuantity = detail.financials.length === 1;
+
+    return (
+    <div key={detailIndex} className="flex h-full min-h-[11rem] w-full max-w-xs flex-col rounded-lg border border-gray-300 bg-white p-1.5 shadow-md">
       {/* <Link to={`/product/${product.slug}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
         <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
           {detail.images?.map((image, imgIndex) => (
@@ -263,19 +270,42 @@ const Product = ({ product, keyword }) => {
       );
     })}
 
-    {getDiscount(selectedQuantity, detail.financials) > 0 && (
-      <div className="absolute top-0 left-1 bg-teal-800 text-white text-[10px] px-1 py-1 font-semibold shadow-lg w-[25px] h-[35px] flex items-center justify-center clip-ribbon">
-        {getDiscount(selectedQuantity, detail.financials)}% OFF
+    <div className={`absolute left-1 top-1 flex min-h-8 w-8 flex-col items-center justify-center rounded-b-md rounded-t-sm px-0.5 py-1 text-center text-[9px] font-bold uppercase leading-none shadow-md ${
+      getDiscount(selectedQuantity, detail.financials) > 0
+        ? 'bg-emerald-700 text-white'
+        : 'bg-transparent text-transparent shadow-none'
+    }`}>
+      {getDiscount(selectedQuantity, detail.financials) > 0 && (
+        <>
+          <span>{Number(getDiscount(selectedQuantity, detail.financials)).toFixed(0)}%</span>
+          <span className="mt-0.5 text-[8px] leading-none">Off</span>
+        </>
+      )}
+    </div>
+    {/* {getDiscount(selectedQuantity, detail.financials) > 0 && (
+      <div className="absolute left-1 top-1 flex min-h-8 w-8 flex-col items-center justify-center rounded-b-md rounded-t-sm bg-emerald-700 px-0.5 py-1 text-center text-[9px] font-bold uppercase leading-none text-white shadow-md">
+        <span>{Number(getDiscount(selectedQuantity, detail.financials)).toFixed(0)}%</span>
+        <span className="mt-0.5 text-[8px] leading-none">Off</span>
       </div>
-    )}
+    )} */}
   </div>
 </Link>
 
-      <div className="mt-1.5 text-center flex-1 flex flex-col">
+      <div className="mt-1.5 flex flex-1 flex-col text-center">
         <p className="h-[3.35rem] overflow-hidden rounded-md border border-gray-300 px-1.5 py-1 text-center font-serif text-[12px] leading-tight text-maroon-600 shadow-sm sm:text-sm">
           {product.name} - <span className="text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
         </p>
 
+        {!alwaysShowOptions && hasSingleBrand && hasSingleQuantity ? (
+          <div className="min-h-[0.25rem]" aria-hidden="true" />
+        ) : !alwaysShowOptions && hasSingleBrand ? (
+          <div className="mt-1 flex min-h-[1.5rem] min-w-0 items-center gap-1">
+            <span className="truncate rounded-md border border-gray-300 bg-gray-50 px-1.5 py-0.5 text-[11px] text-gray-800">
+              {selectedQuantity}{detail.financials[0]?.units || ''}
+            </span>
+          </div>
+        ) : (
+          <>
         {/* Quantity selector */}
         <div
           ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
@@ -328,6 +358,8 @@ const Product = ({ product, keyword }) => {
           </div>
         </div>
               {/* x Packs Total Price – always reserve space */}
+          </>
+        )}
         <div className="text-xs font-medium text-gray-700 mt-0.5 text-center pr-2">
           {selectedQty > 1 ? (
             <>
@@ -370,7 +402,7 @@ const Product = ({ product, keyword }) => {
 
       </div>
     </div>
-  ))}
+  )})}
 </div>
 
       <FloatingCartIcon ref={floatingCartIconRef} />

@@ -15,9 +15,9 @@ const OrderOptions = () => {
       cta: "Start Ordering",
       href: whatsappLink,
       Icon: FaWhatsapp,
-      accent: "text-green-700",
-      iconBg: "bg-green-50",
-      button: "bg-green-700 hover:bg-green-800 focus:ring-green-500",
+      accent: "text-emerald-700",
+      iconBg: "bg-white/90",
+      button: "bg-emerald-700 hover:bg-emerald-800 focus:ring-emerald-500",
       ariaLabel: `Order via WhatsApp ${whatsappNumber}`,
     },
     // {
@@ -41,19 +41,27 @@ const OrderOptions = () => {
           href={href}
           target={label.includes("WhatsApp") ? "_blank" : undefined}
           rel={label.includes("WhatsApp") ? "noopener noreferrer" : undefined}
-          className="group flex min-w-0 items-center gap-3 rounded-lg border border-green-100 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-green-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 sm:p-4"
+          className="group block min-w-0 rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-lime-50 p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 sm:p-4"
           aria-label={ariaLabel}
         >
-          <span className={`flex h-12 w-12 flex-none items-center justify-center rounded-lg sm:h-14 sm:w-14 ${iconBg}`}>
-            <Icon className={`text-3xl sm:text-4xl ${accent}`} aria-hidden="true" />
+          <span className="flex items-center gap-3">
+            <span className={`flex h-12 w-12 flex-none items-center justify-center rounded-lg sm:h-14 sm:w-14 ${iconBg}`}>
+              <Icon className={`text-3xl sm:text-4xl ${accent}`} aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1 text-base font-bold text-emerald-950 sm:text-lg">
+              {label}
+            </span>
           </span>
-          <span className="min-w-0 flex-1 text-left">
-            <span className="block text-base font-semibold text-gray-900">{label}</span>
-            <span className="mt-1 block text-xs leading-5 text-gray-600 sm:text-sm">{description}</span>
-            <span className={`mt-1 block truncate text-base font-bold ${accent}`}>{value}</span>
+
+          <span className="mt-2 block text-xs leading-5 text-slate-700 sm:text-sm">
+            {description}
           </span>
-          <span className={`flex-none rounded-md px-3 py-2 text-xs font-semibold text-white transition ${button}`}>
-            {cta}
+
+          <span className="mt-3 flex items-center justify-between gap-3">
+            <span className={`min-w-0 truncate text-base font-bold ${accent}`}>{value}</span>
+            <span className={`flex-none rounded-md px-3 py-2 text-xs font-semibold text-white transition sm:px-4 ${button}`}>
+              {cta}
+            </span>
           </span>
         </a>
       ))}

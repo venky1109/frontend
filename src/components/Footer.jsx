@@ -1,13 +1,13 @@
 import {  useState, useCallback  } from 'react';
-import { Link ,useNavigate } from 'react-router-dom';
+import { Link ,useLocation, useNavigate } from 'react-router-dom';
 import {  FaWhatsapp } from 'react-icons/fa';
 import { TbDeviceLandlinePhone } from "react-icons/tb";
 import logo from "../assets/ManaKiranaLogoWithName4.mp4";
-import mhlogo from "../assets/RaithuDairyLogo150x102.png";
 import { TiSocialFacebook, TiSocialInstagram, TiSocialYoutubeCircular } from "react-icons/ti";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import homeConfig from '../HomeConfig.json'; // Import the homeConfig file
 // import { TbCategory2 } from "react-icons/tb";
+import { TbCategory2 } from "react-icons/tb";
 import { HiOutlineCurrencyRupee } from "react-icons/hi"; // Import Rupee Icon
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { MdOutlineSavings } from "react-icons/md";
@@ -18,6 +18,7 @@ const Footer = ({ scrollToCategory }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { whatsappNumber, phoneNumber } = homeConfig; // Extract numbers from the homeConfig file
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
   // const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
   // State to manage the visibility of the login and account forms
@@ -33,6 +34,10 @@ const Footer = ({ scrollToCategory }) => {
   const handleCategoryCardClick = useCallback((categoryName) => {
     navigate(`/category/${categoryName}`);
   }, [navigate]);
+
+  const navItemClass = "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-0.5 text-[9px] font-semibold leading-tight text-slate-600 transition";
+  const activeNavItemClass = "bg-white/80 text-emerald-800 shadow-sm ring-1 ring-emerald-100";
+  const iconWrapClass = "flex h-6 w-6 items-center justify-center rounded-full";
 
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
@@ -82,100 +87,83 @@ const Footer = ({ scrollToCategory }) => {
   return (
     <>
       {/* Mobile Footer */}
-      <footer
-  className="fixed bottom-0 left-0 w-full rounded-sm bg-gradient-to-b from-white via-white to-white shadow-md z-30 block md:hidden"
->
-  <div className="container mx-auto flex justify-between items-center px-2 py-1 sm:px-1 sm:py-1">
-    {/* Home Icon */}
-    <Link to="/" className="flex flex-col items-center shadow-md border border-b-5 border-green-600 hover:border-white rounded-sm  transition-all duration-300 ">
-  {/* <img 
-    src={logo}
-    alt="" 
-    className="h-9 w-9 sm:h-9 sm:w-9 object-contain "
-  /> */}
-   <video
-    src={logo}
-    autoPlay
-    loop
-    muted
-    playsInline
-    className="h-9 w-9 sm:h-9 sm:w-9 object-contain "
-  />
-    <span className="text-xs text-green-900">Home</span>
-</Link>
+      <footer className="fixed bottom-0 left-0 z-30 block w-full border-t border-emerald-200 bg-gradient-to-r from-lime-100 via-white to-emerald-100 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur md:hidden">
+        <nav className="relative mx-auto flex max-w-md items-center gap-1 px-2 py-0.5">
+          <Link to="/" className={`${navItemClass} ${location.pathname === '/' ? activeNavItemClass : ''}`}>
+            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
+              <video
+                src={logo}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-5 w-5 object-contain"
+              />
+            </span>
+            <span className="truncate">Home</span>
+          </Link>
 
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            className={`${navItemClass} ${isMenuOpen ? activeNavItemClass : ''}`}
+          >
+            <span className={`${iconWrapClass} bg-emerald-50`}>
+              <RiCustomerService2Fill className="h-4 w-4 text-emerald-800" />
+            </span>
+            <span className="truncate">Order</span>
+          </button>
 
-
-   {/* User Community Icon */}
-   <div className="relative flex flex-col items-center cursor-pointer">
-        <RiCustomerService2Fill
-          className="h-9 w-9 text-green-800 hover:text-green-700 transition"
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-        />
-        <span className="text-xs text-green-900">Say Hi To Order</span>
-
-        {/* Dropdown Menu */}
-        {isMenuOpen && (
-          <div className="absolute bottom-10 mb-3 bg-white shadow-lg rounded-md p-2 w-48 flex flex-col gap-2">
-            {/* WhatsApp */}
-            <div className="bg-gray-200 p-2 rounded-md">
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center"
-              >
-                <FaWhatsapp className="text-green-700" size={20} />
-                <span className="text-gray-500 font-semibold text-sm sm:text-md ml-2">
-                  {whatsappNumber}
-                </span>
-              </a>
+          {isMenuOpen && (
+            <div className="absolute bottom-12 left-3 right-3 rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Contact to order</p>
+              <div className="grid gap-2">
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-lg bg-emerald-50 p-3 text-sm font-semibold text-emerald-800"
+                >
+                  <FaWhatsapp className="h-5 w-5" />
+                  <span>{whatsappNumber}</span>
+                </a>
+                <a
+                  href={`tel:${phoneNumber}`}
+                  className="flex items-center gap-3 rounded-lg bg-slate-50 p-3 text-sm font-semibold text-slate-700"
+                >
+                  <TbDeviceLandlinePhone className="h-5 w-5 text-emerald-800" />
+                  <span>{phoneNumber}</span>
+                </a>
+              </div>
             </div>
+          )}
 
-            {/* Phone */}
-            <div className="bg-gray-200 p-2 rounded-md">
-              <a
-                href={`tel:${phoneNumber}`}
-                className="flex items-center"
-              >
-                <TbDeviceLandlinePhone className="text-green-700" size={20} />
-                <span className="text-gray-500 font-semibold text-sm sm:text-md ml-2">
-                  {phoneNumber}
-                </span>
-              </a>
-            </div>
-          </div>
-        )}
-      </div>
-      <div
-        onClick={() => handleCategoryCardClick("Eggs & Dairy")} 
-        className="flex flex-col items-center cursor-pointer"
-      >
-       <img 
-    src={mhlogo}
-    alt="sri maha lakshmi raithu dairy" 
-    className="h-10 w-10 sm:h-10 sm:w-10 object-contain ml-2"
-  />
-       <span className="text-xs text-green-900">SMLR Products</span>
-      </div>
+          <button
+            type="button"
+            onClick={() => navigate('/#categories')}
+            className={`${navItemClass} ${location.hash === '#categories' ? activeNavItemClass : ''}`}
+          >
+            <span className={`${iconWrapClass} bg-emerald-50`}>
+              <TbCategory2 className="h-4 w-4 text-emerald-800" />
+            </span>
+            <span className="truncate">Categories</span>
+          </button>
 
-      <div
-        onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")} 
-
-        className="flex flex-col items-center cursor-pointer"
-      >
-        <div className="relative h-9 w-9">
-    <MdOutlineSavings className="absolute inset-0 h-full w-full text-green-800" />
-    <HiOutlineCurrencyRupee className="absolute inset-0 h-5 w-5 m-auto text-green-800" />
-  </div>
-       <span className="text-xs text-green-900">Budget Friendly</span>
-      </div>
-
-      
-   
-
-  </div>
-</footer>
+          <button
+            type="button"
+            onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")}
+            className={`${navItemClass} ${location.pathname.includes('/category/BUDGET') ? activeNavItemClass : ''}`}
+          >
+            <span className={`${iconWrapClass} bg-emerald-50`}>
+              <span className="relative h-6 w-6">
+                <MdOutlineSavings className="absolute inset-0 h-6 w-6 text-emerald-800" />
+                <HiOutlineCurrencyRupee className="absolute inset-0 m-auto h-3 w-3 text-emerald-800" />
+              </span>
+            </span>
+            <span className="truncate">Budget</span>
+          </button>
+        </nav>
+      </footer>
 
       {/* Desktop Footer */}
       <footer className="hidden md:block bg-green-800 text-white py-8">

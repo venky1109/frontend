@@ -94,10 +94,10 @@ const SearchBox = () => {
   return (
     <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
       {/* Search Input */}
-      <div className="flex items-center border border-gray-100 rounded-lg bg-white p-1 sm:p-2">
+      <div className="flex h-10 items-center rounded-full border border-emerald-100 bg-white px-3 shadow-sm ring-1 ring-black/5 focus-within:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-100 sm:h-11">
         <input
           type="text"
-          className="flex-grow outline-none text-gray-700 text-sm sm:text-base p-1 sm:p-2"
+          className="min-w-0 flex-grow bg-transparent py-2 pr-2 text-sm text-gray-700 outline-none placeholder:text-gray-400 sm:text-base"
           placeholder="Search for products or brands..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
@@ -116,9 +116,8 @@ const SearchBox = () => {
               handleSuggestionClick(suggestions[focusedIndex]);
             }
           }}
-          style={{ minHeight: '32px' }}
         />
-        <button onClick={handleSearch} className="p-1 sm:p-2 text-gray-500" aria-label="Search">
+        <button onClick={handleSearch} className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-gray-500 hover:bg-gray-100" aria-label="Search">
           <FaSearch />
         </button>
       </div>
