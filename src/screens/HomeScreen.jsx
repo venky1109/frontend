@@ -1,25 +1,54 @@
 import React, { useEffect, useState, useRef, useCallback, Suspense, useMemo } from 'react';
-import { useGetProductsByCategoryQuery } from '../slices/productsApiSlice';
+import { useGetProductsByCategoryQuery, useGetProductsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import homeConfig from '../HomeConfig.json';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ProductSkeleton } from '../components/ProductSkeleton';
+import Meta from '../components/Meta';
 
 const CategoryCard = React.lazy(() => import('../components/CategoryCard'));
 const Product = React.lazy(() => import('../components/Product'));
 const OrderOptions = React.lazy(() => import('../components/OrderOptionsBanner'));
 
+const SITE_URL = 'https://manakirana.com';
+const HOME_DESCRIPTION =
+  'Order groceries online from Mana Kirana. Shop rice, pulses, snacks, oils, spices, dairy, dry fruits, cleaning essentials, pooja needs, personal care and daily home needs.';
+
 const CategoryProductSection = ({ category }) => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const railRef = useRef(null);
-  const dragStateRef = useRef({ isDown: false, startX: 0, scrollLeft: 0, didDrag: false });
+  const autoScrollFrameRef = useRef(null);
+  const lastAutoScrollTimeRef = useRef(0);
+  const isHoveringRailRef = useRef(false);
+  const resumeInteractionTimeoutRef = useRef(null);
+  const dragStateRef = useRef({ isDown: false, startX: 0, lastX: 0, didDrag: false });
   const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const { data, isLoading, error } = useGetProductsByCategoryQuery(category.name);
-  const products = data?.products?.slice(0, 10) || [];
-  const railProducts = products.length > 3 ? [...products, ...products] : products;
+  const { data, isLoading, error } = useGetProductsByCategoryQuery({ category: category.name, pageSize: 6 });
+  const products = data?.products?.slice(0, 6) || [];
+  const shouldLoopRail = false;
+  const railProducts = products;
+
+  const keepRailInMiddleLoop = useCallback((rail) => {
+    if (!rail || !shouldLoopRail) return 0;
+
+    const segmentWidth = rail.scrollWidth / 3;
+    if (!segmentWidth) return 0;
+
+    if (rail.scrollLeft < segmentWidth * 0.5) {
+      rail.scrollLeft += segmentWidth;
+      return segmentWidth;
+    }
+
+    if (rail.scrollLeft > segmentWidth * 1.5) {
+      rail.scrollLeft -= segmentWidth;
+      return -segmentWidth;
+    }
+
+    return 0;
+  }, [shouldLoopRail]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -36,46 +65,84 @@ const CategoryProductSection = ({ category }) => {
 
   useEffect(() => {
     const rail = railRef.current;
-    if (!rail || !isSectionVisible || isUserInteracting || products.length <= 3) return;
+    if (!rail || !shouldLoopRail) return;
 
-    const interval = setInterval(() => {
-      const firstCard = rail.firstElementChild;
-      if (!firstCard) return;
-
-      const cardStep = firstCard.getBoundingClientRect().width + 4;
-      const nextLeft = rail.scrollLeft + cardStep;
-      const loopPoint = rail.scrollWidth / 2;
-
-      rail.scrollTo({
-        left: nextLeft,
-        behavior: 'smooth',
-      });
-
-      if (nextLeft >= loopPoint) {
-        window.setTimeout(() => {
-          rail.scrollLeft = nextLeft - loopPoint;
-        }, 450);
+    const frameId = window.requestAnimationFrame(() => {
+      const segmentWidth = rail.scrollWidth / 3;
+      if (segmentWidth && rail.scrollLeft < segmentWidth * 0.5) {
+        rail.scrollLeft = segmentWidth;
       }
-    }, 3500);
+    });
 
-    return () => clearInterval(interval);
-  }, [isSectionVisible, isUserInteracting, products.length]);
+    return () => window.cancelAnimationFrame(frameId);
+  }, [products.length, shouldLoopRail]);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || !isSectionVisible || isUserInteracting || !shouldLoopRail) return;
+
+    const autoScroll = (time) => {
+      if (!lastAutoScrollTimeRef.current) {
+        lastAutoScrollTimeRef.current = time;
+      }
+
+      const elapsed = Math.min(time - lastAutoScrollTimeRef.current, 32);
+      lastAutoScrollTimeRef.current = time;
+      const loopPoint = rail.scrollWidth / 2;
+      if (!loopPoint) return;
+
+      rail.scrollLeft += elapsed * 0.018;
+      keepRailInMiddleLoop(rail);
+
+      autoScrollFrameRef.current = window.requestAnimationFrame(autoScroll);
+    };
+
+    rail.style.scrollBehavior = 'auto';
+    autoScrollFrameRef.current = window.requestAnimationFrame(autoScroll);
+
+    return () => {
+      window.cancelAnimationFrame(autoScrollFrameRef.current);
+      lastAutoScrollTimeRef.current = 0;
+      if (rail) {
+        rail.style.scrollBehavior = '';
+      }
+    };
+  }, [isSectionVisible, isUserInteracting, shouldLoopRail, keepRailInMiddleLoop]);
+
+  const pauseRailInteraction = useCallback(() => {
+    window.clearTimeout(resumeInteractionTimeoutRef.current);
+    setIsUserInteracting(true);
+  }, []);
+
+  const resumeRailInteraction = useCallback((delay = 0) => {
+    window.clearTimeout(resumeInteractionTimeoutRef.current);
+    resumeInteractionTimeoutRef.current = window.setTimeout(() => {
+      if (!isHoveringRailRef.current && !dragStateRef.current.isDown) {
+        setIsUserInteracting(false);
+      }
+    }, delay);
+  }, []);
 
   const handleRailPointerDown = useCallback((event) => {
     const rail = railRef.current;
     if (!rail) return;
+    if (event.target.closest('button, input, select, textarea')) {
+      dragStateRef.current = { isDown: false, startX: 0, lastX: 0, didDrag: false };
+      return;
+    }
 
+    keepRailInMiddleLoop(rail);
     dragStateRef.current = {
       isDown: true,
       startX: event.clientX,
-      scrollLeft: rail.scrollLeft,
+      lastX: event.clientX,
       didDrag: false,
     };
-    setIsUserInteracting(true);
+    pauseRailInteraction();
     rail.style.scrollBehavior = 'auto';
     rail.classList.add('cursor-grabbing');
     rail.setPointerCapture?.(event.pointerId);
-  }, []);
+  }, [keepRailInMiddleLoop, pauseRailInteraction]);
 
   const stopRailDrag = useCallback((event) => {
     const rail = railRef.current;
@@ -87,8 +154,8 @@ const CategoryProductSection = ({ category }) => {
         rail.releasePointerCapture(event.pointerId);
       }
     }
-    setIsUserInteracting(false);
-  }, []);
+    resumeRailInteraction(1200);
+  }, [resumeRailInteraction]);
 
   const handleRailPointerMove = useCallback((event) => {
     const rail = railRef.current;
@@ -96,14 +163,17 @@ const CategoryProductSection = ({ category }) => {
     if (!rail || !dragState.isDown) return;
 
     event.preventDefault();
-    const walk = (event.clientX - dragState.startX) * 1.25;
+    const totalWalk = event.clientX - dragState.startX;
+    const movement = event.clientX - dragState.lastX;
 
-    if (Math.abs(walk) > 4) {
+    if (Math.abs(totalWalk) > 4) {
       dragState.didDrag = true;
     }
 
-    rail.scrollLeft = dragState.scrollLeft - walk;
-  }, []);
+    rail.scrollLeft -= movement;
+    dragState.lastX = event.clientX;
+    keepRailInMiddleLoop(rail);
+  }, [keepRailInMiddleLoop]);
 
   const handleRailClickCapture = useCallback((event) => {
     if (dragStateRef.current.didDrag) {
@@ -113,17 +183,32 @@ const CategoryProductSection = ({ category }) => {
     }
   }, []);
 
+  const handleProductOpen = useCallback((product, state) => {
+    if (dragStateRef.current.didDrag) return;
+    navigate(`/product/${product.slug}`, { state });
+  }, [navigate]);
+
   const handleRailWheel = useCallback((event) => {
     const rail = railRef.current;
     if (!rail || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
 
-    setIsUserInteracting(true);
+    pauseRailInteraction();
     rail.scrollBy({
       left: event.deltaY,
       behavior: 'smooth',
     });
-    window.setTimeout(() => setIsUserInteracting(false), 600);
-  }, []);
+    resumeRailInteraction(900);
+  }, [pauseRailInteraction, resumeRailInteraction]);
+
+  const handleRailMouseEnter = useCallback(() => {
+    isHoveringRailRef.current = true;
+    pauseRailInteraction();
+  }, [pauseRailInteraction]);
+
+  const handleRailMouseLeave = useCallback((event) => {
+    isHoveringRailRef.current = false;
+    stopRailDrag(event);
+  }, [stopRailDrag]);
 
   if (isLoading) {
     return (
@@ -161,24 +246,25 @@ const CategoryProductSection = ({ category }) => {
       <Suspense fallback={<Loader />}>
         <div
           ref={railRef}
-          className="flex cursor-grab snap-x snap-mandatory gap-1 overflow-x-auto scroll-smooth rounded-lg bg-gray-100 p-1 pb-2 scrollbar-hide select-none"
+          className="flex cursor-grab gap-1 overflow-x-auto scroll-smooth rounded-lg bg-gray-100 p-1 pb-2 scrollbar-hide select-none"
           style={{ touchAction: 'pan-y' }}
-          onMouseEnter={() => setIsUserInteracting(true)}
-          onMouseLeave={stopRailDrag}
+          onMouseEnter={handleRailMouseEnter}
+          onMouseLeave={handleRailMouseLeave}
           onPointerDown={handleRailPointerDown}
           onPointerUp={stopRailDrag}
           onPointerCancel={stopRailDrag}
           onPointerMove={handleRailPointerMove}
           onClickCapture={handleRailClickCapture}
+          onDragStart={(event) => event.preventDefault()}
           onWheel={handleRailWheel}
-          onTouchStart={() => setIsUserInteracting(true)}
-          onTouchEnd={() => setIsUserInteracting(false)}
-          onFocus={() => setIsUserInteracting(true)}
-          onBlur={() => setIsUserInteracting(false)}
+          onTouchStart={pauseRailInteraction}
+          onTouchEnd={() => resumeRailInteraction(900)}
+          onFocus={pauseRailInteraction}
+          onBlur={() => resumeRailInteraction(900)}
         >
           {railProducts.map((product, index) => (
-            <div key={`${product._id}-${index}`} className="flex min-w-0 shrink-0 grow-0 basis-[calc((100%_-_0.5rem)/3)] snap-start md:basis-[calc((100%_-_0.75rem)/4)] lg:basis-[calc((100%_-_1rem)/5)]">
-              <Product product={product} compactRibbon />
+            <div key={`${product._id}-${index}`} className="flex min-w-0 shrink-0 grow-0 basis-[calc((100%_-_0.5rem)/3)] md:basis-[calc((100%_-_1.25rem)/6)] lg:basis-[calc((100%_-_1.5rem)/7)] xl:basis-[calc((100%_-_1.75rem)/8)]">
+              <Product product={product} compactRibbon desktopCompact onProductOpen={handleProductOpen} />
             </div>
           ))}
         </div>
@@ -209,6 +295,65 @@ const HomeScreen = () => {
     () => categories.filter((cat) => cat.name !== 'BUDGET FRIENDLY PACKAGES'),
     [categories]
   );
+  const featuredProductCategories = useMemo(() => {
+    const preferredCategoryNames = [
+      'BATH & BODY',
+      'RICE & PULSES',
+      'CLEANING ESSENTIALS',
+      'DAILY NEEDS',
+      'FLOURS',
+    ];
+
+    return preferredCategoryNames
+      .map((categoryName) => productCategories.find((category) => category.name === categoryName))
+      .filter(Boolean);
+  }, [productCategories]);
+  const categoryNames = useMemo(() => categories.map((category) => category.name), [categories]);
+  const seoKeywords = useMemo(
+    () => [
+      'online grocery delivery',
+      'Mana Kirana',
+      'grocery home delivery',
+      'kirana store online',
+      ...categoryNames,
+    ].join(', '),
+    [categoryNames]
+  );
+  const homeJsonLd = useMemo(() => ([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'GroceryStore',
+      name: 'Mana Kirana',
+      url: SITE_URL,
+      image: `${SITE_URL}/images/logoSquare512_v1.webp`,
+      description: HOME_DESCRIPTION,
+      telephone: homeConfig.phoneNumber?.[0],
+      areaServed: 'India',
+      sameAs: [SITE_URL],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Mana Kirana',
+      url: SITE_URL,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${SITE_URL}/search/{search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Mana Kirana grocery categories',
+      itemListElement: categories.map((category, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: category.name,
+        url: `${SITE_URL}/category/${encodeURIComponent(category.name)}`,
+      })),
+    },
+  ]), [categories]);
 
   const categoryName = 'BUDGET FRIENDLY PACKAGES';
   const shouldFetch = initialCachedProducts.length === 0;
@@ -217,6 +362,7 @@ const HomeScreen = () => {
     useGetProductsByCategoryQuery(categoryName, {
       skip: !shouldFetch,
     });
+  const { data: seoProductsData } = useGetProductsQuery({ pageSize: 80 });
 
   useEffect(() => {
     const cachedProducts = localStorage.getItem('cachedProducts');
@@ -266,7 +412,7 @@ const HomeScreen = () => {
   }, [startAutoScroll]);
 
   const handleCategoryCardClick = useCallback((name) => {
-    navigate(`/category/${name}`);
+    navigate(`/category/${encodeURIComponent(name)}`);
   }, [navigate]);
 
   const renderedProducts = useMemo(() => {
@@ -276,11 +422,37 @@ const HomeScreen = () => {
         ))
       : products
           .slice(0, displayCount)
-          .map(product => <Product key={product._id} product={product} alwaysShowOptions />);
+          .map(product => <Product key={product._id} product={product} alwaysShowOptions desktopCompact />);
   }, [isProductsLoading, products, displayCount]);
+  const seoProductsByCategory = useMemo(() => {
+    const groupedProducts = {};
+
+    (seoProductsData?.products || []).forEach((product) => {
+      if (!product?.category || !product?.slug) return;
+
+      if (!groupedProducts[product.category]) {
+        groupedProducts[product.category] = [];
+      }
+
+      if (groupedProducts[product.category].length < 5) {
+        groupedProducts[product.category].push(product);
+      }
+    });
+
+    return Object.entries(groupedProducts).slice(0, 8);
+  }, [seoProductsData]);
 
   return (
     <div className="mt-16 mb-24 sm:mt-20">
+      <Meta
+        title="Mana Kirana Online Grocery Delivery | Daily Essentials, Snacks, Rice, Oils"
+        description={HOME_DESCRIPTION}
+        keywords={seoKeywords}
+        canonical={SITE_URL}
+        url={SITE_URL}
+        image={`${SITE_URL}/images/logoSquare512_v1.webp`}
+        jsonLd={homeJsonLd}
+      />
       <div className="rounded-b-2xl bg-gradient-to-b from-green-50 via-white to-white pb-3 pt-1">
         <Suspense fallback={<Loader />}>
           <OrderOptions />
@@ -333,15 +505,70 @@ const HomeScreen = () => {
             </div>
 
             <Suspense fallback={<Loader />}>
-              <div className="grid grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6">
+              <div className="grid grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8">
                 {renderedProducts}
               </div>
             </Suspense>
           </section>
 
-          {productCategories.map((category) => (
+          {featuredProductCategories.map((category) => (
             <CategoryProductSection key={category.key} category={category} />
           ))}
+
+          <section className="rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
+            <div className="mb-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-green-700">Quick grocery links</p>
+              <h2 className="text-xl font-bold text-gray-900">Shop all Mana Kirana products by category</h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                Find online grocery delivery for daily essentials, rice and pulses, oils, snacks, spices,
+                dairy, cleaning products, pooja needs, health and personal care.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Link
+                to="/category/all"
+                className="rounded-md border border-green-700 px-3 py-1.5 text-sm font-semibold text-green-700 hover:bg-green-50"
+              >
+                All Products
+              </Link>
+              {categories.map((category) => (
+                <Link
+                  key={`seo-${category.key}`}
+                  to={`/category/${encodeURIComponent(category.name)}`}
+                  className="rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:border-green-700 hover:text-green-700"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+
+            {seoProductsByCategory.length > 0 && (
+              <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {seoProductsByCategory.map(([category, categoryProducts]) => (
+                  <div key={`product-links-${category}`} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                    <Link
+                      to={`/category/${encodeURIComponent(category)}`}
+                      className="font-semibold text-gray-900 hover:text-green-700"
+                    >
+                      {category}
+                    </Link>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {categoryProducts.map((product) => (
+                        <Link
+                          key={`seo-product-${product._id}`}
+                          to={`/product/${product.slug}`}
+                          className="rounded border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-700 hover:border-green-700 hover:text-green-700"
+                        >
+                          {product.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
 
           <div ref={observerRef} className="h-10 w-full"></div>
         </div>

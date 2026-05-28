@@ -63,7 +63,7 @@ const ShippingScreen = () => {
         <CheckoutSteps step1 step2 />
         <div className="mb-5">
           <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Delivery Address</p>
-          <h1 className="text-2xl font-extrabold text-slate-950">Shipping</h1>
+          <h1 className="text-xl font-semibold text-slate-950">Shipping</h1>
           <p className="mt-1 text-sm text-slate-500">Confirm where your groceries should be delivered.</p>
         </div>
         {hasValidAddress ? (
@@ -81,7 +81,7 @@ const ShippingScreen = () => {
               </div>
             </div>
             <button
-              className="mt-5 w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-100 transition hover:bg-emerald-700"
+              className="mt-5 inline-flex w-auto min-w-[13rem] items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-100 transition hover:bg-emerald-700"
               onClick={handleContinueWithSavedAddress}
             >
               Continue with Saved Address

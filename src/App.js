@@ -7,7 +7,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { logout } from './slices/authSlice';
 import { ToastContainer } from 'react-toastify';
 import { useWebSocket } from './hooks/useWebSocket';
-import logo from './assets/ManaKiranaLogoWithName4.mp4';
+// import logo from './assets/ManaKiranaLogoWithName4.mp4';
 // import Loader from './components/Loader';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -121,34 +121,26 @@ const handleInstallClick = async () => {
       {showInstallBanner && (
         <div
         className={`fixed ${
-          window.innerWidth < 640 ? "top-[6rem]" : "bottom-4"
-        } left-2 right-2 border border-b-5 border-gray-300 bg-white shadow-lg rounded-md p-2 flex items-center sm:justify-between`}
+          window.innerWidth < 640 ? "top-[5.5rem]" : "bottom-4"
+        } left-3 right-3 flex items-center justify-between gap-2 rounded-xl border border-emerald-100 bg-white/85 p-2 shadow-[0_10px_28px_rgba(15,23,42,0.12)] backdrop-blur-md sm:left-auto sm:right-4 sm:w-[22rem]`}
       >
         {/* Logo & Text */}
-        <div className="flex items-center space-x-3">
-          {/* <img
-            src={logo}
+        <div className="flex min-w-0 items-center gap-2.5">
+          <img
+            src="/images/icon-192.png"
             alt="ManaKirana logo"
-            className="w-14 h-auto sm:w-16 lg:w-20 border border-green-600 rounded-md"
-          /> */}
-          <video
-  src={logo}
-  autoPlay
-  loop
-  muted
-  playsInline
-  className="w-14 h-auto sm:w-16 lg:w-20 border border-green-600 rounded-md"
-/>
-          <p className="text-gray-800 text-sm sm:text-md">
-            Install <span className="font-bold text-green-600">APP</span> for better experience!
+            className="h-11 w-11 flex-none rounded-full border border-emerald-100 bg-white object-contain p-0.5 shadow-sm"
+          />
+          <p className="min-w-0 text-xs leading-4 text-slate-700">
+            Install <span className="font-semibold text-emerald-700">app</span> for better experience.
           </p>
         </div>
       
         {/* Install & Close Buttons */}
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-none items-center gap-2">
           <button
             onClick={handleInstallClick}
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300"
+            className="rounded-lg bg-emerald-500 px-3 py-2 text-xs font-normal text-white shadow-sm transition hover:bg-emerald-600"
           >
             Install
           </button>
@@ -156,7 +148,8 @@ const handleInstallClick = async () => {
           {/* Close (X) Button */}
           <button
             onClick={handleDismissBanner}
-            className="text-gray-600 hover:text-gray-800 text-mb font-semibold focus:outline-none"
+            className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-normal text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none"
+            aria-label="Dismiss install prompt"
           >
             ✖
           </button>

@@ -7,6 +7,9 @@ import { FiChevronDown } from 'react-icons/fi';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
+import Meta from '../components/Meta';
+
+const SITE_URL = 'https://manakirana.com';
 
 const ProductScreen = () => {
   const { slug } = useParams();  // ✅ Extract slug from URL
@@ -52,6 +55,47 @@ const ProductScreen = () => {
       .filter((item) => item._id !== product?._id)
       .slice(0, 6);
   }, [categoryData, product]);
+
+  const productMeta = useMemo(() => {
+    if (!product) {
+      return {
+        title: 'Mana Kirana Product | Online Grocery Delivery',
+        description: 'Shop grocery products online from Mana Kirana.',
+        image: `${SITE_URL}/images/logoSquare512_v1.webp`,
+        jsonLd: null,
+      };
+    }
+
+    const firstDetail = selectedDetail || product.details?.[0];
+    const firstFinancial = selectedFinancial || firstDetail?.financials?.[0];
+    const image = firstDetail?.images?.[0]?.image || `${SITE_URL}/images/logoSquare512_v1.webp`;
+    const title = `${product.name} | ${product.category} | Mana Kirana`;
+    const description = `Buy ${product.name} online from Mana Kirana. Shop ${product.category} with grocery home delivery.`;
+
+    return {
+      title,
+      description,
+      image,
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        image,
+        description,
+        category: product.category,
+        brand: firstDetail?.brand,
+        offers: firstFinancial ? {
+          '@type': 'Offer',
+          priceCurrency: 'INR',
+          price: Number(firstFinancial.dprice || firstFinancial.price || 0).toFixed(2),
+          availability: Number(firstFinancial.countInStock || 0) > 0
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+          url: `${SITE_URL}/product/${product.slug}`,
+        } : undefined,
+      },
+    };
+  }, [product, selectedDetail, selectedFinancial]);
 
   // Update selected detail whenever the selected brand or product data changes
   useEffect(() => {
@@ -150,6 +194,16 @@ const ProductScreen = () => {
 
   return (
     <div className="mt-24 mb-24">
+      <Meta
+        title={productMeta.title}
+        description={productMeta.description}
+        keywords={`${product?.name || 'grocery product'}, ${product?.category || 'online grocery'}, Mana Kirana`}
+        canonical={`${SITE_URL}/product/${slug}`}
+        url={`${SITE_URL}/product/${slug}`}
+        image={productMeta.image}
+        type="product"
+        jsonLd={productMeta.jsonLd}
+      />
       <button
         onClick={goBackHandler}
         className="mb-4 inline-flex rounded-md border border-green-700 px-3 py-2 text-sm font-semibold text-green-700 hover:bg-green-50"

@@ -94,10 +94,10 @@ const SearchBox = () => {
   return (
     <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
       {/* Search Input */}
-      <div className="flex h-10 items-center rounded-full border border-emerald-100 bg-white px-3 shadow-[0_2px_8px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-emerald-950/5 focus-within:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-100 sm:h-11">
+      <div className="flex h-10 items-center rounded-full border border-white/70 bg-white/75 px-3 shadow-[0_4px_16px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-emerald-950/5 backdrop-blur-md focus-within:border-emerald-200 focus-within:bg-white/90 focus-within:ring-2 focus-within:ring-emerald-100 sm:h-11">
         <input
           type="text"
-          className="min-w-0 flex-grow bg-transparent py-2 pr-2 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
+          className="min-w-0 flex-grow bg-transparent py-2 pr-2 text-sm font-normal text-slate-800 outline-none placeholder:font-normal placeholder:text-slate-600 sm:text-base"
           placeholder="Search for products or brands..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
@@ -117,7 +117,7 @@ const SearchBox = () => {
             }
           }}
         />
-        <button onClick={handleSearch} className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-emerald-50 text-emerald-800 shadow-inner hover:bg-emerald-100" aria-label="Search">
+        <button onClick={handleSearch} className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-emerald-50/90 text-emerald-800 shadow-inner hover:bg-emerald-100" aria-label="Search">
           <FaSearch />
         </button>
       </div>

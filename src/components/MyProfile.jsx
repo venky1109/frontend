@@ -226,13 +226,15 @@ const MyProfile = ({ onProfileUpdate }) => {
             onChange={(e) => setPostalCode(e.target.value)}
           />
 
-          <button
-            type="button"
-            onClick={handleFetchLocationClick}
-            className="mt-2 w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            Use Current Location
-          </button>
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={handleFetchLocationClick}
+              className="inline-flex w-auto items-center justify-center rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              Use Current Location
+            </button>
+          </div>
         </div>
 {/* 
         {latitude && longitude && (
@@ -249,14 +251,15 @@ const MyProfile = ({ onProfileUpdate }) => {
   </div>
 )} */}
 
-
-        <button
-          type="button"
-          onClick={handlePasswordResetClick}
-          className="w-full rounded-md border border-green-700 bg-white px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          {showPasswordFields ? 'Hide Password Fields' : 'Reset Password'}
-        </button>
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <button
+            type="button"
+            onClick={handlePasswordResetClick}
+            className="inline-flex w-auto items-center justify-center rounded-md border border-green-700 bg-white px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            {showPasswordFields ? 'Hide Password Fields' : 'Reset Password'}
+          </button>
+        </div>
 
         {showPasswordFields && (
           <>
@@ -290,9 +293,11 @@ const MyProfile = ({ onProfileUpdate }) => {
           </>
         )}
 
-        <button type="submit" className="w-full rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500">
-          Update
-        </button>
+        <div className="pt-1">
+          <button type="submit" className="inline-flex w-auto min-w-[6rem] items-center justify-center rounded-md bg-green-700 px-5 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+            Update
+          </button>
+        </div>
         {loadingUpdateProfile && <Loader />}
       </form>
     </div>

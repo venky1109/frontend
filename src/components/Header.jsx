@@ -41,7 +41,7 @@ const Header = () => {
 
 
   return (
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-emerald-100 bg-gradient-to-b from-white via-emerald-50 to-lime-50 shadow-[0_4px_14px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.85)]">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/60 bg-white/70 shadow-[0_6px_22px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/55">
         <nav className="container mx-auto flex items-center justify-between gap-2 px-3 py-2 font-sans md:px-4 lg:p-2" ref={navbarRef}>
           {/* Logo */}
           <div className="hidden flex-shrink-0 md:flex">
@@ -74,7 +74,7 @@ const Header = () => {
       <button
         onClick={toggleAccountForm}
         ref={userIconRef}
-        className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/30 bg-gradient-to-b from-white to-emerald-50 text-emerald-900 shadow-[0_3px_8px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.9)]"
+        className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/70 bg-white/70 text-emerald-900 shadow-[0_4px_12px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-md"
         aria-label="User Profile"
       >
         <CgProfile size={30} />
@@ -102,7 +102,7 @@ const Header = () => {
       <button
         onClick={toggleLoginForm}
         ref={userIconRef}
-        className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/30 bg-gradient-to-b from-white to-emerald-50 text-emerald-900 shadow-[0_3px_8px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.9)]"
+        className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/70 bg-white/70 text-emerald-900 shadow-[0_4px_12px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-md"
         aria-label="Profile"
       >
         <CgProfile size={30} />

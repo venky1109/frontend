@@ -6,7 +6,7 @@ import { FaCartPlus } from "react-icons/fa6";
 import { CgSpinner } from "react-icons/cg";
 import FloatingCartIcon from './FloatingCartIcon';
 
-const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = false }) => {
+const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = false, desktopCompact = false, onProductOpen }) => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const [selectedQty, setSelectedQty] = useState(1);
@@ -310,7 +310,14 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
     const brandOptions = product.details.map((brandDetail) => ({ brandDetail, loopIndex: 1 }));
 
     return (
-    <div key={detailIndex} className="flex h-full min-h-[11rem] w-full min-w-0 max-w-none flex-col overflow-hidden rounded-lg border border-gray-300 bg-white p-1.5 shadow-md">
+    <div
+      key={detailIndex}
+      className={`flex h-full min-h-[11rem] w-full min-w-0 max-w-none flex-col overflow-hidden rounded-lg border border-gray-300 bg-white p-1.5 shadow-md transition ${
+        desktopCompact
+          ? 'md:min-h-[14.25rem] md:rounded-xl md:border-gray-200 md:p-2 md:shadow-[0_4px_14px_rgba(15,23,42,0.08)] md:hover:-translate-y-0.5 md:hover:shadow-[0_10px_24px_rgba(15,23,42,0.12)]'
+          : ''
+      }`}
+    >
       {/* <Link to={`/product/${product.slug}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
         <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
           {detail.images?.map((image, imgIndex) => (
@@ -336,8 +343,16 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
 <Link
   to={`/product/${product.slug}`}
   state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
+  onClick={(event) => {
+    if (onProductOpen) {
+      event.preventDefault();
+      onProductOpen(product, { brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty });
+    }
+  }}
 >
-  <div className="relative aspect-[4/3] bg-gray-50 rounded-md overflow-hidden border border-gray-300">
+  <div className={`relative aspect-[4/3] overflow-hidden rounded-md border border-gray-300 bg-gray-50 ${
+    desktopCompact ? 'md:aspect-square md:border-gray-100 md:bg-slate-50 md:p-2' : ''
+  }`}>
     {detail.images?.map((image, imgIndex) => {
       // Prioritize only the first image of the first product card
       const isFirstVisibleImage = detailIndex === 0 && imgIndex === 0;
@@ -354,7 +369,7 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
           decoding="async"
           width="320"
           height="240"
-           className="block h-full w-full max-w-full object-contain rounded mx-auto"
+           className="mx-auto block h-full w-full max-w-full rounded object-contain"
         />
       );
     })}
@@ -384,12 +399,16 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
 
       <div className="mt-1.5 flex flex-1 flex-col text-center">
         <p
-          className="h-[3.65rem] overflow-hidden rounded-md border border-gray-300 px-1 py-1 text-center font-sans text-[10px] font-semibold leading-[1.08] text-slate-950 shadow-sm sm:h-[4rem] sm:px-1.5 sm:text-[11px] md:text-xs"
+          className={`overflow-hidden rounded-md border border-gray-300 px-1 py-1 text-center font-sans text-[10px] font-semibold leading-[1.08] text-slate-950 shadow-sm sm:px-1.5 sm:text-[11px] md:text-xs ${
+            desktopCompact
+              ? 'h-[3.65rem] sm:h-[4rem] md:h-[2.75rem] md:border-transparent md:px-0 md:py-0.5 md:text-[11px] md:leading-[1.18] md:shadow-none'
+              : 'h-[3.65rem] sm:h-[4rem]'
+          }`}
           title={`${product.name} - ${selectedQuantity}${detail.financials[0]?.units || ''}`}
           style={{
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 4,
+            WebkitLineClamp: desktopCompact ? 3 : 4,
           }}
         >
           {product.name} - <span className="text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
@@ -480,12 +499,12 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
               {/* x Packs Total Price – always reserve space */}
           </>
         )}
-        <div className="min-h-4 text-center text-[11px] font-medium text-gray-700 sm:text-xs">
+        <div className={`text-center text-[11px] font-medium text-gray-700 sm:text-xs ${desktopCompact ? 'min-h-3 md:min-h-2' : 'min-h-4'}`}>
           {selectedQty > 1 ? (
             <>
               {selectedQty} x Packs{' '}
               <span className="text-green-700 font-semibold">
-                ₹{(getDprice(selectedQuantity, detail.financials) * selectedQty).toFixed(2)}
+                ₹{formatProductPrice(getDprice(selectedQuantity, detail.financials) * selectedQty)}
               </span>
             </>
           ) : (
@@ -493,25 +512,27 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
           )}
         </div>
         {/* Price + Add to Cart + Qty Controls */}
-        <div className="mt-auto flex min-h-[2rem] items-end justify-between gap-1 px-0.5 pt-0.5 sm:min-h-[2.25rem] sm:gap-2 sm:px-1 sm:pt-1">
-          <div className="min-w-0 flex-1 text-left font-semibold text-gray-900 sm:text-sm">
+        <div className={`mt-auto flex items-end justify-between gap-1.5 px-0.5 pr-1 pt-0.5 sm:gap-2 sm:px-1 sm:pt-1 ${
+          desktopCompact ? 'min-h-[2rem] sm:min-h-[2.25rem] md:min-h-[1.85rem] md:px-0 md:pt-0' : 'min-h-[2rem] sm:min-h-[2.25rem]'
+        }`}>
+          <div className="min-w-[2.7rem] max-w-[calc(100%-2.75rem)] flex-1 overflow-hidden text-left font-semibold text-gray-900 sm:max-w-none sm:text-sm">
             {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
               <>
-                <span className="block text-[10px] leading-none text-gray-400 line-through sm:text-xs">₹{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
-                <span className="inline-block whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-0.5 py-0.5 text-[11px] leading-none text-slate-950 sm:px-1 sm:text-sm">₹{getDprice(selectedQuantity, detail.financials).toFixed(2)}</span>
+                <span className="block truncate text-[9px] leading-none text-gray-400 line-through sm:text-xs">₹{formatProductPrice(getPrice(selectedQuantity, detail.financials))}</span>
+                <span className="inline-block min-w-[2.55rem] max-w-full whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-0.5 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:px-1 sm:text-sm">₹{formatProductPrice(getDprice(selectedQuantity, detail.financials))}</span>
               </>
             ) : (
-              <span className="inline-block whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-0.5 py-0.5 text-[11px] leading-none text-slate-950 sm:px-1 sm:text-sm">₹{getPrice(selectedQuantity, detail.financials).toFixed(2)}</span>
+              <span className="inline-block min-w-[2.55rem] max-w-full whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-0.5 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:px-1 sm:text-sm">₹{formatProductPrice(getPrice(selectedQuantity, detail.financials))}</span>
             )}
           </div>
 
           {showQuantityControls ? (
-            <div className="flex h-6 w-11 flex-none items-center justify-between overflow-hidden rounded-md bg-green-700 text-[11px] font-semibold text-white shadow-sm sm:h-7 sm:w-auto sm:space-x-2 sm:rounded-lg sm:px-2 sm:py-0.5 sm:text-sm">
+            <div className="flex h-5 w-9 flex-none items-center justify-between overflow-hidden rounded-md bg-green-700 text-[9px] font-semibold text-white shadow-sm sm:h-7 sm:w-auto sm:space-x-2 sm:rounded-lg sm:px-2 sm:py-0.5 sm:text-sm">
               <button
                 type="button"
                 onClick={() => handleQtyChange(selectedQty - 1)}
                 disabled={selectedQty <= 1}
-                className="flex h-6 w-3.5 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
+                className="flex h-5 w-2.5 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
                 aria-label="Decrease quantity"
               >
                 -
@@ -521,7 +542,7 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
                 type="button"
                 onClick={() => handleQtyChange(selectedQty + 1)}
                 disabled={selectedQty >= 9}
-                className="flex h-6 w-3.5 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
+                className="flex h-5 w-2.5 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
                 aria-label="Increase quantity"
               >
                 +
@@ -578,4 +599,9 @@ const getDiscount = (selectedQuantity, financials) => {
     (financial) => financial.quantity.toString() === selectedQuantity
   );
   return selectedFinancial ? selectedFinancial.Discount : 0;
+};
+
+const formatProductPrice = (value) => {
+  const numericValue = Number(value) || 0;
+  return Number.isInteger(numericValue) ? numericValue.toFixed(0) : numericValue.toFixed(2);
 };

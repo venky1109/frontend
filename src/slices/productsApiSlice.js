@@ -6,21 +6,31 @@ export const productsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Query to get products
     getProducts: builder.query({
-      query: ({ keyword = '', pageNumber = 1 } = {} ) => ({
+      query: ({ keyword = '', pageNumber = 1, pageSize } = {} ) => ({
         url: PRODUCTS_URL,
         method: 'GET', // Explicitly specify method for axios
-        params: { keyword, pageNumber },
+        params: { keyword, pageNumber, pageSize },
       }),
       keepUnusedDataFor: 5,
       providesTags: ['Products'],
     }),
     getProductsByCategory: builder.query({
-        query: (category) => ({
-          url: `/api/products/categories/${category}/products`,
+        query: (categoryArg) => {
+          const category = typeof categoryArg === 'string' ? categoryArg : categoryArg?.category;
+          const pageSize = typeof categoryArg === 'string' ? undefined : categoryArg?.pageSize;
+          const pageNumber = typeof categoryArg === 'string' ? undefined : categoryArg?.pageNumber;
+
+          return {
+          url: `/api/products/categories/${encodeURIComponent(category)}/products`,
           method: 'GET', // Explicitly specify method for axios
-        }),
+          params: { pageSize, pageNumber },
+        };
+      },
       keepUnusedDataFor: 5, // Cache duration in seconds
-      providesTags: (result, error, category) => [{ type: 'Products', id: category }], // Provides specific tag for refetching
+      providesTags: (result, error, categoryArg) => [{
+        type: 'Products',
+        id: typeof categoryArg === 'string' ? categoryArg : categoryArg?.category,
+      }], // Provides specific tag for refetching
     }),
   
 

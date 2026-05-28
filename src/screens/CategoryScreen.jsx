@@ -6,6 +6,9 @@ import { useGetProductsByCategoryQuery, useGetProductsQuery } from '../slices/pr
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import Meta from '../components/Meta';
+
+const SITE_URL = 'https://manakirana.com';
 
 const CategoryScreen = () => {
   const { categoryName } = useParams();
@@ -28,6 +31,20 @@ const CategoryScreen = () => {
 
   return (
     <>
+      <Meta
+        title={`${categoryName === 'all' ? 'All Grocery Products' : categoryName} | Mana Kirana Online Grocery`}
+        description={`Shop ${categoryName === 'all' ? 'all grocery products' : categoryName} online from Mana Kirana with home delivery for daily essentials and household needs.`}
+        keywords={`${categoryName}, Mana Kirana, online grocery, grocery delivery, kirana store`}
+        canonical={`${SITE_URL}/category/${encodeURIComponent(categoryName)}`}
+        url={`${SITE_URL}/category/${encodeURIComponent(categoryName)}`}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: categoryName === 'all' ? 'All Grocery Products' : categoryName,
+          url: `${SITE_URL}/category/${encodeURIComponent(categoryName)}`,
+          description: `Shop ${categoryName === 'all' ? 'all grocery products' : categoryName} online from Mana Kirana.`,
+        }}
+      />
       {isLoading ? (
          <div >
         <Loader />

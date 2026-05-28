@@ -100,7 +100,7 @@ const OrderScreen = () => {
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Order details</p>
-            <h1 className="text-2xl font-extrabold text-slate-950">Invoice #{order._id?.slice(-8)}</h1>
+            <h1 className="text-xl font-semibold text-slate-950">Invoice #{order._id?.slice(-8)}</h1>
           </div>
           <span className={`rounded-full px-3 py-1 text-xs font-bold ${order.isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
             {order.isPaid ? 'Paid' : 'Pay on delivery'}

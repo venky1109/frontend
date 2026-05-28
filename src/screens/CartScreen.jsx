@@ -56,7 +56,7 @@ const CartScreen = () => {
         <div className="mb-4 flex items-end justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Your order</p>
-            <h1 className="text-2xl font-extrabold text-slate-950">Shopping Cart</h1>
+            <h1 className="text-xl font-semibold text-slate-950">Shopping Cart</h1>
           </div>
           <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
             {totalItems} {totalItems === 1 ? 'item' : 'items'}
@@ -160,7 +160,7 @@ const CartScreen = () => {
               </div>
               <button
                 type="button"
-                className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-extrabold text-white shadow-[0_8px_18px_rgba(22,163,74,0.28)] hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+                className="inline-flex w-auto min-w-[12rem] items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_18px_rgba(22,163,74,0.28)] hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
               >

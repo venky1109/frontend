@@ -43,9 +43,9 @@ const Footer = ({ scrollToCategory }) => {
     }
   }, [location.pathname, navigate]);
 
-  const navItemClass = "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-0.5 text-[9px] font-bold leading-tight tracking-wide text-slate-600 transition";
-  const activeNavItemClass = "bg-white text-emerald-800 shadow-[0_2px_8px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-emerald-100";
-  const iconWrapClass = "flex h-6 w-6 items-center justify-center rounded-full shadow-[0_1px_4px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.85)]";
+  const navItemClass = "flex min-w-0 flex-1 flex-col items-center justify-center rounded-lg px-0.5 py-0 text-[8px] font-bold leading-tight tracking-wide text-slate-600 transition";
+  const activeNavItemClass = "bg-white/75 text-emerald-800 shadow-[0_3px_12px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-white/80 backdrop-blur-md";
+  const iconWrapClass = "flex h-6 w-6 items-center justify-center rounded-full shadow-[0_2px_8px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.95)]";
 
   // useEffect(() => {
   //   const handleClickOutside = (event) => {
@@ -95,14 +95,14 @@ const Footer = ({ scrollToCategory }) => {
   return (
     <>
       {/* Mobile Footer */}
-      <footer className="fixed bottom-0 left-0 z-30 block w-full border-t border-emerald-100 bg-gradient-to-t from-white via-emerald-50 to-lime-50 shadow-[0_-4px_14px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.85)] md:hidden">
-        <nav className="relative mx-auto flex max-w-md items-center gap-1 px-2 py-0.5 font-sans">
+      <footer className="fixed bottom-0 left-0 z-30 block w-full border-t border-white/60 bg-white/70 shadow-[0_-6px_22px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/55 md:hidden">
+        <nav className="relative mx-auto flex max-w-md items-center gap-1 px-2 py-0 font-sans">
           <Link to="/" className={`${navItemClass} ${location.pathname === '/' ? activeNavItemClass : ''}`} aria-label="Home">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_1px_4px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-emerald-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 shadow-[0_2px_8px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-white/80 backdrop-blur-md">
               <img
                 src="/images/icon-192.png"
                 alt="ManaKirana"
-                className="h-7 w-7 rounded-full object-contain"
+                className="h-8 w-8 rounded-full object-contain"
               />
             </span>
           </Link>
@@ -112,14 +112,14 @@ const Footer = ({ scrollToCategory }) => {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             className={`${navItemClass} ${isMenuOpen ? activeNavItemClass : ''}`}
           >
-            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
+            <span className={`${iconWrapClass} bg-white/75 ring-1 ring-white/80 backdrop-blur-md`}>
               <RiCustomerService2Fill className="h-4 w-4 text-emerald-800" />
             </span>
             <span className="truncate">Order</span>
           </button>
 
           {isMenuOpen && (
-            <div className="absolute bottom-12 left-3 right-3 rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+            <div className="absolute bottom-12 left-3 right-3 rounded-xl border border-white/70 bg-white/90 p-3 shadow-xl backdrop-blur-xl">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Contact to order</p>
               <div className="grid gap-2">
                 <a
@@ -147,7 +147,7 @@ const Footer = ({ scrollToCategory }) => {
             onClick={handleCategoriesClick}
             className={`${navItemClass} ${location.hash === '#categories' ? activeNavItemClass : ''}`}
           >
-            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
+            <span className={`${iconWrapClass} bg-white/75 ring-1 ring-white/80 backdrop-blur-md`}>
               <TbCategory2 className="h-4 w-4 text-emerald-800" />
             </span>
             <span className="truncate">Categories</span>
@@ -158,7 +158,7 @@ const Footer = ({ scrollToCategory }) => {
             onClick={() => handleCategoryCardClick("BUDGET FRIENDLY PACKAGES")}
             className={`${navItemClass} ${location.pathname.includes('/category/BUDGET') ? activeNavItemClass : ''}`}
           >
-            <span className={`${iconWrapClass} bg-white ring-1 ring-emerald-100`}>
+            <span className={`${iconWrapClass} bg-white/75 ring-1 ring-white/80 backdrop-blur-md`}>
               <span className="relative h-6 w-6">
                 <MdOutlineSavings className="absolute inset-0 h-6 w-6 text-emerald-800" />
                 <HiOutlineCurrencyRupee className="absolute inset-0 m-auto h-3 w-3 text-emerald-800" />
@@ -170,7 +170,7 @@ const Footer = ({ scrollToCategory }) => {
       </footer>
 
       {/* Desktop Footer */}
-      <footer className="hidden md:block bg-green-800 text-white py-8">
+      <footer className="hidden border-t border-white/60 bg-white/65 py-8 text-slate-700 shadow-[0_-6px_22px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/50 md:block">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between">
             <div className="md:w-6/12 mb-6 md:mb-0">
@@ -195,22 +195,22 @@ const Footer = ({ scrollToCategory }) => {
             <div className="md:w-1/12 mb-6 md:mb-0 mr-8">
               <h6 className="text-lg font-semibold mb-2">Follow Us</h6>
               <div className="flex space-x-4">
-                <a href="https://www.facebook.com/profile.php?id=61557084347066" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-500">
+                <a href="https://www.facebook.com/profile.php?id=61557084347066" target="_blank" rel="noopener noreferrer" className="text-emerald-800 hover:text-blue-500">
                   <TiSocialFacebook size={24} />
                 </a>
-                <a href="https://www.instagram.com/manakirana8/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-pink-500">
+                <a href="https://www.instagram.com/manakirana8/" target="_blank" rel="noopener noreferrer" className="text-emerald-800 hover:text-pink-500">
                   <TiSocialInstagram size={24} />
                 </a>
-                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-red-500">
+                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-emerald-800 hover:text-red-500">
                   <TiSocialYoutubeCircular size={24} />
                 </a>
-                <a href="https://twitter.com/manakirana8" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-500">
+                <a href="https://twitter.com/manakirana8" target="_blank" rel="noopener noreferrer" className="text-emerald-800 hover:text-blue-500">
                   <FaSquareXTwitter size={24} />
                 </a>
               </div>
             </div>
           </div>
-          <hr className="my-4 border-gray-400" />
+          <hr className="my-4 border-emerald-100/80" />
           <p className="text-center text-sm">&copy; {currentYear} ManaKirana</p>
         </div>
       </footer>

@@ -100,6 +100,39 @@ table th {
 
 body {
   font-family: var(--default-font);
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+.font-semibold {
+  font-weight: 500;
+}
+
+.font-bold {
+  font-weight: 550;
+}
+
+.font-extrabold {
+  font-weight: 600;
+}
+
+h1.font-extrabold,
+h2.font-extrabold,
+h3.font-extrabold {
+  font-weight: 550;
+}
+
+button,
+a[role="button"],
+input[type="button"],
+input[type="submit"] {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+button:not([aria-label]) {
+  padding: 0.45rem 0.75rem;
 }
 
 .font-anek-telugu {
