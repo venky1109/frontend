@@ -24,8 +24,23 @@ const DELIVERY_AREAS = [
   'I. Polavaram',
   'Kothapeta',
 ];
+const DELIVERY_AREA_TEXT = 'Amalapuram • Mummidivaram • Yanam • Nearby Konaseema Areas';
+const DELIVERY_HIGHLIGHTS = [
+  'Flours & Daily Essentials',
+  'Rice & Pulses',
+  'Snacks & Breakfast Items',
+  'Oils & Spices',
+  'Dry Fruits & Nuts',
+  'Personal Care Essentials',
+  'Cleaning & Home Care',
+  'Pooja Items & Daily Needs',
+];
 const HOME_DESCRIPTION =
   'Order groceries online from Mana Kirana with delivery around Amalapuram, Mummidivaram, Yanam and nearby Konaseema areas. Shop rice, pulses, snacks, oils, spices, dairy, dry fruits, cleaning essentials, pooja needs, personal care and daily home needs.';
+
+const getBudgetDisplayBatch = () => (
+  typeof window !== 'undefined' && window.innerWidth < 768 ? 6 : 8
+);
 
 const CategoryProductSection = ({ category }) => {
   const navigate = useNavigate();
@@ -38,10 +53,10 @@ const CategoryProductSection = ({ category }) => {
   const dragStateRef = useRef({ isDown: false, startX: 0, lastX: 0, didDrag: false });
   const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const { data, isLoading, error } = useGetProductsByCategoryQuery({ category: category.name, pageSize: 6 });
-  const products = data?.products?.slice(0, 6) || [];
-  const shouldLoopRail = false;
-  const railProducts = products;
+  const { data, isLoading, error } = useGetProductsByCategoryQuery({ category: category.name, pageSize: 8 });
+  const products = data?.products?.slice(0, 8) || [];
+  const shouldLoopRail = products.length > 3;
+  const railProducts = shouldLoopRail ? [...products, ...products, ...products] : products;
 
   const keepRailInMiddleLoop = useCallback((rail) => {
     if (!rail || !shouldLoopRail) return 0;
@@ -275,7 +290,7 @@ const CategoryProductSection = ({ category }) => {
           onBlur={() => resumeRailInteraction(900)}
         >
           {railProducts.map((product, index) => (
-            <div key={`${product._id}-${index}`} className="flex min-w-0 shrink-0 grow-0 basis-[calc((100%_-_0.5rem)/3)] md:basis-[calc((100%_-_1.25rem)/6)] lg:basis-[calc((100%_-_1.5rem)/7)] xl:basis-[calc((100%_-_1.75rem)/8)]">
+            <div key={`${product._id}-${index}`} className="flex min-w-0 shrink-0 grow-0 basis-[calc((100%_-_0.5rem)/3)] md:basis-[calc((100%_-_1.25rem)/6)] lg:basis-[calc((100%_-_1.75rem)/8)]">
               <Product product={product} compactRibbon desktopCompact onProductOpen={handleProductOpen} />
             </div>
           ))}
@@ -292,7 +307,7 @@ const HomeScreen = () => {
   }, []);
 
   const [products, setProducts] = useState(initialCachedProducts);
-  const [displayCount, setDisplayCount] = useState(6);
+  const [displayCount, setDisplayCount] = useState(getBudgetDisplayBatch);
   const observerRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const scrollIntervalRef = useRef(null);
@@ -398,7 +413,7 @@ const HomeScreen = () => {
 
   const loadMoreProducts = useCallback(() => {
     if (products.length > displayCount) {
-      setDisplayCount(prev => prev + 6);
+      setDisplayCount(prev => prev + getBudgetDisplayBatch());
     }
   }, [products, displayCount]);
 
@@ -487,16 +502,29 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <div className="space-y-6">
-          <section className="rounded-xl border border-green-100 bg-white p-3 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-wide text-green-700">Local grocery delivery</p>
-            <h1 className="mt-1 text-2xl font-bold leading-tight text-gray-900">
-              Grocery delivery around Amalapuram, Mummidivaram and Yanam
-            </h1>
-            <p className="mt-2 text-sm leading-6 text-gray-600">
-              Mana Kirana delivers groceries and daily essentials across Amalapuram, Mummidivaram,
-              Yanam, Ambajipeta, Ainavilli, Uppalaguptam, Allavaram, Katrenikona, I. Polavaram,
-              Kothapeta and nearby Konaseema areas.
-            </p>
+          <section className="overflow-hidden rounded-xl border border-green-100 bg-white shadow-sm">
+            <div className="bg-green-700 px-4 py-2.5 text-white">
+              <p className="text-xs font-semibold uppercase tracking-wide text-green-100">Local grocery delivery</p>
+              <h1 className="mt-1 text-2xl font-bold leading-tight">
+                Order Groceries Online from Mana Kirana
+              </h1>
+              <p className="mt-2 text-sm font-medium text-green-50">
+                Delivery Available In: {DELIVERY_AREA_TEXT}
+              </p>
+            </div>
+
+            <div className="px-4 py-2.5">
+              <div className="grid grid-cols-2 gap-1.5 text-xs font-medium text-gray-800 sm:grid-cols-3 sm:text-sm">
+                {DELIVERY_HIGHLIGHTS.map((item) => (
+                  <div key={item} className="rounded-md border border-gray-100 bg-gray-50 px-2 py-1.5">
+                    {item}
+                  </div>
+                ))}
+              </div>
+              <p className="mt-2 rounded-md bg-amber-50 px-3 py-1.5 text-center text-sm font-semibold text-amber-900">
+                Fast Delivery • Easy Ordering • Trusted Local Store
+              </p>
+            </div>
           </section>
 
           <section id="categories" className="scroll-mt-20 rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
@@ -537,7 +565,7 @@ const HomeScreen = () => {
             </div>
 
             <Suspense fallback={<Loader />}>
-              <div className="grid grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8">
+              <div className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1 md:grid-cols-6 xl:grid-cols-8">
                 {renderedProducts}
               </div>
             </Suspense>
@@ -557,7 +585,7 @@ const HomeScreen = () => {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
               <Link
                 to="/category/all"
                 className="rounded-md border border-green-700 px-3 py-1.5 text-sm font-semibold text-green-700 hover:bg-green-50"
