@@ -215,7 +215,7 @@ const Product = ({ product, keyword }) => {
      <>
       <div className="flex flex-wrap gap-4 justify-center">
   {product.details.map((detail, detailIndex) => (!selectedBrand || detail.brand === selectedBrand) && (
-    <div key={detailIndex} className="border border-gray-300 rounded-lg p-2 shadow-md bg-white w-full h-full max-w-xs">
+    <div key={detailIndex} className="border border-gray-300 rounded-lg p-1.5 shadow-md bg-white w-full h-full max-w-xs">
       {/* <Link to={`/product/${product.slug}`} state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}>
         <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
           {detail.images?.map((image, imgIndex) => (
@@ -242,7 +242,7 @@ const Product = ({ product, keyword }) => {
   to={`/product/${product.slug}`}
   state={{ brand: selectedBrand, quantity: selectedQuantity, qty: selectedQty }}
 >
-  <div className="relative aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-300">
+  <div className="relative aspect-[4/3] bg-gray-50 rounded-md overflow-hidden border border-gray-300">
     {detail.images?.map((image, imgIndex) => {
       // Prioritize only the first image of the first product card
       const isFirstVisibleImage = detailIndex === 0 && imgIndex === 0;
@@ -271,8 +271,8 @@ const Product = ({ product, keyword }) => {
   </div>
 </Link>
 
-      <div className="mt-2 text-center flex-1 flex flex-col justify-between">
-        <p className="text-sm font-serif text-maroon-600 text-center line-clamp-3 min-h-[5.5rem] border border-gray-300 rounded-md px-2 py-1 shadow-sm">
+      <div className="mt-1.5 text-center flex-1 flex flex-col">
+        <p className="h-[3.35rem] overflow-hidden rounded-md border border-gray-300 px-1.5 py-1 text-center font-serif text-[12px] leading-tight text-maroon-600 shadow-sm sm:text-sm">
           {product.name} - <span className="text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
         </p>
 
@@ -287,7 +287,7 @@ const Product = ({ product, keyword }) => {
         >
           {detail.financials.map((f, idx) => (
             <button key={idx} onClick={() => handleQuantityChange(f.quantity.toString())}
-              className={`px-2 py-0.5 rounded-md text-xs border ${selectedQuantity === f.quantity.toString()
+              className={`px-1.5 py-0.5 rounded-md text-[11px] border ${selectedQuantity === f.quantity.toString()
                 ? "bg-gray-100 text-black border-gray-500"
                 : "bg-white text-gray-800 border-gray-300 hover:border-gray-500"}`}
                 aria-label={`Select price ₹${Math.round(f.dprice)}`}
@@ -304,7 +304,7 @@ const Product = ({ product, keyword }) => {
         <div className="flex items-center">
           <div
             ref={(el) => (scrollContainersRef.current[detailIndex] = el)}
-            className="flex overflow-x-auto space-x-1 py-1 scrollbar-hide"
+            className="flex overflow-x-auto space-x-1 py-0.5 scrollbar-hide"
             onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'brand')}
             onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
             onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'brand')}
@@ -317,9 +317,9 @@ const Product = ({ product, keyword }) => {
                   if (brandDetail.brand === selectedBrand) selectedButtonsRef.current[detailIndex] = el;
                 }}
                 onClick={() => handleBrandChange(detailIndex, brandDetail.brand)}
-                className={`px-2 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
+                className={`px-1.5 py-0.5 rounded-lg border ${selectedBrand === brandDetail.brand
                   ? 'bg-gray-100 text-black border-gray-500'
-                  : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-xs`}
+                  : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'} whitespace-nowrap text-[11px]`}
                   aria-label={`Select brand ${brandDetail.brand}`}
               >
                 {brandDetail.brand}
@@ -328,7 +328,7 @@ const Product = ({ product, keyword }) => {
           </div>
         </div>
               {/* x Packs Total Price – always reserve space */}
-        <div className="text-xs font-medium text-gray-700 mt-1 min-h-[0.1rem] text-center pr-2">
+        <div className="text-xs font-medium text-gray-700 mt-0.5 text-center pr-2">
           {selectedQty > 1 ? (
             <>
               {selectedQty} x Packs{' '}
@@ -337,11 +337,11 @@ const Product = ({ product, keyword }) => {
               </span>
             </>
           ) : (
-            <span className="opacity-0 select-none">0 x Packs ₹0.00</span> 
+            null
           )}
         </div>
         {/* Price + Add to Cart + Qty Controls */}
-        <div className="flex justify-between items-center mt-2 px-2 min-h-[0.5rem]">
+        <div className="mt-auto flex justify-between items-end pt-1 px-1 min-h-[2.25rem]">
           <div className="text-sm text-gray-900 font-semibold">
             {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
               <>
@@ -360,8 +360,8 @@ const Product = ({ product, keyword }) => {
               <button onClick={() => handleQtyChange(selectedQty + 1)}>+</button>
             </div>
           ) : (
-            <button onClick={() => addToCartHandler(detailIndex)} className="bg-gray-100 p-2 rounded-lg">
-              <FaCartPlus className="text-green-800 w-6 h-6" />
+            <button onClick={() => addToCartHandler(detailIndex)} className="bg-gray-100 p-1.5 rounded-lg">
+              <FaCartPlus className="text-green-800 w-5 h-5" />
             </button>
           )}
         </div>

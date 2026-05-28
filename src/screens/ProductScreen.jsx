@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
+import { useGetProductDetailsQuery, useGetProductsByCategoryQuery } from '../slices/productsApiSlice';
 import { addToCart } from '../slices/cartSlice';
+import { FiChevronDown } from 'react-icons/fi';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import Product from '../components/Product';
 
 const ProductScreen = () => {
   const { slug } = useParams();  // ✅ Extract slug from URL
@@ -18,11 +20,13 @@ const ProductScreen = () => {
   }, []);
 
   const location = useLocation();
-  const scrollContainersRef = useRef([]);
   const { brand, quantity, qty } = location.state || {};
 
   // const { data: product, isLoading, error } = useGetProductDetailsQuery(productId);
   const { data: product, isLoading, error } = useGetProductDetailsQuery(slug);
+  const { data: categoryData } = useGetProductsByCategoryQuery(product?.category, {
+    skip: !product?.category,
+  });
   // console.log("Product Object:", product); 
 
 
@@ -34,6 +38,21 @@ const ProductScreen = () => {
 
   const [cartState, setCartState] = useState([]); // To track items added to the cart
 
+  const selectedFinancial = useMemo(
+    () =>
+      selectedDetail?.financials.find(
+        (financial) => financial.quantity.toString() === selectedQuantity
+      ),
+    [selectedDetail, selectedQuantity]
+  );
+
+  const relatedProducts = useMemo(() => {
+    const products = categoryData?.products || [];
+    return products
+      .filter((item) => item._id !== product?._id)
+      .slice(0, 6);
+  }, [categoryData, product]);
+
   // Update selected detail whenever the selected brand or product data changes
   useEffect(() => {
     if (product && selectedBrand) {
@@ -41,11 +60,16 @@ const ProductScreen = () => {
       if (detail) {
         setSelectedDetail(detail);
         if (detail.financials && detail.financials.length > 0) {
-          setSelectedQuantity(detail.financials[0].quantity.toString());
+          const hasSelectedQuantity = detail.financials.some(
+            (financial) => financial.quantity.toString() === selectedQuantity
+          );
+          if (!hasSelectedQuantity) {
+            setSelectedQuantity(detail.financials[0].quantity.toString());
+          }
         }
       }
     }
-  }, [product, selectedBrand]);
+  }, [product, selectedBrand, selectedQuantity]);
   
 
   // Reset "Added to Cart" when quantity, brand, or qty changes
@@ -73,22 +97,11 @@ const ProductScreen = () => {
     setAddedToCart(false); // Reset the state on quantity change
   };
 
-  const handleSimilarItemClick = (brand, quantity) => {
-    window.scrollTo(0, 0);
-    setSelectedBrand(brand);
-    setSelectedQuantity(quantity);
-    setAddedToCart(false); // Reset the state on similar item click
-  };
-
   const addToCartHandler = () => {
     if (!selectedDetail) {
       alert('Selected brand details are not available.');
       return;
     }
-
-    const selectedFinancial = selectedDetail.financials.find(
-      (financial) => financial.quantity.toString() === selectedQuantity
-    );
 
     if (!selectedFinancial) {
       alert('Selected quantity details are not available.');
@@ -129,16 +142,17 @@ const ProductScreen = () => {
 
   useEffect(() => {
     if (product && product.details.length > 0) {
-      setSelectedBrand(product.details[0].brand); // Default to the first brand for the new product
+      const requestedBrand = brand || product.details[0].brand;
+      setSelectedBrand(requestedBrand);
     }
-  }, [product]);
+  }, [product, brand]);
     
 
   return (
-    <div className="mt-24">
+    <div className="mt-24 mb-24">
       <button
         onClick={goBackHandler}
-        className="text-green-600 hover:text-green-800 p-2 border border-green-600 rounded mb-4 inline-block"
+        className="mb-4 inline-flex rounded-md border border-green-700 px-3 py-2 text-sm font-semibold text-green-700 hover:bg-green-50"
       >
         Go Back
       </button>
@@ -149,179 +163,149 @@ const ProductScreen = () => {
       ) : (
         <>
           {product && product.details && selectedDetail && (
-            <div className="mt-10 mb-20 flex flex-col md:flex-row items-start md:items-center  gap-4 p-4 border-b border-gray-200">
-              <div className="w-full md:w-1/3 flex-shrink-0">
-                <h4 className="text-2xl font-semibold text-center text-green-700 mb-4 mt-2">
-                  {selectedBrand} {product.name}
-                </h4>
-                <Link
-                  to={`/product/${product.slug}`}
-                  state={{ brand: selectedBrand, quantity: selectedQuantity }}
-                >
-                  <div className="relative overflow-hidden">
-                    <div
-                      className="flex space-x-2"
-                      ref={(el) => (scrollContainersRef.current[0] = el)}
-                    >
-                      {selectedDetail.images &&
-                        selectedDetail.images.map((image, imageIndex) => (
-                          <img
-                            key={imageIndex}
-                            src={image.image}
-                            alt={`${product.name}`}
-                              className="block h-64 w-auto max-w-full object-contain rounded mx-auto"
-                          />
-                        ))}
-                    </div>
+            <section className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+              <div className="grid gap-5 p-4 md:grid-cols-[minmax(280px,420px)_1fr] md:p-6">
+                <div>
+                  <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+                    {selectedDetail.images &&
+                      selectedDetail.images.map((image, imageIndex) => (
+                        <img
+                          key={imageIndex}
+                          src={image.image}
+                          alt={`${product.name}`}
+                          className="mx-auto block h-72 w-full max-w-md rounded object-contain"
+                        />
+                      ))}
                   </div>
-                </Link>
-              </div>
-
-              <div className="w-full md:w-2/3 flex flex-col space-y-4">
-                <div>
-                  <label htmlFor="brandDropdown" className="text-sm font-medium text-green-700">
-                    Brand:
-                  </label>
-                  <select
-                    id="brandDropdown"
-                    className="w-full border border-green-500 rounded mt-1 p-2"
-                    onChange={handleBrandChange}
-                    value={selectedBrand}
-                  >
-                    {product.details.map((detail) => (
-                      <option key={detail.brand} value={detail.brand}>
-                        {detail.brand}
-                      </option>
-                    ))}
-                  </select>
                 </div>
 
-                <div>
-                  <label htmlFor="weightDropdown" className="text-sm font-medium text-green-700">
-                    Weight:
-                  </label>
-                  <select
-                    id="weightDropdown"
-                    className="w-full border border-green-500 rounded mt-1 p-2"
-                    onChange={handleQuantityChange}
-                    value={selectedQuantity}
-                  >
-                    {selectedDetail?.financials.map((financial, index) => (
-                      <option key={index} value={financial.quantity}>
-                        {financial.quantity}
-                        {financial.units}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="quantityDropdown" className="text-sm font-medium text-green-700">
-                    Number Of Packs:
-                  </label>
-                  <select
-                    id="quantityDropdown"
-                    className="w-full border border-green-500 rounded mt-1 p-2"
-                    onChange={handleQtyChange}
-                    value={selectedQty}
-                  >
-                    {[...Array(10).keys()].map((x) => (
-                      <option key={x + 1} value={x + 1}>
-                        {x + 1}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex flex-col space-y-2">
+                <div className="flex min-w-0 flex-col gap-4">
                   <div>
-                    <span className="text-green-700">MRP:</span>{' '}
-                    <span className="line-through text-gray-500">
-                      &#x20b9;{getPrice(selectedQuantity, selectedDetail?.financials).toFixed(2)}
-                    </span>
-                    <span className="text-green-700"> (Per Pack)</span>
+                    <p className="text-sm font-semibold uppercase tracking-wide text-green-700">{selectedBrand}</p>
+                    <h1 className="mt-1 text-2xl font-bold leading-tight text-gray-900 md:text-3xl">
+                      {product.name}
+                    </h1>
+                    <p className="mt-2 text-sm text-gray-500">Freshly packed grocery item available for quick delivery.</p>
                   </div>
-                  <div>
-                    <span className="text-green-700">Discount Price:</span>{' '}
-                    <span className="text-green-700 font-semibold">
-                      &#x20b9;{getDprice(selectedQuantity, selectedDetail?.financials).toFixed(2)}
-                    </span>
-                    <span className="text-green-700"> (Per Pack)</span>
-                  </div>
-                  {getDiscount(selectedQuantity, selectedDetail?.financials) > 0 && (
-                    <div>
-                      <span className="text-green-700">Discount:</span>{' '}
-                      <span className="text-red-500 font-semibold">
-                        {getDiscount(selectedQuantity, selectedDetail?.financials)}% Off
-                      </span>
-                    </div>
-                  )}
-                  {selectedQty > 1 && (
-                    <div>
-                      <span className="text-green-700">Price for {selectedQty} Packs:</span>{' '}
-                      <span className="text-green-700 font-semibold">
-                        &#x20b9;{(getDprice(selectedQuantity, selectedDetail?.financials) * selectedQty).toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-                </div>
 
-                {/* Add to Cart Button */}
-                <button
-                  className={`p-2 rounded transition ${
-                    addedToCart ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
-                  } text-white`}
-                  onClick={addToCartHandler}
-                  disabled={addedToCart}
-                >
-                  {addedToCart ? 'Added to Cart' : 'Add to Cart'}
-                </button>
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    <div>
+                      <label htmlFor="brandDropdown" className="mb-1 block text-sm font-medium text-gray-700">
+                        Brand
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="brandDropdown"
+                          className="h-9 w-full appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-2.5 pr-8 text-sm font-medium text-gray-900 shadow-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
+                          onChange={handleBrandChange}
+                          value={selectedBrand}
+                        >
+                          {product.details.map((detail) => (
+                            <option key={detail.brand} value={detail.brand}>
+                              {detail.brand}
+                            </option>
+                          ))}
+                        </select>
+                        <FiChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" aria-hidden="true" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="weightDropdown" className="mb-1 block text-sm font-medium text-gray-700">
+                        Weight
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="weightDropdown"
+                          className="h-9 w-full appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-2.5 pr-8 text-sm font-medium text-gray-900 shadow-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
+                          onChange={handleQuantityChange}
+                          value={selectedQuantity}
+                        >
+                          {selectedDetail?.financials.map((financial, index) => (
+                            <option key={index} value={financial.quantity}>
+                              {financial.quantity}
+                              {financial.units}
+                            </option>
+                          ))}
+                        </select>
+                        <FiChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" aria-hidden="true" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="quantityDropdown" className="mb-1 block text-sm font-medium text-gray-700">
+                        Packs
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="quantityDropdown"
+                          className="h-9 w-full appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-2.5 pr-8 text-sm font-medium text-gray-900 shadow-sm focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
+                          onChange={handleQtyChange}
+                          value={selectedQty}
+                        >
+                          {[...Array(10).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </select>
+                        <FiChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" aria-hidden="true" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg bg-green-50 p-4">
+                    <div className="flex flex-wrap items-end justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-green-700">Price per pack</p>
+                        <div className="mt-1 flex items-baseline gap-2">
+                          <span className="text-2xl font-bold text-gray-900">
+                            &#x20b9;{getDprice(selectedQuantity, selectedDetail?.financials).toFixed(2)}
+                          </span>
+                          <span className="text-sm text-gray-500 line-through">
+                            &#x20b9;{getPrice(selectedQuantity, selectedDetail?.financials).toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                      {getDiscount(selectedQuantity, selectedDetail?.financials) > 0 && (
+                        <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-700">
+                          {getDiscount(selectedQuantity, selectedDetail?.financials)}% Off
+                        </span>
+                      )}
+                    </div>
+                    {selectedQty > 1 && (
+                      <p className="mt-3 text-sm text-gray-700">
+                        Total for {selectedQty} packs:{' '}
+                        <span className="font-bold text-green-800">
+                          &#x20b9;{(getDprice(selectedQuantity, selectedDetail?.financials) * selectedQty).toFixed(2)}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    className={`rounded-md px-4 py-3 text-sm font-semibold text-white transition ${
+                      addedToCart ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800'
+                    }`}
+                    onClick={addToCartHandler}
+                    disabled={addedToCart}
+                  >
+                    {addedToCart ? 'Added to Cart' : 'Add to Cart'}
+                  </button>
+                </div>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Similar Items Section */}
-          {product.details.length > 1 && (
-            <div className="mt-10 mb-20">
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">Similar Items</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {product.details
-                  .filter((detail) => detail.brand !== selectedBrand)
-                  .map((detail) => {
-                    const financials = detail.financials;
-                    const quantity = financials[0]?.quantity.toString();
-                    const discount = getDiscount(quantity, financials);
-
-                    return (
-                      <div
-                        key={detail.brand}
-                        className="border border-gray-200 p-4 rounded-lg shadow-md cursor-pointer"
-                        onClick={() => handleSimilarItemClick(detail.brand, quantity)}
-                      >
-                        <Link
-                          to={`/product/${product.slug}`}
-                          state={{ brand: detail.brand, quantity: quantity }}
-                        >
-                          <img
-                            src={detail.images[0]?.image}
-                            alt={detail.brand}
-                            className="w-full h-40 object-cover mb-4 rounded"
-                          />
-                          <h4 className="text-lg font-semibold text-green-700">{detail.brand}</h4>
-                          {discount > 0 && (
-                            <div>
-                              <span className="text-green-700">Discount:</span>{' '}
-                              <span className="text-red-500 font-semibold">
-                                {discount}% Off
-                              </span>
-                            </div>
-                          )}
-                        </Link>
-                      </div>
-                    );
-                  })}
+          {relatedProducts.length > 0 && (
+            <section className="mt-8">
+              <h2 className="mb-3 text-xl font-semibold text-gray-900">You may also like</h2>
+              <div className="grid grid-cols-2 gap-1 rounded-md bg-gray-200 p-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6">
+                {relatedProducts.map((relatedProduct) => (
+                  <Product key={relatedProduct._id} product={relatedProduct} />
+                ))}
               </div>
-            </div>
+            </section>
           )}
         </>
       )}
