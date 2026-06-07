@@ -1,5 +1,6 @@
 import {  useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
+import { FaRedoAlt } from "react-icons/fa";
 import { Link  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SearchBox from "./SearchBox";
@@ -63,6 +64,16 @@ const Header = () => {
               <SearchBox />
             </div>
             <div className="hidden md:flex items-center space-x-4 mt-2 md:mt-0">
+              {userInfo && (
+                <Link
+                  to="/order-again"
+                  className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/75 px-3 py-2 text-sm font-bold text-emerald-800 shadow-[0_4px_12px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-md hover:bg-emerald-50"
+                  aria-label="Reorder"
+                >
+                  <FaRedoAlt className="h-3.5 w-3.5" />
+                  <span>Reorder</span>
+                </Link>
+              )}
               <ContactUsBanner />
             </div>
 

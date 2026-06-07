@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaArrowLeft, FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
-import { addToCart, removeFromCart } from '../slices/cartSlice';
+import { addToCart, clearCartItems, removeFromCart } from '../slices/cartSlice';
 
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -34,6 +34,10 @@ const CartScreen = () => {
     dispatch(removeFromCart({ productId, brand, quantity }));
   };
 
+  const clearCartHandler = () => {
+    dispatch(clearCartItems());
+  };
+
   const checkoutHandler = () => {
     if (!userInfo) {
       navigate('/login?redirect=/shipping');
@@ -58,9 +62,21 @@ const CartScreen = () => {
             <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">Your order</p>
             <h1 className="text-xl font-semibold text-slate-950">Shopping Cart</h1>
           </div>
-          <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
-            {totalItems} {totalItems === 1 ? 'item' : 'items'}
-          </span>
+          <div className="flex flex-none items-center gap-2">
+            {cartItems.length > 0 && (
+              <button
+                type="button"
+                onClick={clearCartHandler}
+                className="inline-flex items-center gap-1.5 rounded-full border border-red-100 bg-white px-3 py-1 text-xs font-bold text-red-600 shadow-sm hover:bg-red-50"
+              >
+                <FaTrash className="h-3 w-3" />
+                Clear All
+              </button>
+            )}
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+              {totalItems} {totalItems === 1 ? 'item' : 'items'}
+            </span>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_22rem] md:items-start">

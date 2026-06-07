@@ -10,6 +10,7 @@ import { TbCategory2 } from "react-icons/tb";
 import { HiOutlineCurrencyRupee } from "react-icons/hi"; // Import Rupee Icon
 import { RiCustomerService2Fill } from "react-icons/ri";
 import { MdOutlineSavings } from "react-icons/md";
+import { FaRedoAlt } from "react-icons/fa";
 let toggleAccountFormExternally;
 
 const Footer = ({ scrollToCategory }) => {
@@ -152,6 +153,17 @@ const Footer = ({ scrollToCategory }) => {
             </span>
             <span className="truncate">Categories</span>
           </button>
+
+          <Link
+            to="/order-again"
+            className={`${navItemClass} ${location.pathname === '/order-again' ? activeNavItemClass : ''}`}
+            aria-label="Reorder"
+          >
+            <span className={`${iconWrapClass} bg-white/75 ring-1 ring-white/80 backdrop-blur-md`}>
+              <FaRedoAlt className="h-3.5 w-3.5 text-emerald-800" />
+            </span>
+            <span className="truncate">Reorder</span>
+          </Link>
 
           <button
             type="button"

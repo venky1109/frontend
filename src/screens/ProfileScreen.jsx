@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaTimes } from 'react-icons/fa';
+import { FaRedoAlt, FaTimes } from 'react-icons/fa';
 
 import { toast } from 'react-toastify';
 import Message from '../components/Message';
@@ -134,7 +134,16 @@ const ProfileScreen = () => {
       </section>
 
       <section className="min-w-0 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">My Orders</h2>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold text-gray-900">My Orders</h2>
+          <Link
+            to="/order-again"
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
+          >
+            <FaRedoAlt className="h-3 w-3" />
+            Reorder
+          </Link>
+        </div>
         {isLoading ? (
           <Loader />
         ) : error ? (

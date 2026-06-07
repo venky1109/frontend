@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaRedoAlt } from 'react-icons/fa';
 import { useGetMyOrdersQuery } from '../slices/ordersApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -44,7 +45,17 @@ const MyOrders = () => {
   return (
     
       <div className="p-1 bg-white shadow-md rounded-lg max-w-4xl mx-auto mt-8">
-        <h2 className="text-xl font-semibold mb-4">My Orders</h2>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold">My Orders</h2>
+          <Link
+            to="/order-again"
+            onClick={handleDetailsClick}
+            className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
+          >
+            <FaRedoAlt className="h-3 w-3" />
+            Reorder
+          </Link>
+        </div>
         {isLoading ? (
           <Loader />
         ) : error ? (
