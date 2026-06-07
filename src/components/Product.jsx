@@ -404,14 +404,14 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
               ? 'h-[3.65rem] sm:h-[4rem] md:h-[2.75rem] md:border-transparent md:px-0 md:py-0.5 md:text-[11px] md:leading-[1.18] md:shadow-none'
               : 'h-[3.65rem] sm:h-[4rem]'
           }`}
-          title={`${product.name} - ${selectedQuantity}${detail.financials[0]?.units || ''}`}
+          title={`${product.name} - ${getFinancialPackLabel(selectedQuantity, detail.financials)}`}
           style={{
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: desktopCompact ? 3 : 4,
           }}
         >
-          {product.name} - <span className="text-gray-700">{selectedQuantity}{detail.financials[0]?.units}</span>
+          {product.name} - <span className="text-gray-700">{getFinancialPackLabel(selectedQuantity, detail.financials)}</span>
         </p>
 
         {!shouldShowQuantitySelector && !shouldShowBrandSelector ? (
@@ -580,24 +580,31 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
 export default Product;
 
 // Helper functions for price and discount calculations
-const getPrice = (selectedQuantity, financials) => {
-  const selectedFinancial = financials.find(
-    (financial) => financial.quantity.toString() === selectedQuantity
+const getSelectedFinancial = (selectedQuantity, financials = []) => {
+  return financials.find(
+    (financial) => financial.quantity.toString() === selectedQuantity?.toString()
   );
+};
+
+const getFinancialPackLabel = (selectedQuantity, financials = []) => {
+  const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
+  if (!selectedFinancial) return selectedQuantity || '';
+
+  return `${selectedFinancial.quantity}${selectedFinancial.units || ''}`;
+};
+
+const getPrice = (selectedQuantity, financials) => {
+  const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
   return selectedFinancial ? selectedFinancial.price : 0;
 };
 
 const getDprice = (selectedQuantity, financials) => {
-  const selectedFinancial = financials.find(
-    (financial) => financial.quantity.toString() === selectedQuantity
-  );
+  const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
   return selectedFinancial ? selectedFinancial.dprice : 0;
 };
 
 const getDiscount = (selectedQuantity, financials) => {
-  const selectedFinancial = financials.find(
-    (financial) => financial.quantity.toString() === selectedQuantity
-  );
+  const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
   return selectedFinancial ? selectedFinancial.Discount : 0;
 };
 

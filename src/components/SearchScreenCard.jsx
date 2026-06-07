@@ -264,8 +264,7 @@ const SearchScreenCard = ({ product }) => {
                         : 'bg-white text-maroon-600 border-maroon-600 hover:bg-maroon-100'
                     } text-xs`}
                   >
-                    {financial.quantity}
-                    {financial.units}
+                    {getFinancialPackLabel(financial)}
                   </button>
                 ))}
               </div>
@@ -392,4 +391,8 @@ const getDiscount = (selectedQuantity, financials) => {
     (financial) => financial.quantity.toString() === selectedQuantity
   );
   return selectedFinancial ? selectedFinancial.Discount : 0;
+};
+
+const getFinancialPackLabel = (financial = {}) => {
+  return `${financial.quantity ?? ''}${financial.units || ''}`;
 };
