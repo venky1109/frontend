@@ -112,7 +112,7 @@ const MyProfile = ({ onProfileUpdate }) => {
         },
         {
           enableHighAccuracy: true,
-          timeout: 100,
+          timeout: 5000,
           maximumAge: 0,
         }
       );

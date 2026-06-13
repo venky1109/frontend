@@ -7,12 +7,15 @@ import { toast } from 'react-toastify';
 import RegisterScreen from './RegisterScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import ClickOutsideWrapper from "./ClickOutsideWrapper";
+import { Eye, EyeOff } from 'lucide-react';
+
 const LoginScreen = ({ onClose }) => {
   const [screen, setScreen] = useState('login'); // 'login', 'register', 'forgotPassword'
   const [phoneNo, setPhoneNo] = useState('');
   const [password, setPassword] = useState('');
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
   const [validationError, setValidationError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -106,29 +109,34 @@ const LoginScreen = ({ onClose }) => {
               )}
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-gray-700 font-semibold mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                disabled={isLoading}
-              />
-            </div>
+            <div className="relative">
+  <input
+    type={showPassword ? 'text' : 'password'}
+    id="password"
+    placeholder="Enter your password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+    className="w-full p-2 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+    disabled={isLoading}
+  />
 
-            <button
-              type="submit"
-              className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Loading...' : 'Sign In'}
-            </button>
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-700"
+    disabled={isLoading}
+  >
+    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+  </button>
+</div>
+<button
+  type="submit"
+  className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+  disabled={isLoading}
+>
+  {isLoading ? 'Loading...' : 'Sign In'}
+</button>
           </form>
 
           <div className="text-center mt-6">
