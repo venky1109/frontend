@@ -55,8 +55,8 @@ const CategoryProductSection = ({ category }) => {
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const { data, isLoading, error } = useGetProductsByCategoryQuery({ category: category.name, pageSize: 8 });
   const products = data?.products?.slice(0, 8) || [];
-  const shouldLoopRail = products.length > 3;
-  const railProducts = shouldLoopRail ? [...products, ...products, ...products] : products;
+  const shouldLoopRail = false;
+  const railProducts = products;
 
   const keepRailInMiddleLoop = useCallback((rail) => {
     if (!rail || !shouldLoopRail) return 0;
@@ -261,13 +261,6 @@ const CategoryProductSection = ({ category }) => {
           <p className="text-xs font-semibold uppercase tracking-wide text-green-700">Top picks</p>
           <h2 className="truncate text-lg font-bold text-gray-900">{category.name}</h2>
         </div>
-        <button
-          type="button"
-          onClick={() => navigate(`/category/${encodeURIComponent(category.name)}`)}
-          className="flex-none rounded-md border border-green-700 px-3 py-1.5 text-xs font-semibold text-green-700 hover:bg-green-50"
-        >
-          View More
-        </button>
       </div>
 
       <Suspense fallback={<Loader />}>
@@ -294,6 +287,18 @@ const CategoryProductSection = ({ category }) => {
               <Product product={product} compactRibbon desktopCompact onProductOpen={handleProductOpen} />
             </div>
           ))}
+          <div className="flex min-w-0 shrink-0 grow-0 basis-[calc((100%_-_0.5rem)/3)] md:basis-[calc((100%_-_1.25rem)/6)] lg:basis-[calc((100%_-_1.75rem)/8)]">
+            <button
+              type="button"
+              onClick={() => navigate(`/category/${encodeURIComponent(category.name)}`)}
+              className="flex min-h-[11rem] w-full flex-col items-center justify-center rounded-lg border border-dashed border-green-600 bg-white px-2 py-3 text-center text-xs font-semibold text-green-700 shadow-sm transition hover:bg-green-50 md:min-h-[14.25rem]"
+              aria-label={`View more ${category.name} products`}
+            >
+              <span className="text-lg leading-none">+</span>
+              <span className="mt-1">More</span>
+              <span className="mt-0.5 max-w-full truncate text-[10px] text-gray-500">{category.name}</span>
+            </button>
+          </div>
         </div>
       </Suspense>
     </section>

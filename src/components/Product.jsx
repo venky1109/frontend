@@ -374,8 +374,8 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
       );
     })}
 
-    <div className={`absolute left-1 top-1 flex flex-col items-center justify-center rounded-b-md rounded-t-sm px-0.5 text-center font-bold uppercase leading-none shadow-md ${
-      compactRibbon ? 'min-h-7 w-7 py-0.5 text-[8px]' : 'min-h-8 w-8 py-1 text-[9px]'
+    <div className={`absolute left-1 top-1 flex flex-col items-center justify-center rounded-sm px-0.5 text-center font-bold uppercase leading-none shadow-md ${
+      compactRibbon ? 'min-h-4 w-5 py-0 text-[6px]' : 'min-h-5 w-6 py-0.5 text-[7px]'
     } ${
       getDiscount(selectedQuantity, detail.financials) > 0
         ? 'bg-emerald-700 text-white'
@@ -384,7 +384,7 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
       {getDiscount(selectedQuantity, detail.financials) > 0 && (
         <>
           <span>{Number(getDiscount(selectedQuantity, detail.financials)).toFixed(0)}%</span>
-          <span className={`mt-0.5 leading-none ${compactRibbon ? 'text-[7px]' : 'text-[8px]'}`}>Off</span>
+          <span className={`leading-none ${compactRibbon ? 'text-[5px]' : 'text-[6px]'}`}>OFF</span>
         </>
       )}
     </div>
@@ -423,12 +423,7 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
         <div
           ref={(el) => (quantityScrollContainersRef.current[detailIndex] = el)}
           data-loop="false"
-          className="flex w-full max-w-full overflow-x-auto overscroll-x-contain space-x-1 py-1 scrollbar-hide"
-          onMouseDown={(e) => handleMouseInteraction(e, detailIndex, 'down', 'quantity')}
-          onMouseLeave={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
-          onMouseUp={() => handleMouseInteraction(null, detailIndex, 'up', 'quantity')}
-          onMouseMove={(e) => handleMouseInteraction(e, detailIndex, 'move', 'quantity')}
-          onScroll={() => handleCircularScroll(detailIndex, 'quantity')}
+          className="flex w-full max-w-full flex-wrap gap-1 py-1"
         >
           {quantityOptions.map(({ financial: f, loopIndex }, idx) => (
             <button
@@ -448,9 +443,9 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
               className={`flex-none px-1.5 py-0.5 rounded-md text-[11px] border ${selectedQuantity === f.quantity.toString()
                 ? "bg-amber-200 text-slate-950 border-amber-500 shadow-sm"
                 : "bg-amber-50 text-slate-800 border-amber-200 hover:border-amber-400 hover:bg-amber-100"}`}
-                aria-label={`Select price ₹${Math.round(f.dprice)}`}
+                aria-label={`Select price ${formatCurrency(f.dprice)}`}
                 >
-              ₹{Math.round(f.dprice)}
+              {formatCurrency(f.dprice)}
             </button>
           ))}
         </div>
@@ -504,7 +499,7 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
             <>
               {selectedQty} x Packs{' '}
               <span className="text-green-700 font-semibold">
-                ₹{formatProductPrice(getDprice(selectedQuantity, detail.financials) * selectedQty)}
+                {formatCurrency(getDprice(selectedQuantity, detail.financials) * selectedQty)}
               </span>
             </>
           ) : (
@@ -512,27 +507,27 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
           )}
         </div>
         {/* Price + Add to Cart + Qty Controls */}
-        <div className={`mt-auto flex items-end justify-between gap-1.5 px-0.5 pr-1 pt-0.5 sm:gap-2 sm:px-1 sm:pt-1 ${
+        <div className={`mt-auto grid grid-cols-[minmax(0,1fr)_auto] items-end gap-1 px-0.5 pt-0.5 sm:flex sm:flex-nowrap sm:justify-between sm:gap-2 sm:px-1 sm:pt-1 ${
           desktopCompact ? 'min-h-[2rem] sm:min-h-[2.25rem] md:min-h-[1.85rem] md:px-0 md:pt-0' : 'min-h-[2rem] sm:min-h-[2.25rem]'
         }`}>
-          <div className="min-w-[2.7rem] max-w-[calc(100%-2.75rem)] flex-1 overflow-hidden text-left font-semibold text-gray-900 sm:max-w-none sm:text-sm">
+          <div className="min-w-0 overflow-hidden text-left font-semibold text-gray-900 sm:flex-1 sm:overflow-visible sm:max-w-none sm:text-sm">
             {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
               <>
-                <span className="block truncate text-[9px] leading-none text-gray-400 line-through sm:text-xs">₹{formatProductPrice(getPrice(selectedQuantity, detail.financials))}</span>
-                <span className="inline-block min-w-[2.55rem] max-w-full whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-0.5 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:px-1 sm:text-sm">₹{formatProductPrice(getDprice(selectedQuantity, detail.financials))}</span>
+                <span className="block truncate text-[9px] leading-none text-gray-400 line-through sm:text-xs">{formatCurrency(getPrice(selectedQuantity, detail.financials))}</span>
+                <span className="inline-block max-w-full truncate whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-1 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:min-w-[3.15rem] sm:px-1 sm:text-sm">{formatCurrency(getDprice(selectedQuantity, detail.financials))}</span>
               </>
             ) : (
-              <span className="inline-block min-w-[2.55rem] max-w-full whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-0.5 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:px-1 sm:text-sm">₹{formatProductPrice(getPrice(selectedQuantity, detail.financials))}</span>
+              <span className="inline-block max-w-full truncate whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-1 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:min-w-[3.15rem] sm:px-1 sm:text-sm">{formatCurrency(getPrice(selectedQuantity, detail.financials))}</span>
             )}
           </div>
 
           {showQuantityControls ? (
-            <div className="flex h-5 w-9 flex-none items-center justify-between overflow-hidden rounded-md bg-green-700 text-[9px] font-semibold text-white shadow-sm sm:h-7 sm:w-auto sm:space-x-2 sm:rounded-lg sm:px-2 sm:py-0.5 sm:text-sm">
+            <div className="flex h-5 w-12 flex-none items-center justify-between overflow-hidden rounded-md bg-green-700 px-0.5 text-[9px] font-semibold text-white shadow-sm sm:h-7 sm:w-auto sm:space-x-2 sm:rounded-lg sm:px-2 sm:py-0.5 sm:text-sm">
               <button
                 type="button"
                 onClick={() => handleQtyChange(selectedQty - 1)}
                 disabled={selectedQty <= 1}
-                className="flex h-5 w-2.5 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
+                className="flex h-5 w-3 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
                 aria-label="Decrease quantity"
               >
                 -
@@ -542,7 +537,7 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
                 type="button"
                 onClick={() => handleQtyChange(selectedQty + 1)}
                 disabled={selectedQty >= 9}
-                className="flex h-5 w-2.5 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
+                className="flex h-5 w-3 items-center justify-center disabled:opacity-45 sm:h-7 sm:w-auto"
                 aria-label="Increase quantity"
               >
                 +
@@ -606,6 +601,10 @@ const getDprice = (selectedQuantity, financials) => {
 const getDiscount = (selectedQuantity, financials) => {
   const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
   return selectedFinancial ? selectedFinancial.Discount : 0;
+};
+
+const formatCurrency = (value) => {
+  return `Rs ${formatProductPrice(value)}`;
 };
 
 const formatProductPrice = (value) => {
