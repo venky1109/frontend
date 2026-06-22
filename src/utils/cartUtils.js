@@ -8,6 +8,7 @@ export const addDecimals = (num) => {
 // correct to call it passing a string as the argument.
 
 export const updateCart = (state) => {
+  state.cartItems = Array.isArray(state.cartItems) ? state.cartItems : [];
   // Calculate the items price in whole number (pennies) to avoid issues with
   // floating point number calculations
 // console.log(state.cartItems);

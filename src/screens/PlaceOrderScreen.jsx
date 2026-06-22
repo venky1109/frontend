@@ -14,6 +14,7 @@ const PlaceOrderScreen = () => {
   const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart);
+  const cartItems = Array.isArray(cart?.cartItems) ? cart.cartItems : [];
 
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
@@ -44,7 +45,7 @@ const PlaceOrderScreen = () => {
   const placeOrderHandler = async () => {
     try {
       const res = await createOrder({
-        orderItems: cart.cartItems,
+        orderItems: cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod || 'Cash/UPI',
         itemsPrice: cart.itemsPrice,
@@ -78,7 +79,7 @@ const PlaceOrderScreen = () => {
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-bold text-white shadow-sm shadow-emerald-100 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 md:hidden"
-            disabled={cart.cartItems.length === 0 || isLoading}
+            disabled={cartItems.length === 0 || isLoading}
             onClick={placeOrderHandler}
           >
             {isLoading ? 'Placing...' : 'Place Order'}
@@ -120,14 +121,14 @@ const PlaceOrderScreen = () => {
                 <h2 className="text-lg font-semibold text-slate-950">Order Items</h2>
               </div>
               <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
-                {cart.cartItems.length} items
+                {cartItems.length} items
               </span>
             </div>
-            {cart.cartItems.length === 0 ? (
+            {cartItems.length === 0 ? (
               <Message>Your cart is empty</Message>
             ) : (
               <div className="space-y-3">
-                {cart.cartItems.map((item, index) => (
+                {cartItems.map((item, index) => (
                   <div
                     key={`${item.productId}-${item.brand}-${item.quantity}-${index}`}
                     className="grid grid-cols-[3.75rem_minmax(0,1fr)_4.5rem] items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-2.5"
@@ -188,7 +189,7 @@ const PlaceOrderScreen = () => {
           <button
             type="button"
             className="mt-5 inline-flex w-auto min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-100 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-            disabled={cart.cartItems.length === 0}
+            disabled={cartItems.length === 0}
             onClick={placeOrderHandler}
           >
             {isLoading ? 'Placing Order...' : 'Place Order'}

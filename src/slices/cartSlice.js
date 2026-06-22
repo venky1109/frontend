@@ -1,10 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { updateCart } from '../utils/cartUtils';
 
+const defaultCartState = { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
+
+const loadCartState = () => {
+  try {
+    const savedCart = localStorage.getItem('cart');
+    if (!savedCart) return defaultCartState;
+    const parsedCart = JSON.parse(savedCart);
+    return {
+      ...defaultCartState,
+      ...parsedCart,
+      cartItems: Array.isArray(parsedCart?.cartItems) ? parsedCart.cartItems : [],
+    };
+  } catch {
+    return defaultCartState;
+  }
+};
+
 // Initial cart state from local storage or default values
-const initialState = localStorage.getItem('cart')
-  ? JSON.parse(localStorage.getItem('cart'))
-  : { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
+const initialState = loadCartState();
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -12,6 +27,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const { user, rating, numReviews, reviews, ...item } = action.payload;
+      state.cartItems = Array.isArray(state.cartItems) ? state.cartItems : [];
 
       // Check if the item already exists in the cart
       const existItem = state.cartItems.find(
@@ -41,6 +57,7 @@ const cartSlice = createSlice({
 
     updateCartItemQuantity: (state, action) => {
       const { productId, brand, quantity, newQty } = action.payload;
+      state.cartItems = Array.isArray(state.cartItems) ? state.cartItems : [];
       const existingItem = state.cartItems.find(
         (item) => item.productId === productId && item.brand === brand && item.quantity === quantity
       );
@@ -52,6 +69,7 @@ const cartSlice = createSlice({
 
     removeFromCart: (state, action) => {
       const { productId, brand, quantity } = action.payload;
+      state.cartItems = Array.isArray(state.cartItems) ? state.cartItems : [];
       // console.log(`Before removal: ${JSON.stringify(state.cartItems)}`);
       
       // Remove the specific item from the cart based on productId, brand, and quantity
@@ -65,6 +83,7 @@ const cartSlice = createSlice({
       return updateCart(state);
     },updateCartProduct: (state, action) => {
       const updatedProduct = action.payload;
+      state.cartItems = Array.isArray(state.cartItems) ? state.cartItems : [];
       // console.log('Received updated product:', updatedProduct);
     
       // Loop through the cart items and attempt to update the matching item

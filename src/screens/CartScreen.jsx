@@ -10,7 +10,7 @@ const CartScreen = () => {
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const cartItems = Array.isArray(cart?.cartItems) ? cart.cartItems : [];
   const userInfo = useSelector((state) => state.auth.userInfo);
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);

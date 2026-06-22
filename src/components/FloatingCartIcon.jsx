@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useSelector } from 'react-redux';
 
 const FloatingCartIcon = React.forwardRef((props, ref) => {
-  const { cartItems } = useSelector((state) => state.cart);
+  const cartItems = useSelector((state) =>
+    Array.isArray(state.cart?.cartItems) ? state.cart.cartItems : []
+  );
   const [isFooterVisible, setFooterVisible] = useState(false);
   const footerRef = useRef(null); // Use a ref for the footer
   const navigate = useNavigate(); // Initialize useNavigate

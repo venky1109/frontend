@@ -511,13 +511,13 @@ const Product = ({ product, keyword, alwaysShowOptions = false, compactRibbon = 
           desktopCompact ? 'min-h-[2rem] sm:min-h-[2.25rem] md:min-h-[1.85rem] md:px-0 md:pt-0' : 'min-h-[2rem] sm:min-h-[2.25rem]'
         }`}>
           <div className="min-w-0 overflow-hidden text-left font-semibold text-gray-900 sm:flex-1 sm:overflow-visible sm:max-w-none sm:text-sm">
-            {selectedQuantity && getDiscount(selectedQuantity, detail.financials) > 0 ? (
+            {selectedQuantity && hasSellingPrice(selectedQuantity, detail.financials) ? (
               <>
                 <span className="block truncate text-[9px] leading-none text-gray-400 line-through sm:text-xs">{formatCurrency(getPrice(selectedQuantity, detail.financials))}</span>
                 <span className="inline-block max-w-full truncate whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-1 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:min-w-[3.15rem] sm:px-1 sm:text-sm">{formatCurrency(getDprice(selectedQuantity, detail.financials))}</span>
               </>
             ) : (
-              <span className="inline-block max-w-full truncate whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-1 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:min-w-[3.15rem] sm:px-1 sm:text-sm">{formatCurrency(getPrice(selectedQuantity, detail.financials))}</span>
+              <span className="inline-block max-w-full truncate whitespace-nowrap rounded-md border border-amber-300 bg-amber-100 px-1 py-0.5 text-center text-[10px] leading-none text-slate-950 sm:min-w-[3.15rem] sm:px-1 sm:text-sm">{formatCurrency(getDisplayPrice(selectedQuantity, detail.financials))}</span>
             )}
           </div>
 
@@ -596,6 +596,20 @@ const getPrice = (selectedQuantity, financials) => {
 const getDprice = (selectedQuantity, financials) => {
   const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
   return selectedFinancial ? selectedFinancial.dprice : 0;
+};
+
+const getDisplayPrice = (selectedQuantity, financials) => {
+  const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
+  if (!selectedFinancial) return 0;
+  return selectedFinancial.dprice || selectedFinancial.price || 0;
+};
+
+const hasSellingPrice = (selectedQuantity, financials) => {
+  const selectedFinancial = getSelectedFinancial(selectedQuantity, financials);
+  if (!selectedFinancial) return false;
+  const mrp = Number(selectedFinancial.price || 0);
+  const selling = Number(selectedFinancial.dprice || 0);
+  return selling > 0 && mrp > 0 && selling < mrp;
 };
 
 const getDiscount = (selectedQuantity, financials) => {

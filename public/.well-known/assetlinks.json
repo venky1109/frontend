@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.manakirana.shop",
+      "sha256_cert_fingerprints": [
+        "25:E0:FB:4A:5B:F1:55:CA:A0:77:AB:A1:62:22:83:E5:82:0F:15:38:98:22:4F:2C:21:AF:55:CC:7F:37:C6:F1"
+      ]
+    }
+  }
+]
